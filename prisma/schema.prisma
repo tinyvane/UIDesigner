@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ========== User ==========
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  avatar    String?
+  projects  Project[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// ========== Project ==========
+model Project {
+  id           String           @id @default(cuid())
+  name         String
+  description  String?
+  canvasWidth  Int              @default(1920)
+  canvasHeight Int              @default(1080)
+  background   Json?            // { type: 'color'|'gradient'|'image', value: string }
+  globalStyles Json?            // Global styles: font family, primary color, border style
+  components   Component[]
+  dataSources  DataSource[]
+  versions     ProjectVersion[]
+  owner        User             @relation(fields: [ownerId], references: [id])
+  ownerId      String
+  thumbnail    String?
+  isTemplate   Boolean          @default(false)
+  status       String           @default("draft") // draft | published | archived
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([ownerId])
+  @@index([isTemplate, status])
+}
+
+// ========== Component ==========
+model Component {
+  id           String   @id @default(cuid())
+  type         String   // ComponentType enum value
+  name         String?
+  x            Float
+  y            Float
+  width        Float
+  height       Float
+  rotation     Float    @default(0)
+  zIndex       Int      @default(0)
+  locked       Boolean  @default(false)
+  visible      Boolean  @default(true)
+  opacity      Float    @default(1)
+  groupId      String?
+  props        Json     // Component-specific properties
+  animations   Json?    // Animation config
+  events       Json?    // Interaction event config
+  dataSourceId String?
+  dataMapping  Json?    // Data field mapping rules
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([groupId])
+}
+
+// ========== Data Source ==========
+model DataSource {
+  id        String   @id @default(cuid())
+  name      String
+  type      String   // static | api | websocket
+  config    Json     // Connection config (url, method, headers, pollInterval, etc.)
+  transform String?  // JSONPath or JS expression for data transformation
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+// ========== Project Version (snapshots) ==========
+model ProjectVersion {
+  id        String   @id @default(cuid())
+  version   Int
+  snapshot  Json     // Full canvas + components serialized snapshot
+  message   String?  // Version description
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  createdAt DateTime @default(now())
+
+  @@unique([projectId, version])
+  @@index([projectId])
+}
+
+// ========== Template ==========
+model Template {
+  id         String   @id @default(cuid())
+  name       String
+  category   String   // Data monitoring | Sales | Operations | IoT | Custom
+  tags       String[] // Tags: ['dark theme', 'map', 'realtime']
+  thumbnail  String
+  preview    String?  // Full-size preview URL
+  config     Json     // Full canvas + components serialized data
+  isPublic   Boolean  @default(true)
+  usageCount Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([category])
+  @@index([isPublic])
+}
+
+// ========== AI Recognition Log ==========
+model AIRecognitionLog {
+  id         String   @id @default(cuid())
+  imageUrl   String
+  imageHash  String   // Perceptual hash for caching
+  prompt     String   // Prompt version used
+  rawOutput  Json     // Raw AI output
+  parsed     Json?    // Post-processed component data
+  model      String   // Model used: claude-sonnet-4-6, etc.
+  tokenUsage Json?    // { input_tokens, output_tokens }
+  latencyMs  Int
+  success    Boolean
+  errorMsg   String?
+  createdAt  DateTime @default(now())
+
+  @@index([imageHash])
+}
