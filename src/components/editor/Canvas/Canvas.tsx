@@ -9,6 +9,7 @@ import { CanvasGrid } from './CanvasGrid';
 import { AlignGuides } from './AlignGuides';
 import { useSelectionBox } from './SelectionBox';
 import { ContextMenu } from '@/components/editor/ContextMenu';
+import { Ruler } from './Ruler';
 
 export function Canvas() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -135,6 +136,9 @@ export function Canvas() {
 
       {/* Rubber band selection overlay */}
       {SelectionBoxOverlay && <SelectionBoxOverlay />}
+
+      {/* Rulers */}
+      <Ruler />
 
       {/* Context menu */}
       <ContextMenu />
