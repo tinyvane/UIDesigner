@@ -10,6 +10,7 @@ import { AlignGuides } from './AlignGuides';
 import { useSelectionBox } from './SelectionBox';
 import { ContextMenu } from '@/components/editor/ContextMenu';
 import { Ruler } from './Ruler';
+import { Minimap } from './Minimap';
 
 export function Canvas() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -139,6 +140,9 @@ export function Canvas() {
 
       {/* Rulers */}
       <Ruler />
+
+      {/* Minimap */}
+      <Minimap />
 
       {/* Context menu */}
       <ContextMenu />
