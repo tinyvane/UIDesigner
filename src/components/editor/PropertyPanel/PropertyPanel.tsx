@@ -19,16 +19,110 @@ export function PropertyPanel() {
   const selectedId = selectedIds.size === 1 ? Array.from(selectedIds)[0] : null;
   const selectedComponent = selectedId ? components.get(selectedId) : null;
 
+  // Multi-select editing
+  if (selectedIds.size > 1) {
+    const selectedComps = Array.from(selectedIds)
+      .map((id) => components.get(id))
+      .filter(Boolean) as import('@/schemas/component').ComponentData[];
+
+    return (
+      <div className="flex h-full flex-col">
+        <div className="border-b border-gray-800 p-3">
+          <div className="text-xs font-medium text-gray-200">
+            {selectedIds.size} components selected
+          </div>
+          <div className="text-[10px] text-gray-500">Edit shared properties</div>
+        </div>
+        <ScrollArea className="flex-1">
+          <div className="p-3">
+            <h4 className="mb-2 text-xs font-semibold tracking-wider text-gray-400 uppercase">
+              Shared Properties
+            </h4>
+            <div className="space-y-2">
+              <div>
+                <Label className="text-[10px] text-gray-500">Opacity</Label>
+                <Input
+                  type="number"
+                  min={0}
+                  max={1}
+                  step={0.1}
+                  placeholder="Mixed"
+                  value={
+                    selectedComps.every((c) => c.opacity === selectedComps[0].opacity)
+                      ? selectedComps[0].opacity
+                      : ''
+                  }
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    selectedComps.forEach((c) => updateComponent(c.id, { opacity: val }));
+                  }}
+                  className="h-7 border-gray-700 bg-gray-800 text-xs"
+                />
+              </div>
+              <div>
+                <Label className="text-[10px] text-gray-500">Rotation</Label>
+                <Input
+                  type="number"
+                  placeholder="Mixed"
+                  value={
+                    selectedComps.every((c) => c.rotation === selectedComps[0].rotation)
+                      ? selectedComps[0].rotation
+                      : ''
+                  }
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    selectedComps.forEach((c) => updateComponent(c.id, { rotation: val }));
+                  }}
+                  className="h-7 border-gray-700 bg-gray-800 text-xs"
+                />
+              </div>
+              <Separator className="my-3" />
+              <div>
+                <Label className="text-[10px] text-gray-500">Lock All</Label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedComps.every((c) => c.locked)}
+                    onChange={(e) => {
+                      selectedComps.forEach((c) =>
+                        updateComponent(c.id, { locked: e.target.checked }),
+                      );
+                    }}
+                    className="rounded border-gray-600"
+                  />
+                  <span className="text-xs text-gray-400">
+                    {selectedComps.every((c) => c.locked) ? 'All locked' : 'Lock all'}
+                  </span>
+                </label>
+              </div>
+              <div>
+                <Label className="text-[10px] text-gray-500">Visibility</Label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedComps.every((c) => c.visible)}
+                    onChange={(e) => {
+                      selectedComps.forEach((c) =>
+                        updateComponent(c.id, { visible: e.target.checked }),
+                      );
+                    }}
+                    className="rounded border-gray-600"
+                  />
+                  <span className="text-xs text-gray-400">Visible</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </ScrollArea>
+      </div>
+    );
+  }
+
   if (!selectedComponent) {
     return (
       <div className="flex h-full flex-col items-center justify-center p-4 text-center">
         <div className="mb-2 text-4xl text-gray-600">🎯</div>
         <p className="text-sm text-gray-500">Select a component to edit its properties</p>
-        {selectedIds.size > 1 && (
-          <p className="mt-2 text-xs text-gray-600">
-            {selectedIds.size} components selected — multi-edit coming soon
-          </p>
-        )}
       </div>
     );
   }
