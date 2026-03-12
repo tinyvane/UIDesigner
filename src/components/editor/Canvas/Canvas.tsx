@@ -86,6 +86,7 @@ export function Canvas() {
 
       {/* Canvas transform container */}
       <div
+        data-canvas="true"
         className="absolute origin-top-left"
         style={{
           transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoom})`,

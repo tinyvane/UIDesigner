@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { AlignGuide } from '@/lib/utils/alignment';
 
 export type EditorMode = 'select' | 'pan' | 'multiSelect';
 export type PropertyPanelTab = 'style' | 'data' | 'animation' | 'event';
@@ -36,6 +37,9 @@ interface UIState {
 
   // Context menu
   contextMenu: ContextMenu | null;
+
+  // Alignment guides (active during drag)
+  alignGuides: AlignGuide[];
 
   // AI state
   aiStatus: AIStatus;
@@ -77,6 +81,10 @@ interface UIActions {
   openContextMenu: (x: number, y: number, targetIds: string[]) => void;
   closeContextMenu: () => void;
 
+  // Alignment guides
+  setAlignGuides: (guides: AlignGuide[]) => void;
+  clearAlignGuides: () => void;
+
   // AI
   setAIStatus: (status: AIStatus) => void;
   setAIProgress: (progress: { recognized: number; total: number }) => void;
@@ -103,6 +111,7 @@ export const useUIStore = create<UIState & UIActions>()((set, get) => ({
   activePanel: 'components',
   propertyPanelTab: 'style',
   contextMenu: null,
+  alignGuides: [],
   aiStatus: 'idle',
   aiProgress: { recognized: 0, total: 0 },
   aiError: null,
@@ -155,6 +164,10 @@ export const useUIStore = create<UIState & UIActions>()((set, get) => ({
   // Context menu
   openContextMenu: (x, y, targetIds) => set({ contextMenu: { x, y, targetIds } }),
   closeContextMenu: () => set({ contextMenu: null }),
+
+  // Alignment guides
+  setAlignGuides: (guides) => set({ alignGuides: guides }),
+  clearAlignGuides: () => set({ alignGuides: [] }),
 
   // AI
   setAIStatus: (status) => set({ aiStatus: status }),

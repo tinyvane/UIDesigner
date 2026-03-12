@@ -5,6 +5,7 @@ import { useEditorStore } from '@/stores/editorStore';
 import { useUIStore } from '@/stores/uiStore';
 import { getComponent } from './registry';
 import type { ComponentData } from '@/schemas/component';
+import { calculateSnap } from '@/lib/utils/alignment';
 
 interface WidgetWrapperProps {
   component: ComponentData;
@@ -116,7 +117,8 @@ function WidgetWrapperInner({ component }: WidgetWrapperProps) {
   const handlePointerMove = useCallback(
     (e: React.PointerEvent) => {
       if (!isDragging.current) return;
-      const zoom = useUIStore.getState().zoom;
+      const uiState = useUIStore.getState();
+      const zoom = uiState.zoom;
       const currentX = e.clientX / zoom;
       const currentY = e.clientY / zoom;
       const dx = currentX - dragStart.current.x;
@@ -124,14 +126,43 @@ function WidgetWrapperInner({ component }: WidgetWrapperProps) {
       dragStart.current = { x: currentX, y: currentY };
 
       // Move all selected components
-      const ids = Array.from(useUIStore.getState().selectedIds);
+      const ids = Array.from(uiState.selectedIds);
       moveComponents(ids, { x: dx, y: dy });
+
+      // Apply snap alignment if enabled
+      if (uiState.snapEnabled) {
+        const editorState = useEditorStore.getState();
+        const comp = editorState.components.get(component.id);
+        if (comp) {
+          const movingRect = { x: comp.x, y: comp.y, width: comp.width, height: comp.height };
+          const otherRects = Array.from(editorState.components.entries())
+            .filter(([id]) => !ids.includes(id))
+            .map(([, c]) => ({ x: c.x, y: c.y, width: c.width, height: c.height }));
+
+          const { snappedRect, guides } = calculateSnap(
+            movingRect,
+            otherRects,
+            editorState.canvas.width,
+            editorState.canvas.height,
+          );
+
+          // Apply snap offset to all selected components
+          const snapDx = snappedRect.x - comp.x;
+          const snapDy = snappedRect.y - comp.y;
+          if (snapDx !== 0 || snapDy !== 0) {
+            moveComponents(ids, { x: snapDx, y: snapDy });
+          }
+
+          useUIStore.getState().setAlignGuides(guides);
+        }
+      }
     },
-    [moveComponents],
+    [component.id, moveComponents],
   );
 
   const handlePointerUp = useCallback(() => {
     isDragging.current = false;
+    useUIStore.getState().clearAlignGuides();
   }, []);
 
   // ========== Resize ==========
