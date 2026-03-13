@@ -32,13 +32,16 @@ function RulerComponent() {
   const tickInterval = getTickInterval(zoom);
   const scaledInterval = tickInterval * zoom;
 
+  const winW = typeof window !== 'undefined' ? window.innerWidth : 1920;
+  const winH = typeof window !== 'undefined' ? window.innerHeight : 1080;
+
   // Calculate visible range for horizontal ruler
   const hStart = Math.floor(-panOffset.x / zoom / tickInterval) * tickInterval;
-  const hEnd = Math.ceil((-panOffset.x + window.innerWidth) / zoom / tickInterval) * tickInterval;
+  const hEnd = Math.ceil((-panOffset.x + winW) / zoom / tickInterval) * tickInterval;
 
   // Calculate visible range for vertical ruler
   const vStart = Math.floor(-panOffset.y / zoom / tickInterval) * tickInterval;
-  const vEnd = Math.ceil((-panOffset.y + window.innerHeight) / zoom / tickInterval) * tickInterval;
+  const vEnd = Math.ceil((-panOffset.y + winH) / zoom / tickInterval) * tickInterval;
 
   const hTicks: number[] = [];
   for (let i = hStart; i <= hEnd; i += tickInterval) {
