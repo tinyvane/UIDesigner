@@ -93,6 +93,15 @@ export async function POST(request: NextRequest) {
             sendEvent,
           );
 
+          // Log raw AI output for debugging
+          console.log('[AI Recognition] Raw components:', JSON.stringify(result.components.map(c => ({
+            type: c.type,
+            name: c.name,
+            propsKeys: Object.keys(c.props || {}),
+            hasData: 'data' in (c.props || {}),
+            props: c.props,
+          })), null, 2));
+
           // Post-process
           sendEvent({ type: 'status', message: 'Post-processing results...' });
 

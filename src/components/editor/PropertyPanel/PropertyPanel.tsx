@@ -375,8 +375,8 @@ export function PropertyPanel() {
             <div className="space-y-4">
               {/* Inline JSON editor for component data props */}
               {registration?.propSchema?.filter((f) => f.type === 'json').map((field) => {
-                const raw = selectedComponent.props[field.key];
-                const jsonStr = typeof raw === 'string' ? raw : JSON.stringify(raw, null, 2);
+                const raw = selectedComponent.props[field.key] ?? registration.defaultProps?.[field.key];
+                const jsonStr = typeof raw === 'string' ? raw : (raw !== undefined ? JSON.stringify(raw, null, 2) : '');
                 return (
                   <div key={field.key}>
                     <Label className="text-[10px] text-gray-500">{field.label}</Label>

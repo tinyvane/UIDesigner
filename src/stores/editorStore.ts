@@ -4,6 +4,7 @@ import { enableMapSet } from 'immer';
 import { nanoid } from 'nanoid';
 import type { ComponentData, ComponentType, Background } from '@/schemas/component';
 import type { DataSource } from '@/schemas/dataSource';
+import { getComponent } from '@/components/widgets/registry';
 
 // Enable Immer Map/Set support
 enableMapSet();
@@ -196,6 +197,7 @@ export const useEditorStore = create<EditorState & EditorActions>()(
     addComponent: (type, position, size) => {
       const id = nanoid(10);
       const defaultSize = getDefaultSize(type);
+      const registration = getComponent(type);
       const comp: ComponentData = {
         id,
         type,
@@ -210,7 +212,7 @@ export const useEditorStore = create<EditorState & EditorActions>()(
         visible: true,
         opacity: 1,
         groupId: null,
-        props: {},
+        props: registration?.defaultProps ? { ...registration.defaultProps } : {},
         dataSourceId: null,
         dataMapping: null,
       };

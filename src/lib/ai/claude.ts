@@ -7,7 +7,7 @@ import { buildSystemPrompt, TOOL_DEFINITION, USER_PROMPT, PROMPT_VERSION } from 
 
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
 const DEFAULT_MODEL = 'claude-sonnet-4-20250514';
-const MAX_TOKENS = 4096;
+const MAX_TOKENS = 8192;
 
 export class ClaudeProvider implements AIProvider {
   name = 'claude';
