@@ -131,6 +131,7 @@ const DEFAULT_SIZE: Record<string, { width: number; height: number }> = {
   map_china: { width: 600, height: 500 },
   table_ranking: { width: 350, height: 280 },
   clock: { width: 250, height: 80 },
+  video: { width: 480, height: 270 },
 };
 
 const getDefaultSize = (type: ComponentType) =>

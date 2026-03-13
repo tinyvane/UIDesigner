@@ -33,6 +33,7 @@ import './maps/ChinaMap';
 
 // Media
 import './media/ImageWidget';
+import './media/VideoWidget';
 
 // Utility
 import './utility/Clock';
