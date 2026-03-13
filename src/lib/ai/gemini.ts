@@ -5,16 +5,9 @@
 import type { AIProvider, AIRecognitionRequest, AIRecognitionResult, AIStreamEvent } from './provider';
 import { buildSystemPrompt, TOOL_DEFINITION, USER_PROMPT } from './prompts';
 
-const MODEL = 'gemini-2.0-flash';
+const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
+const DEFAULT_MODEL = 'gemini-2.0-flash';
 const MAX_TOKENS = 4096;
-
-function getApiUrl(apiKey: string) {
-  return `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${apiKey}`;
-}
-
-function getStreamApiUrl(apiKey: string) {
-  return `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:streamGenerateContent?alt=sse&key=${apiKey}`;
-}
 
 /** Convert our tool definition to Gemini's function declaration format */
 function toGeminiFunctionDeclaration() {
@@ -28,9 +21,21 @@ function toGeminiFunctionDeclaration() {
 export class GeminiProvider implements AIProvider {
   name = 'gemini';
   private apiKey: string;
+  private baseUrl: string;
+  private model: string;
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, baseUrl?: string, model?: string) {
     this.apiKey = apiKey;
+    this.baseUrl = (baseUrl || process.env.GEMINI_BASE_URL || DEFAULT_BASE_URL).replace(/\/+$/, '');
+    this.model = model || process.env.GEMINI_MODEL || DEFAULT_MODEL;
+  }
+
+  private get apiUrl() {
+    return `${this.baseUrl}/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`;
+  }
+
+  private get streamApiUrl() {
+    return `${this.baseUrl}/v1beta/models/${this.model}:streamGenerateContent?alt=sse&key=${this.apiKey}`;
   }
 
   async recognize(request: AIRecognitionRequest): Promise<AIRecognitionResult> {
@@ -38,7 +43,7 @@ export class GeminiProvider implements AIProvider {
     const canvasWidth = request.canvasWidth ?? 1920;
     const canvasHeight = request.canvasHeight ?? 1080;
 
-    const response = await fetch(getApiUrl(this.apiKey), {
+    const response = await fetch(this.apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -105,7 +110,7 @@ export class GeminiProvider implements AIProvider {
     const canvasWidth = request.canvasWidth ?? 1920;
     const canvasHeight = request.canvasHeight ?? 1080;
 
-    const response = await fetch(getStreamApiUrl(this.apiKey), {
+    const response = await fetch(this.streamApiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

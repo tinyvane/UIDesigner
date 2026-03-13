@@ -5,16 +5,41 @@
 import type { AIProvider, AIRecognitionRequest, AIRecognitionResult, AIStreamEvent } from './provider';
 import { buildSystemPrompt, TOOL_DEFINITION, USER_PROMPT, PROMPT_VERSION } from './prompts';
 
-const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
-const MODEL = 'claude-sonnet-4-20250514';
+const DEFAULT_BASE_URL = 'https://api.anthropic.com';
+const DEFAULT_MODEL = 'claude-sonnet-4-20250514';
 const MAX_TOKENS = 4096;
 
 export class ClaudeProvider implements AIProvider {
   name = 'claude';
   private apiKey: string;
+  private baseUrl: string;
+  private model: string;
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, baseUrl?: string, model?: string) {
     this.apiKey = apiKey;
+    this.baseUrl = (baseUrl || process.env.ANTHROPIC_BASE_URL || DEFAULT_BASE_URL).replace(/\/+$/, '');
+    this.model = model || process.env.ANTHROPIC_MODEL || DEFAULT_MODEL;
+  }
+
+  private get apiUrl() {
+    return `${this.baseUrl}/v1/messages`;
+  }
+
+  /** Build auth headers — supports both official API and third-party proxies */
+  private get authHeaders(): Record<string, string> {
+    const isOfficial = this.baseUrl === DEFAULT_BASE_URL;
+    if (isOfficial) {
+      return {
+        'x-api-key': this.apiKey,
+        'anthropic-version': '2023-06-01',
+      };
+    }
+    // Third-party proxy: send both header styles for maximum compatibility
+    return {
+      'x-api-key': this.apiKey,
+      'Authorization': this.apiKey,
+      'anthropic-version': '2023-06-01',
+    };
   }
 
   async recognize(request: AIRecognitionRequest): Promise<AIRecognitionResult> {
@@ -22,15 +47,14 @@ export class ClaudeProvider implements AIProvider {
     const canvasWidth = request.canvasWidth ?? 1920;
     const canvasHeight = request.canvasHeight ?? 1080;
 
-    const response = await fetch(ANTHROPIC_API_URL, {
+    const response = await fetch(this.apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': this.apiKey,
-        'anthropic-version': '2023-06-01',
+        ...this.authHeaders,
       },
       body: JSON.stringify({
-        model: MODEL,
+        model: this.model,
         max_tokens: MAX_TOKENS,
         system: buildSystemPrompt(canvasWidth, canvasHeight),
         tools: [TOOL_DEFINITION],
@@ -96,15 +120,14 @@ export class ClaudeProvider implements AIProvider {
     const canvasWidth = request.canvasWidth ?? 1920;
     const canvasHeight = request.canvasHeight ?? 1080;
 
-    const response = await fetch(ANTHROPIC_API_URL, {
+    const response = await fetch(this.apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': this.apiKey,
-        'anthropic-version': '2023-06-01',
+        ...this.authHeaders,
       },
       body: JSON.stringify({
-        model: MODEL,
+        model: this.model,
         max_tokens: MAX_TOKENS,
         stream: true,
         system: buildSystemPrompt(canvasWidth, canvasHeight),

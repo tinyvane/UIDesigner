@@ -5,16 +5,24 @@
 import type { AIProvider, AIRecognitionRequest, AIRecognitionResult, AIStreamEvent } from './provider';
 import { buildSystemPrompt, TOOL_DEFINITION, USER_PROMPT } from './prompts';
 
-const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-const MODEL = 'gpt-4o';
+const DEFAULT_BASE_URL = 'https://api.openai.com';
+const DEFAULT_MODEL = 'gpt-4o';
 const MAX_TOKENS = 4096;
 
 export class OpenAIProvider implements AIProvider {
   name = 'openai';
   private apiKey: string;
+  private baseUrl: string;
+  private model: string;
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, baseUrl?: string, model?: string) {
     this.apiKey = apiKey;
+    this.baseUrl = (baseUrl || process.env.OPENAI_BASE_URL || DEFAULT_BASE_URL).replace(/\/+$/, '');
+    this.model = model || process.env.OPENAI_MODEL || DEFAULT_MODEL;
+  }
+
+  private get apiUrl() {
+    return `${this.baseUrl}/v1/chat/completions`;
   }
 
   async recognize(request: AIRecognitionRequest): Promise<AIRecognitionResult> {
@@ -22,14 +30,14 @@ export class OpenAIProvider implements AIProvider {
     const canvasWidth = request.canvasWidth ?? 1920;
     const canvasHeight = request.canvasHeight ?? 1080;
 
-    const response = await fetch(OPENAI_API_URL, {
+    const response = await fetch(this.apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.apiKey}`,
       },
       body: JSON.stringify({
-        model: MODEL,
+        model: this.model,
         max_tokens: MAX_TOKENS,
         messages: [
           {
@@ -107,14 +115,14 @@ export class OpenAIProvider implements AIProvider {
     const canvasWidth = request.canvasWidth ?? 1920;
     const canvasHeight = request.canvasHeight ?? 1080;
 
-    const response = await fetch(OPENAI_API_URL, {
+    const response = await fetch(this.apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.apiKey}`,
       },
       body: JSON.stringify({
-        model: MODEL,
+        model: this.model,
         max_tokens: MAX_TOKENS,
         stream: true,
         messages: [
