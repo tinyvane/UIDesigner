@@ -228,7 +228,23 @@ npm run format       # Prettier format all files
 
 ### License
 
-This project is for personal and educational use.
+This project is licensed under the [GNU AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html).
+
+- **Community Edition**: Free and open-source, ideal for individual developers and learning purposes
+- **Professional Edition**: Designed for teams and enterprises with advanced needs, offering additional features and commercial licensing
+
+> 💡 If you are an enterprise user and would like to use UIDesigner in the future without disclosing your source code, we will offer a commercial license plan. Feel free to contact us in advance for more details.
+
+### 📬 Contact Us
+
+If you have any licensing-related questions, feel free to reach out:
+
+- 📧 Email: [40579925@qq.com](mailto:40579925@qq.com)
+- 💬 Issues: [GitHub Issues](https://github.com/tinyvane/UIDesigner/issues)
+
+---
+
+> ⚠️ Third-party dependencies in this project may use different open-source licenses. Please refer to each dependency's license information.
 
 ---
 
@@ -449,4 +465,20 @@ npm run format       # Prettier 格式化所有文件
 
 ### 许可
 
-本项目仅供个人和学习使用。
+本项目基于 [GNU AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html) 协议开源。
+
+- **社区版**：保持开源免费，适合个人开发者和学习使用
+- **专业版**：面向有更多需求的团队和企业，提供额外功能和商业许可
+
+> 💡 如果你是企业用户，未来希望在不公开源代码的情况下使用 UIDesigner，我们将提供商业许可方案，欢迎提前联系我们了解详情。
+
+### 📬 联系我们
+
+如有许可相关的疑问，欢迎通过以下方式联系：
+
+- 📧 Email: [40579925@qq.com](mailto:40579925@qq.com)
+- 💬 Issues: [GitHub Issues](https://github.com/tinyvane/UIDesigner/issues)
+
+---
+
+> ⚠️ 本项目中的第三方依赖库可能使用不同的开源协议，请参阅各依赖库的许可信息。
