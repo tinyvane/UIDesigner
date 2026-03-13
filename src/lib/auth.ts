@@ -1,21 +1,23 @@
+/**
+ * Full auth setup — Node.js runtime only.
+ * Extends authConfig with PrismaAdapter and Credentials authorize().
+ * NOT imported by middleware (which uses auth.config.ts instead).
+ */
 import NextAuth from 'next-auth';
-import GitHub from 'next-auth/providers/github';
-import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
+import { authConfig } from './auth.config';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   adapter: PrismaAdapter(prisma),
   providers: [
-    GitHub({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    }),
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
+    // Re-use OAuth providers from config (GitHub, Google)
+    ...authConfig.providers.filter(
+      (p) => 'type' in p && p.type !== 'credentials',
+    ),
+    // Full Credentials provider with Prisma-backed authorize()
     Credentials({
       name: 'Email',
       credentials: {
@@ -24,7 +26,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email) return null;
-        // For now, find or create user by email (password auth deferred)
         const email = credentials.email as string;
         let user = await prisma.user.findUnique({ where: { email } });
         if (!user) {
@@ -36,41 +37,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  session: { strategy: 'jwt' },
-  callbacks: {
-    authorized({ auth: session, request }) {
-      const isLoggedIn = !!session?.user;
-      const { pathname } = request.nextUrl;
-
-      // Protected routes
-      const isProtected =
-        pathname.startsWith('/dashboard') ||
-        pathname.startsWith('/editor') ||
-        pathname.startsWith('/api/projects') ||
-        pathname.startsWith('/api/datasource') ||
-        pathname.startsWith('/api/ai') ||
-        pathname.startsWith('/api/export');
-
-      if (isProtected && !isLoggedIn) {
-        return false; // Redirect to signIn page
-      }
-
-      return true;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token.id) {
-        session.user.id = token.id as string;
-      }
-      return session;
-    },
-  },
-  pages: {
-    signIn: '/auth/signin',
-  },
 });
