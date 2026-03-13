@@ -9,10 +9,14 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { getComponent } from '@/components/widgets/registry';
 import { DataSourcePanel } from '@/components/editor/DataSourcePanel';
+import { Link2, Unlink } from 'lucide-react';
 
 export function PropertyPanel() {
   const components = useEditorStore((s) => s.components);
   const updateComponent = useEditorStore((s) => s.updateComponent);
+  const dataSources = useEditorStore((s) => s.dataSources);
+  const bindComponentToDataSource = useEditorStore((s) => s.bindComponentToDataSource);
+  const unbindComponentFromDataSource = useEditorStore((s) => s.unbindComponentFromDataSource);
   const selectedIds = useUIStore((s) => s.selectedIds);
   const propertyPanelTab = useUIStore((s) => s.propertyPanelTab);
   const setPropertyPanelTab = useUIStore((s) => s.setPropertyPanelTab);
@@ -402,6 +406,60 @@ export function PropertyPanel() {
                   </div>
                 );
               })}
+
+              <Separator />
+
+              {/* Data Source Binding */}
+              {(() => {
+                const dsList = Array.from(dataSources.values());
+                const boundDsId = selectedComponent.dataSourceId;
+                const boundDs = boundDsId ? dataSources.get(boundDsId) : null;
+
+                return (
+                  <div>
+                    <h4 className="mb-2 text-xs font-semibold tracking-wider text-gray-400 uppercase">
+                      Bind Data Source
+                    </h4>
+                    {boundDs ? (
+                      <div className="flex items-center gap-2 rounded border border-blue-600/30 bg-blue-900/20 px-2 py-1.5">
+                        <Link2 className="h-3.5 w-3.5 shrink-0 text-blue-400" />
+                        <span className="min-w-0 flex-1 truncate text-xs text-blue-300">
+                          {boundDs.name}
+                        </span>
+                        <button
+                          onClick={() => unbindComponentFromDataSource(selectedComponent.id)}
+                          className="rounded p-1 text-gray-400 hover:bg-gray-700 hover:text-red-400"
+                          title="Unbind data source"
+                        >
+                          <Unlink className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ) : dsList.length > 0 ? (
+                      <select
+                        value=""
+                        onChange={(e) => {
+                          const dsId = e.target.value;
+                          if (dsId) {
+                            bindComponentToDataSource(selectedComponent.id, dsId, {});
+                          }
+                        }}
+                        className="h-7 w-full rounded border border-gray-700 bg-gray-800 text-xs text-gray-200"
+                      >
+                        <option value="">Select a data source...</option>
+                        {dsList.map((ds) => (
+                          <option key={ds.id} value={ds.id}>
+                            {ds.name} ({ds.type})
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <p className="text-[10px] text-gray-500">
+                        No data sources available. Create one below.
+                      </p>
+                    )}
+                  </div>
+                );
+              })()}
 
               <Separator />
 

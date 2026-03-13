@@ -17,6 +17,7 @@ function WidgetWrapperInner({ component }: WidgetWrapperProps) {
   const updateComponent = useEditorStore((s) => s.updateComponent);
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const moveComponents = useEditorStore((s) => s.moveComponents);
+  const dataValues = useEditorStore((s) => s.dataValues);
   const selectedIds = useUIStore((s) => s.selectedIds);
   const hoveredId = useUIStore((s) => s.hoveredId);
   const select = useUIStore((s) => s.select);
@@ -243,6 +244,29 @@ function WidgetWrapperInner({ component }: WidgetWrapperProps) {
     [component.id, isSelected, select, openContextMenu],
   );
 
+  // Merge data source values into component props when bound
+  const effectiveProps = useMemo(() => {
+    if (!component.dataSourceId) return component.props;
+    const dsValue = dataValues.get(component.dataSourceId);
+    if (dsValue === undefined) return component.props;
+
+    // If dataMapping is set, map specific fields; otherwise inject as "data"
+    if (component.dataMapping && Object.keys(component.dataMapping).length > 0) {
+      const mapped: Record<string, unknown> = { ...component.props };
+      for (const [propKey, dsField] of Object.entries(component.dataMapping)) {
+        if (dsField && typeof dsValue === 'object' && dsValue !== null) {
+          mapped[propKey] = (dsValue as Record<string, unknown>)[dsField];
+        } else {
+          mapped[propKey] = dsValue;
+        }
+      }
+      return mapped;
+    }
+
+    // Default: inject the whole data source value as the "data" prop
+    return { ...component.props, data: dsValue };
+  }, [component.props, component.dataSourceId, component.dataMapping, dataValues]);
+
   if (!registration || !component.visible) return null;
 
   const RenderComponent = registration.render;
@@ -287,7 +311,7 @@ function WidgetWrapperInner({ component }: WidgetWrapperProps) {
             id={component.id}
             width={component.width}
             height={component.height}
-            props={component.props}
+            props={effectiveProps}
             isEditing={isSelected}
           />
         </Suspense>
