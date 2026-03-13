@@ -16,6 +16,7 @@ import {
   Eye,
   Save,
   Trash2,
+  MessageSquare,
 } from 'lucide-react';
 // Button unused — using plain TooltipTrigger elements
 import { Separator } from '@/components/ui/separator';
@@ -126,6 +127,11 @@ export function Toolbar() {
         onClick={() => window.open('/preview', '_blank')}
       />
       <ToolbarButton icon={Download} label="Export" onClick={() => setShowExportDialog(true)} />
+      <ToolbarButton
+        icon={MessageSquare}
+        label="AI Chat (Ctrl+K)"
+        onClick={() => useUIStore.getState().toggleChatPanel()}
+      />
       <Separator orientation="vertical" className="mx-1 h-6" />
       <ToolbarButton
         icon={Trash2}

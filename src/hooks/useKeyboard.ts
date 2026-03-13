@@ -89,6 +89,12 @@ export function useKeyboard() {
           window.open('/preview', '_blank');
           break;
 
+        // AI Chat (Ctrl+K)
+        case isCtrl && e.key === 'k':
+          e.preventDefault();
+          useUIStore.getState().toggleChatPanel();
+          break;
+
         // Select all
         case isCtrl && e.key === 'a':
           e.preventDefault();

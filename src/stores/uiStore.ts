@@ -50,6 +50,9 @@ interface UIState {
   dataSourcePanelOpen: boolean;
   activeDataSourceId: string | null;
   requestLogPanelOpen: boolean;
+
+  // Chat panel
+  chatPanelOpen: boolean;
 }
 
 interface UIActions {
@@ -99,6 +102,10 @@ interface UIActions {
   toggleDataSourcePanel: () => void;
   setActiveDataSourceId: (id: string | null) => void;
   toggleRequestLogPanel: () => void;
+
+  // Chat panel
+  setChatPanelOpen: (open: boolean) => void;
+  toggleChatPanel: () => void;
 }
 
 const ZOOM_LEVELS = [0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4];
@@ -128,6 +135,7 @@ export const useUIStore = create<UIState & UIActions>()((set, get) => ({
   dataSourcePanelOpen: false,
   activeDataSourceId: null,
   requestLogPanelOpen: false,
+  chatPanelOpen: false,
 
   // Selection
   select: (ids) => set({ selectedIds: new Set(ids) }),
@@ -191,4 +199,8 @@ export const useUIStore = create<UIState & UIActions>()((set, get) => ({
   toggleDataSourcePanel: () => set((s) => ({ dataSourcePanelOpen: !s.dataSourcePanelOpen })),
   setActiveDataSourceId: (id) => set({ activeDataSourceId: id }),
   toggleRequestLogPanel: () => set((s) => ({ requestLogPanelOpen: !s.requestLogPanelOpen })),
+
+  // Chat panel
+  setChatPanelOpen: (open) => set({ chatPanelOpen: open }),
+  toggleChatPanel: () => set((s) => ({ chatPanelOpen: !s.chatPanelOpen })),
 }));

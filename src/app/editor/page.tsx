@@ -6,6 +6,7 @@ import { LayerPanel } from '@/components/editor/LayerPanel';
 import { AIUploader } from '@/components/editor/AIUploader';
 import { Canvas } from '@/components/editor/Canvas/Canvas';
 import { PropertyPanel } from '@/components/editor/PropertyPanel/PropertyPanel';
+import ChatPanel from '@/components/editor/ChatPanel';
 import { useKeyboard } from '@/hooks/useKeyboard';
 import { useUIStore } from '@/stores/uiStore';
 
@@ -17,6 +18,8 @@ export default function EditorPage() {
   const sidebarCollapsed = useUIStore((s) => s.sidebarCollapsed);
   const activePanel = useUIStore((s) => s.activePanel);
   const setActivePanel = useUIStore((s) => s.setActivePanel);
+  const chatPanelOpen = useUIStore((s) => s.chatPanelOpen);
+  const setChatPanelOpen = useUIStore((s) => s.setChatPanelOpen);
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-gray-950 text-gray-200">
@@ -77,6 +80,9 @@ export default function EditorPage() {
         <div className="w-72 flex-shrink-0 overflow-hidden border-l border-gray-800 bg-gray-900">
           <PropertyPanel />
         </div>
+
+        {/* Chat Panel (slides in from right) */}
+        {chatPanelOpen && <ChatPanel onClose={() => setChatPanelOpen(false)} />}
       </div>
     </div>
   );
