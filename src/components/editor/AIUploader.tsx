@@ -9,6 +9,19 @@ import type { AIRecognizedComponent } from '@/lib/ai/provider';
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp'];
 
+function getFriendlyErrorMessage(status: number): string {
+  switch (status) {
+    case 400: return 'Invalid image data. Please try a different image.';
+    case 401: return 'API key is invalid. Check your ANTHROPIC_API_KEY in .env.local.';
+    case 403: return 'API access denied. Verify your API key permissions.';
+    case 429: return 'Rate limited by AI provider. Please wait a moment and try again.';
+    case 500: return 'Server error. Check that ANTHROPIC_API_KEY is set in .env.local.';
+    case 502: case 503: return 'AI service is temporarily unavailable. Please try again later.';
+    case 529: return 'AI service is overloaded. Please try again in a few minutes.';
+    default: return `Unexpected error (${status}). Please try again.`;
+  }
+}
+
 export function AIUploader() {
   const [preview, setPreview] = useState<CompressResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -106,7 +119,8 @@ export function AIUploader() {
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        throw new Error(data.error || `API error: ${response.status}`);
+        const friendlyMessage = data.error || getFriendlyErrorMessage(response.status);
+        throw new Error(friendlyMessage);
       }
 
       // Handle streaming response
