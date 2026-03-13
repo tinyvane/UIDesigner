@@ -141,7 +141,7 @@ export function PropertyPanel() {
             <div className="text-xs font-medium text-gray-200">
               {selectedComponent.name || registration?.label || selectedComponent.type}
             </div>
-            <div className="text-[10px] text-gray-500">{selectedComponent.type}</div>
+            <div className="text-[10px] text-gray-500">{registration?.label || selectedComponent.type}</div>
           </div>
         </div>
       </div>
