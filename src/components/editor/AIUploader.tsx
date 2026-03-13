@@ -3,6 +3,8 @@
 import { useState, useCallback, useRef } from 'react';
 import { useUIStore } from '@/stores/uiStore';
 import { compressImage, type CompressResult } from '@/lib/utils/imageCompress';
+import { AIConfirmDialog } from './AIConfirmDialog';
+import type { AIRecognizedComponent } from '@/lib/ai/provider';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp'];
@@ -11,6 +13,12 @@ export function AIUploader() {
   const [preview, setPreview] = useState<CompressResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [aiResult, setAIResult] = useState<{
+    components: AIRecognizedComponent[];
+    background?: { type: 'color' | 'gradient' | 'image'; value: string };
+    layoutDescription?: string;
+    warnings?: string[];
+  } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const aiStatus = useUIStore((s) => s.aiStatus);
   const setAIStatus = useUIStore((s) => s.setAIStatus);
@@ -128,16 +136,23 @@ export function AIUploader() {
             try {
               const event = JSON.parse(data);
               if (event.type === 'component') {
-                // Component recognized — will be handled by confirmation UI
                 useUIStore.getState().setAIProgress({
                   recognized: event.index + 1,
                   total: event.total || 0,
                 });
+              } else if (event.type === 'result') {
+                setAIResult({
+                  components: event.components ?? [],
+                  background: event.background,
+                  layoutDescription: event.layoutDescription,
+                  warnings: event.warnings,
+                });
+                setAIStatus('done');
               } else if (event.type === 'error') {
                 setAIError(event.message);
                 setAIStatus('error');
               } else if (event.type === 'complete') {
-                setAIStatus('done');
+                // Final event after result
               }
             } catch {
               // Skip malformed events
@@ -154,6 +169,7 @@ export function AIUploader() {
   const handleClear = useCallback(() => {
     setPreview(null);
     setError(null);
+    setAIResult(null);
     setAIStatus('idle');
     if (fileInputRef.current) fileInputRef.current.value = '';
   }, [setAIStatus]);
@@ -274,6 +290,17 @@ export function AIUploader() {
           </div>
         )}
       </div>
+
+      {/* Confirmation dialog */}
+      {aiResult && aiResult.components.length > 0 && (
+        <AIConfirmDialog
+          components={aiResult.components}
+          background={aiResult.background}
+          layoutDescription={aiResult.layoutDescription}
+          warnings={aiResult.warnings}
+          onClose={() => setAIResult(null)}
+        />
+      )}
     </div>
   );
 }
