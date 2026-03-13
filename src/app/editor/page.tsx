@@ -3,6 +3,7 @@
 import { Toolbar } from '@/components/editor/Toolbar';
 import { ComponentLibrary } from '@/components/editor/ComponentLibrary';
 import { LayerPanel } from '@/components/editor/LayerPanel';
+import { AIUploader } from '@/components/editor/AIUploader';
 import { Canvas } from '@/components/editor/Canvas/Canvas';
 import { PropertyPanel } from '@/components/editor/PropertyPanel/PropertyPanel';
 import { useKeyboard } from '@/hooks/useKeyboard';
@@ -51,9 +52,19 @@ export default function EditorPage() {
             >
               Layers
             </button>
+            <button
+              onClick={() => setActivePanel('ai')}
+              className={`flex-1 px-3 py-2 text-xs font-medium ${
+                activePanel === 'ai'
+                  ? 'border-b-2 border-blue-500 text-blue-400'
+                  : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              AI
+            </button>
           </div>
           <div className="flex-1 overflow-hidden">
-            {activePanel === 'layers' ? <LayerPanel /> : <ComponentLibrary />}
+            {activePanel === 'layers' ? <LayerPanel /> : activePanel === 'ai' ? <AIUploader /> : <ComponentLibrary />}
           </div>
         </div>
 

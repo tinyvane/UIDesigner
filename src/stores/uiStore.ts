@@ -32,7 +32,7 @@ interface UIState {
 
   // Panels
   sidebarCollapsed: boolean;
-  activePanel: 'components' | 'layers' | null;
+  activePanel: 'components' | 'layers' | 'ai' | null;
   propertyPanelTab: PropertyPanelTab;
 
   // Context menu
@@ -74,7 +74,7 @@ interface UIActions {
 
   // Panels
   toggleSidebar: () => void;
-  setActivePanel: (panel: 'components' | 'layers' | null) => void;
+  setActivePanel: (panel: 'components' | 'layers' | 'ai' | null) => void;
   setPropertyPanelTab: (tab: PropertyPanelTab) => void;
 
   // Context menu
