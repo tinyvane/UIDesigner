@@ -1,8 +1,8 @@
-# Dashboard Designer / 可视化大屏设计器
+# Dashboard Designer — Community Edition / 可视化大屏设计器 — 社区版
 
 <p align="center">
-  <strong>An AI-powered visual dashboard design platform</strong><br/>
-  <strong>AI 驱动的可视化数据大屏设计平台</strong>
+  <strong>An AI-powered visual dashboard design platform (Community Edition)</strong><br/>
+  <strong>AI 驱动的可视化数据大屏设计平台（社区版）</strong>
 </p>
 
 <p align="center">
