@@ -1,8 +1,10 @@
 import NextAuth from 'next-auth';
 import { authConfig } from '@/lib/auth.config';
 
-// Use the Edge-safe auth config (no Prisma, no Node.js modules)
-export const { auth: middleware } = NextAuth(authConfig);
+const { auth } = NextAuth(authConfig);
+
+// Next.js 16 requires a default export or named "middleware" export
+export default auth;
 
 export const config = {
   // Protect these routes — redirect to sign-in if unauthenticated
