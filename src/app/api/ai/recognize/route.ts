@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ClaudeProvider } from '@/lib/ai/claude';
+import { createProvider, resolveProviderConfig } from '@/lib/ai/providerFactory';
 import { postProcessComponents } from '@/lib/ai/postProcess';
 import { getMediaType, stripDataUrlPrefix } from '@/lib/utils/imageCompress';
-import type { AIRecognitionResult } from '@/lib/ai/provider';
+import type { AIProvider, AIRecognitionResult } from '@/lib/ai/provider';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // 60s timeout for AI calls
@@ -11,7 +11,7 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1000;
 
 async function recognizeWithRetry(
-  provider: ClaudeProvider,
+  provider: AIProvider,
   request: { imageBase64: string; mediaType: string; canvasWidth: number; canvasHeight: number },
   sendEvent: (data: object) => void,
 ): Promise<AIRecognitionResult> {
@@ -24,9 +24,12 @@ async function recognizeWithRetry(
         await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS * attempt));
       }
 
-      return await provider.recognizeStream(request, (event) => {
-        sendEvent(event);
-      });
+      if (provider.recognizeStream) {
+        return await provider.recognizeStream(request, (event) => {
+          sendEvent(event);
+        });
+      }
+      return await provider.recognize(request);
     } catch (err) {
       lastError = err instanceof Error ? err : new Error(String(err));
       const isRetryable =
@@ -58,10 +61,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing or invalid image data' }, { status: 400 });
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
+    let providerConfig;
+    try {
+      providerConfig = resolveProviderConfig();
+    } catch (err) {
       return NextResponse.json(
-        { error: 'ANTHROPIC_API_KEY not configured. Add it to your .env file.' },
+        { error: err instanceof Error ? err.message : 'No AI provider configured.' },
         { status: 500 },
       );
     }
@@ -69,7 +74,7 @@ export async function POST(request: NextRequest) {
     const mediaType = getMediaType(image);
     const imageBase64 = stripDataUrlPrefix(image);
 
-    const provider = new ClaudeProvider(apiKey);
+    const provider = createProvider(providerConfig);
 
     // Use streaming via SSE
     const encoder = new TextEncoder();
@@ -80,7 +85,7 @@ export async function POST(request: NextRequest) {
         };
 
         try {
-          sendEvent({ type: 'status', message: 'Analyzing image with AI...' });
+          sendEvent({ type: 'status', message: `Analyzing image with ${providerConfig.provider}...` });
 
           const result = await recognizeWithRetry(
             provider,

@@ -1,10 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { postProcessComponents, type PostProcessResult } from '@/lib/ai/postProcess';
-import type { AIRecognitionResult } from '@/lib/ai/provider';
+import type { AIRecognitionResult, AIRecognizedComponent } from '@/lib/ai/provider';
 
-function makeResult(components: AIRecognitionResult['components']): AIRecognitionResult {
+// Helper: allows omitting `props` in test data (postProcess handles missing props)
+type PartialComponent = Omit<AIRecognizedComponent, 'props'> & { props?: Record<string, unknown> };
+
+function makeResult(components: PartialComponent[]): AIRecognitionResult {
   return {
-    components,
+    components: components as AIRecognizedComponent[],
     layoutDescription: 'test layout',
     tokenUsage: { inputTokens: 100, outputTokens: 200 },
     latencyMs: 500,
