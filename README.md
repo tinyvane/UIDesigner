@@ -6,6 +6,15 @@
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Next.js-16-black?logo=next.js" alt="Next.js 16" />
+  <img src="https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white" alt="React 19" />
+  <img src="https://img.shields.io/badge/AI-powered-ff6b6b?logo=anthropic&logoColor=white" alt="AI Powered" />
+  <img src="https://img.shields.io/badge/ECharts-6-aa344d?logo=apacheecharts&logoColor=white" alt="ECharts 6" />
+  <img src="https://img.shields.io/badge/license-AGPLv3-blue" alt="License" />
+</p>
+
+<p align="center">
   <a href="#english">English</a> | <a href="#中文">中文</a>
 </p>
 
