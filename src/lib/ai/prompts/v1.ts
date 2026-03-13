@@ -24,17 +24,25 @@ export const SYSTEM_PROMPT = `You are a professional dashboard UI analysis engin
 - < 0.7 Low confidence, mark as "needs review"
 
 ## Supported Component Types
-Charts: chart_bar, chart_line, chart_pie, gauge
+Charts: chart_bar (supports horizontal=true for horizontal bars), chart_line, chart_pie, gauge
 Stats: stat_card, stat_number_flip, progress_bar, progress_ring
-Text: text_title, text_scroll
-Tables: table_simple, table_scroll
+Text: text_title, text_block (multi-line paragraph), text_scroll
+Tables: table_simple, table_scroll, table_ranking (horizontal bar ranking list)
+Maps: map_china (China province heatmap)
+Media: image (static image by URL)
 Decorations: border_decoration, divider
+Utility: clock (real-time digital clock)
 
 ## Props Guidelines
-- For charts: include title, color, and sample data matching the screenshot
+- For chart_bar: include title, color, data ({categories, values}), set horizontal=true for horizontal bars
 - For stat cards: include title, value, prefix/suffix, trend direction
-- For text: include the visible text content
+- For text_title: include text and color
+- For text_block: include the full text content as seen in the screenshot
+- For table_ranking: include title, data ([{name, value}]), columns (1 or 2 for dual-column)
 - For tables: include column headers and sample row data
+- For map_china: include data ([{name: province_name, value: number}])
+- For clock: include format (HH:mm:ss), showDate, color
+- For image: include src (URL), objectFit
 - Colors should be hex values extracted from the screenshot`;
 
 export function buildSystemPrompt(canvasWidth: number, canvasHeight: number): string {
@@ -60,9 +68,12 @@ export const TOOL_DEFINITION = {
               enum: [
                 'chart_bar', 'chart_line', 'chart_pie', 'gauge',
                 'stat_card', 'stat_number_flip', 'progress_bar', 'progress_ring',
-                'text_title', 'text_scroll',
-                'table_simple', 'table_scroll',
+                'text_title', 'text_block', 'text_scroll',
+                'table_simple', 'table_scroll', 'table_ranking',
+                'map_china',
+                'image',
                 'border_decoration', 'divider',
+                'clock',
               ],
               description: 'Component type',
             },

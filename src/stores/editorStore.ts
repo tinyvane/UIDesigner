@@ -98,6 +98,9 @@ const DEFAULT_SIZE: Record<string, { width: number; height: number }> = {
   border_decoration: { width: 400, height: 300 },
   divider: { width: 300, height: 4 },
   image: { width: 300, height: 200 },
+  map_china: { width: 600, height: 500 },
+  table_ranking: { width: 350, height: 280 },
+  clock: { width: 250, height: 80 },
 };
 
 const getDefaultSize = (type: ComponentType) =>

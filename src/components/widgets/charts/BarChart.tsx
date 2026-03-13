@@ -22,11 +22,26 @@ function BarChartWidget({ width, height, props }: WidgetProps) {
     color = '#6366f1',
     data = DEFAULT_DATA,
     showGrid = true,
+    horizontal = false,
   } = props as {
     title?: string;
     color?: string;
     data?: { categories: string[]; values: number[] };
     showGrid?: boolean;
+    horizontal?: boolean;
+  };
+
+  const categoryAxis = {
+    type: 'category' as const,
+    data: data.categories,
+    axisLabel: { color: '#9ca3af', fontSize: 10 },
+    axisLine: { lineStyle: { color: '#374151' } },
+  };
+
+  const valueAxis = {
+    type: 'value' as const,
+    axisLabel: { color: '#9ca3af', fontSize: 10 },
+    splitLine: { lineStyle: { color: '#1f2937' } },
   };
 
   const option = {
@@ -39,29 +54,23 @@ function BarChartWidget({ width, height, props }: WidgetProps) {
     },
     tooltip: { trigger: 'axis' as const },
     grid: {
-      left: '10%',
+      left: horizontal ? '18%' : '10%',
       right: '5%',
       bottom: '15%',
       top: '25%',
       show: showGrid,
       borderColor: '#374151',
     },
-    xAxis: {
-      type: 'category' as const,
-      data: data.categories,
-      axisLabel: { color: '#9ca3af', fontSize: 10 },
-      axisLine: { lineStyle: { color: '#374151' } },
-    },
-    yAxis: {
-      type: 'value' as const,
-      axisLabel: { color: '#9ca3af', fontSize: 10 },
-      splitLine: { lineStyle: { color: '#1f2937' } },
-    },
+    xAxis: horizontal ? valueAxis : categoryAxis,
+    yAxis: horizontal ? { ...categoryAxis, inverse: true } : valueAxis,
     series: [
       {
         type: 'bar',
         data: data.values,
-        itemStyle: { color, borderRadius: [4, 4, 0, 0] },
+        itemStyle: {
+          color,
+          borderRadius: horizontal ? [0, 4, 4, 0] : [4, 4, 0, 0],
+        },
       },
     ],
   };
@@ -89,10 +98,12 @@ registerComponent({
     color: '#6366f1',
     data: DEFAULT_DATA,
     showGrid: true,
+    horizontal: false,
   },
   propSchema: [
     { key: 'title', type: 'string', label: 'Title', group: 'Basic' },
     { key: 'color', type: 'color', label: 'Bar Color', group: 'Style' },
+    { key: 'horizontal', type: 'boolean', label: 'Horizontal', group: 'Style' },
     { key: 'showGrid', type: 'boolean', label: 'Show Grid', group: 'Style' },
     { key: 'data', type: 'json', label: 'Data', group: 'Data' },
   ],

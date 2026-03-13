@@ -16,14 +16,25 @@ import './stats/ProgressRing';
 // Text
 import './text/TextTitle';
 import './text/ScrollingText';
+import './text/TextParagraph';
 
 // Tables
 import './tables/BasicTable';
 import './tables/ScrollingTable';
+import './tables/RankingList';
 
 // Decorations
 import './decorations/BorderDecoration';
 import './decorations/Divider';
+
+// Maps
+import './maps/ChinaMap';
+
+// Media
+import './media/ImageWidget';
+
+// Utility
+import './utility/Clock';
 
 // Re-export registry for convenience
 export {
