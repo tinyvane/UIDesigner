@@ -171,7 +171,15 @@ export const useEditorStore = create<EditorState & EditorActions>()(
       set((state) => {
         const comp = state.components.get(id);
         if (comp) {
-          Object.assign(comp, patch);
+          // Merge props shallowly instead of replacing, so AI-provided
+          // partial props don't wipe out default values like `data`
+          if (patch.props) {
+            comp.props = { ...comp.props, ...patch.props };
+            const { props: _, ...rest } = patch;
+            Object.assign(comp, rest);
+          } else {
+            Object.assign(comp, patch);
+          }
         }
       }),
 
