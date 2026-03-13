@@ -117,7 +117,11 @@ export function Toolbar() {
           setTimeout(() => setSaveStatus('saved'), 300);
         }}
       />
-      <ToolbarButton icon={Eye} label="Preview" />
+      <ToolbarButton
+        icon={Eye}
+        label="Preview (Ctrl+P)"
+        onClick={() => window.open('/preview', '_blank')}
+      />
       <ToolbarButton icon={Download} label="Export" />
       <Separator orientation="vertical" className="mx-1 h-6" />
       <ToolbarButton

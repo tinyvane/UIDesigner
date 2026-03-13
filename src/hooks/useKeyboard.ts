@@ -83,6 +83,12 @@ export function useKeyboard() {
           }, 300);
           break;
 
+        // Preview (Ctrl+P)
+        case isCtrl && e.key === 'p':
+          e.preventDefault();
+          window.open('/preview', '_blank');
+          break;
+
         // Select all
         case isCtrl && e.key === 'a':
           e.preventDefault();
