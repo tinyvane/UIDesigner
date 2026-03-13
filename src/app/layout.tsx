@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import SessionProvider from '@/components/providers/SessionProvider';
+import { ServiceWorkerProvider } from '@/components/providers/ServiceWorkerProvider';
 import './globals.css';
 
 const geistSans = Geist({
@@ -19,6 +20,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Dashboard Designer',
   description: 'Visual dashboard design platform powered by AI',
+  manifest: '/manifest.json',
+  themeColor: '#2563eb',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Dashboard Designer',
+  },
 };
 
 export default async function RootLayout({
@@ -34,7 +42,9 @@ export default async function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionProvider>
           <NextIntlClientProvider messages={messages}>
-            <TooltipProvider>{children}</TooltipProvider>
+            <ServiceWorkerProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </ServiceWorkerProvider>
           </NextIntlClientProvider>
         </SessionProvider>
       </body>
