@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+// Mock auth before importing routes
+vi.mock('@/lib/auth', () => ({
+  auth: vi.fn().mockResolvedValue({ user: { id: 'user1', email: 'test@example.com' } }),
+}));
+
 // Mock prisma before importing routes
 vi.mock('@/lib/prisma', () => {
   const mockProject = {
@@ -84,7 +89,7 @@ describe('Project API', () => {
     expect(res.status).toBe(201);
   });
 
-  it('POST /api/projects should require name and ownerId', async () => {
+  it('POST /api/projects should require name', async () => {
     const req = makeRequest('http://localhost/api/projects', {
       method: 'POST',
       body: JSON.stringify({}),

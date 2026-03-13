@@ -38,6 +38,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: { strategy: 'jwt' },
   callbacks: {
+    authorized({ auth: session, request }) {
+      const isLoggedIn = !!session?.user;
+      const { pathname } = request.nextUrl;
+
+      // Protected routes
+      const isProtected =
+        pathname.startsWith('/dashboard') ||
+        pathname.startsWith('/editor') ||
+        pathname.startsWith('/api/projects') ||
+        pathname.startsWith('/api/datasource') ||
+        pathname.startsWith('/api/ai') ||
+        pathname.startsWith('/api/export');
+
+      if (isProtected && !isLoggedIn) {
+        return false; // Redirect to signIn page
+      }
+
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
