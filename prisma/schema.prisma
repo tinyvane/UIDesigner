@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 // ========== User ==========
@@ -146,7 +146,7 @@ model Template {
   id         String   @id @default(cuid())
   name       String
   category   String   // Data monitoring | Sales | Operations | IoT | Custom
-  tags       String[] // Tags: ['dark theme', 'map', 'realtime']
+  tags       Json     // Tags: ['dark theme', 'map', 'realtime'] (Json because SQLite has no array type)
   thumbnail  String
   preview    String?  // Full-size preview URL
   config     Json     // Full canvas + components serialized data
