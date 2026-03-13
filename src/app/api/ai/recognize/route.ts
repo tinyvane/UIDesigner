@@ -2,9 +2,52 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ClaudeProvider } from '@/lib/ai/claude';
 import { postProcessComponents } from '@/lib/ai/postProcess';
 import { getMediaType, stripDataUrlPrefix } from '@/lib/utils/imageCompress';
+import type { AIRecognitionResult } from '@/lib/ai/provider';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // 60s timeout for AI calls
+
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 1000;
+
+async function recognizeWithRetry(
+  provider: ClaudeProvider,
+  request: { imageBase64: string; mediaType: string; canvasWidth: number; canvasHeight: number },
+  sendEvent: (data: object) => void,
+): Promise<AIRecognitionResult> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      if (attempt > 1) {
+        sendEvent({ type: 'status', message: `Retry attempt ${attempt}/${MAX_RETRIES}...` });
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS * attempt));
+      }
+
+      return await provider.recognizeStream(request, (event) => {
+        sendEvent(event);
+      });
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      const isRetryable =
+        lastError.message.includes('Failed to parse') ||
+        lastError.message.includes('timeout') ||
+        lastError.message.includes('529') ||
+        lastError.message.includes('500');
+
+      if (!isRetryable || attempt === MAX_RETRIES) {
+        throw lastError;
+      }
+
+      sendEvent({
+        type: 'status',
+        message: `Attempt ${attempt} failed: ${lastError.message}. Retrying...`,
+      });
+    }
+  }
+
+  throw lastError ?? new Error('All retries failed');
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,7 +60,10 @@ export async function POST(request: NextRequest) {
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
-      return NextResponse.json({ error: 'ANTHROPIC_API_KEY not configured' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'ANTHROPIC_API_KEY not configured. Add it to your .env file.' },
+        { status: 500 },
+      );
     }
 
     const mediaType = getMediaType(image);
@@ -36,11 +82,10 @@ export async function POST(request: NextRequest) {
         try {
           sendEvent({ type: 'status', message: 'Analyzing image with AI...' });
 
-          const result = await provider.recognizeStream(
+          const result = await recognizeWithRetry(
+            provider,
             { imageBase64, mediaType, canvasWidth, canvasHeight },
-            (event) => {
-              sendEvent(event);
-            },
+            sendEvent,
           );
 
           // Post-process
@@ -53,6 +98,7 @@ export async function POST(request: NextRequest) {
             gridSize: 20,
           });
 
+          // Even if some components were rejected, send whatever we got (partial success)
           sendEvent({
             type: 'result',
             components: processed.components,
