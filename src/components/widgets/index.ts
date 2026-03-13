@@ -26,6 +26,7 @@ import './tables/RankingList';
 // Decorations
 import './decorations/BorderDecoration';
 import './decorations/Divider';
+import './decorations/GlowDot';
 
 // Maps
 import './maps/ChinaMap';
