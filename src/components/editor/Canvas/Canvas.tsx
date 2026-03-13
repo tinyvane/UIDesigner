@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useCallback, useEffect, useState, useMemo } from 'react';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUIStore } from '@/stores/uiStore';
 import { useCanvas } from '@/hooks/useCanvas';
+import { useViewportCulling } from '@/hooks/useViewportCulling';
 import { WidgetWrapper } from '@/components/widgets/WidgetWrapper';
 import { CanvasGrid } from './CanvasGrid';
 import { AlignGuides } from './AlignGuides';
@@ -19,6 +20,40 @@ export function Canvas() {
   const { handleWheel, handlePointerDown: handleCanvasPan, handlePointerMove: handleCanvasPanMove, handlePointerUp: handleCanvasPanUp } = useCanvas();
 
   const { selectionHandlers, SelectionBoxOverlay } = useSelectionBox({ zoom, panOffset });
+
+  // Viewport culling: track container size
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const ro = new ResizeObserver(([entry]) => {
+      setContainerSize({ width: entry.contentRect.width, height: entry.contentRect.height });
+    });
+    ro.observe(container);
+    return () => ro.disconnect();
+  }, []);
+
+  // Build component bounds array for culling
+  const componentBounds = useMemo(
+    () =>
+      componentOrder
+        .map((id) => {
+          const c = components.get(id);
+          if (!c) return null;
+          return { id: c.id, x: c.x, y: c.y, width: c.width, height: c.height };
+        })
+        .filter(Boolean) as Array<{ id: string; x: number; y: number; width: number; height: number }>,
+    [components, componentOrder],
+  );
+
+  const visibleIds = useViewportCulling({
+    viewportWidth: containerSize.width,
+    viewportHeight: containerSize.height,
+    zoom,
+    panOffset,
+    components: componentBounds,
+  });
 
   // Auto-fit canvas on mount
   useEffect(() => {
@@ -116,10 +151,10 @@ export function Canvas() {
         {/* Alignment guides */}
         <AlignGuides />
 
-        {/* Render components in order */}
+        {/* Render visible components (viewport culled) */}
         {componentOrder.map((id) => {
           const comp = components.get(id);
-          if (!comp) return null;
+          if (!comp || !visibleIds.has(id)) return null;
           return <WidgetWrapper key={id} component={comp} />;
         })}
       </div>
