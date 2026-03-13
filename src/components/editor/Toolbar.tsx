@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   Undo2,
   Redo2,
@@ -21,6 +22,7 @@ import {
 // Button unused — using plain TooltipTrigger elements
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { LocaleSwitcher } from '@/components/ui/LocaleSwitcher';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUIStore } from '@/stores/uiStore';
 import { ExportDialog } from './ExportDialog';
@@ -54,6 +56,7 @@ function ToolbarButton({
 }
 
 export function Toolbar() {
+  const t = useTranslations('toolbar');
   const [showExportDialog, setShowExportDialog] = useState(false);
   const { undo, redo, canUndo, canRedo, clearCanvas, components, saveStatus, setSaveStatus } = useEditorStore();
   const { zoom, mode, gridVisible, snapEnabled, setMode, zoomIn, zoomOut, zoomToFit, toggleGrid, toggleSnap } =
@@ -72,13 +75,13 @@ export function Toolbar() {
       {/* Mode tools */}
       <ToolbarButton
         icon={MousePointer2}
-        label="Select (V)"
+        label={t('select')}
         onClick={() => setMode('select')}
         active={mode === 'select'}
       />
       <ToolbarButton
         icon={Hand}
-        label="Pan (Space+Drag)"
+        label={t('pan')}
         onClick={() => setMode('pan')}
         active={mode === 'pan'}
       />
@@ -86,36 +89,39 @@ export function Toolbar() {
       <Separator orientation="vertical" className="mx-1 h-6" />
 
       {/* Undo / Redo */}
-      <ToolbarButton icon={Undo2} label="Undo (Ctrl+Z)" onClick={undo} disabled={!canUndo()} />
-      <ToolbarButton icon={Redo2} label="Redo (Ctrl+Y)" onClick={redo} disabled={!canRedo()} />
+      <ToolbarButton icon={Undo2} label={t('undo')} onClick={undo} disabled={!canUndo()} />
+      <ToolbarButton icon={Redo2} label={t('redo')} onClick={redo} disabled={!canRedo()} />
 
       <Separator orientation="vertical" className="mx-1 h-6" />
 
       {/* Zoom */}
-      <ToolbarButton icon={ZoomOut} label="Zoom Out" onClick={zoomOut} />
+      <ToolbarButton icon={ZoomOut} label={t('zoomOut')} onClick={zoomOut} />
       <span className="w-12 text-center text-xs text-gray-400">{Math.round(zoom * 100)}%</span>
-      <ToolbarButton icon={ZoomIn} label="Zoom In" onClick={zoomIn} />
-      <ToolbarButton icon={Maximize} label="Fit to Screen" onClick={zoomToFit} />
+      <ToolbarButton icon={ZoomIn} label={t('zoomIn')} onClick={zoomIn} />
+      <ToolbarButton icon={Maximize} label={t('fitToScreen')} onClick={zoomToFit} />
 
       <Separator orientation="vertical" className="mx-1 h-6" />
 
       {/* View toggles */}
-      <ToolbarButton icon={Grid3x3} label="Toggle Grid" onClick={toggleGrid} active={gridVisible} />
-      <ToolbarButton icon={Magnet} label="Toggle Snap" onClick={toggleSnap} active={snapEnabled} />
+      <ToolbarButton icon={Grid3x3} label={t('toggleGrid')} onClick={toggleGrid} active={gridVisible} />
+      <ToolbarButton icon={Magnet} label={t('toggleSnap')} onClick={toggleSnap} active={snapEnabled} />
 
       {/* Spacer */}
       <div className="flex-1" />
 
       {/* Save status indicator */}
       <span className={`mr-1 text-[10px] ${saveStatus === 'saved' ? 'text-gray-500' : saveStatus === 'saving' ? 'text-yellow-400' : saveStatus === 'unsaved' ? 'text-orange-400' : 'text-red-400'}`}>
-        {saveStatus === 'saved' ? 'Saved' : saveStatus === 'saving' ? 'Saving...' : saveStatus === 'unsaved' ? 'Unsaved' : 'Error'}
+        {saveStatus === 'saved' ? t('saved') : saveStatus === 'saving' ? t('saving') : saveStatus === 'unsaved' ? t('unsaved') : 'Error'}
       </span>
 
+      {/* Language switcher */}
+      <LocaleSwitcher />
+
       {/* Right actions */}
-      <ToolbarButton icon={Upload} label="Upload Image (AI)" />
+      <ToolbarButton icon={Upload} label={t('uploadImage')} />
       <ToolbarButton
         icon={Save}
-        label="Save (Ctrl+S)"
+        label={t('save')}
         onClick={() => {
           setSaveStatus('saving');
           setTimeout(() => setSaveStatus('saved'), 300);
@@ -123,19 +129,19 @@ export function Toolbar() {
       />
       <ToolbarButton
         icon={Eye}
-        label="Preview (Ctrl+P)"
+        label={t('preview')}
         onClick={() => window.open('/preview', '_blank')}
       />
-      <ToolbarButton icon={Download} label="Export" onClick={() => setShowExportDialog(true)} />
+      <ToolbarButton icon={Download} label={t('export')} onClick={() => setShowExportDialog(true)} />
       <ToolbarButton
         icon={MessageSquare}
-        label="AI Chat (Ctrl+K)"
+        label={t('aiChat')}
         onClick={() => useUIStore.getState().toggleChatPanel()}
       />
       <Separator orientation="vertical" className="mx-1 h-6" />
       <ToolbarButton
         icon={Trash2}
-        label="Clear Canvas"
+        label={t('clearCanvas')}
         onClick={() => {
           if (components.size > 0 && window.confirm('Clear all components from the canvas?')) {
             clearCanvas();
