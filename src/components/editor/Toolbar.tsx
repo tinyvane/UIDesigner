@@ -14,6 +14,7 @@ import {
   Download,
   Eye,
   Save,
+  Trash2,
 } from 'lucide-react';
 // Button unused — using plain TooltipTrigger elements
 import { Separator } from '@/components/ui/separator';
@@ -50,7 +51,7 @@ function ToolbarButton({
 }
 
 export function Toolbar() {
-  const { undo, redo, canUndo, canRedo } = useEditorStore();
+  const { undo, redo, canUndo, canRedo, clearCanvas, components } = useEditorStore();
   const { zoom, mode, gridVisible, snapEnabled, setMode, zoomIn, zoomOut, zoomToFit, toggleGrid, toggleSnap } =
     useUIStore();
 
@@ -106,6 +107,17 @@ export function Toolbar() {
       <ToolbarButton icon={Save} label="Save (Ctrl+S)" />
       <ToolbarButton icon={Eye} label="Preview" />
       <ToolbarButton icon={Download} label="Export" />
+      <Separator orientation="vertical" className="mx-1 h-6" />
+      <ToolbarButton
+        icon={Trash2}
+        label="Clear Canvas"
+        onClick={() => {
+          if (components.size > 0 && window.confirm('Clear all components from the canvas?')) {
+            clearCanvas();
+          }
+        }}
+        disabled={components.size === 0}
+      />
     </div>
   );
 }

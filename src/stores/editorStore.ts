@@ -79,6 +79,7 @@ interface EditorActions {
 
   // Reset
   reset: () => void;
+  clearCanvas: () => void;
 }
 
 // ========== Default component props by type ==========
@@ -120,6 +121,29 @@ const initialState: EditorState = {
   historyIndex: -1,
   maxHistory: 100,
 };
+
+// ========== LocalStorage persistence ==========
+const STORAGE_KEY = 'dashboard-designer-canvas';
+
+function saveToLocalStorage(data: { canvas: EditorState['canvas']; components: ComponentData[] }) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch {
+    // Quota exceeded or unavailable — silently ignore
+  }
+}
+
+function loadFromLocalStorage(): { canvas: EditorState['canvas']; components: ComponentData[] } | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (data?.canvas && Array.isArray(data?.components)) return data;
+  } catch {
+    // Corrupted data — ignore
+  }
+  return null;
+}
 
 // ========== Store ==========
 export const useEditorStore = create<EditorState & EditorActions>()(
@@ -353,5 +377,33 @@ export const useEditorStore = create<EditorState & EditorActions>()(
     },
 
     reset: () => set(initialState),
+
+    clearCanvas: () => {
+      set((state) => {
+        state.components = new Map();
+        state.componentOrder = [];
+        state.history = [];
+        state.historyIndex = -1;
+        state.canvas = { ...initialState.canvas };
+      });
+      try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+    },
   })),
 );
+
+// ========== Auto-restore from localStorage on startup ==========
+if (typeof window !== 'undefined') {
+  const saved = loadFromLocalStorage();
+  if (saved && saved.components.length > 0) {
+    useEditorStore.getState().loadFromJSON(saved);
+  }
+}
+
+// ========== Auto-save to localStorage on every change (debounced) ==========
+let saveTimer: ReturnType<typeof setTimeout> | null = null;
+useEditorStore.subscribe((state) => {
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    saveToLocalStorage(useEditorStore.getState().toJSON());
+  }, 500);
+});
