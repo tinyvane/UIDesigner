@@ -8,6 +8,16 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // Mock env
 vi.stubEnv('ANTHROPIC_API_KEY', 'test-key-123');
 
+// Mock prisma (required by recognitionLog)
+vi.mock('@/lib/prisma', () => ({
+  prisma: {
+    aIRecognitionLog: {
+      create: vi.fn().mockResolvedValue({ id: 'log-mock' }),
+      findFirst: vi.fn().mockResolvedValue(null), // no cache hit
+    },
+  },
+}));
+
 // Mock Claude API response for non-streaming recognize
 function createMockClaudeStreamResponse(components: object[]) {
   const toolInput = JSON.stringify({

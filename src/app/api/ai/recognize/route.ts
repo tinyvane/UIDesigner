@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createProvider, resolveProviderConfig } from '@/lib/ai/providerFactory';
 import { postProcessComponents } from '@/lib/ai/postProcess';
 import { getMediaType, stripDataUrlPrefix } from '@/lib/utils/imageCompress';
+import { generateImageHash } from '@/lib/ai/imageHash';
+import { saveRecognitionLog, findByImageHash } from '@/lib/ai/recognitionLog';
+import { PROMPT_VERSION } from '@/lib/ai/prompts';
 import type { AIProvider, AIRecognitionResult } from '@/lib/ai/provider';
 
 export const runtime = 'nodejs';
@@ -74,6 +77,9 @@ export async function POST(request: NextRequest) {
     const mediaType = getMediaType(image);
     const imageBase64 = stripDataUrlPrefix(image);
 
+    // Generate perceptual hash for cache lookup
+    const imageHash = generateImageHash(imageBase64);
+
     const provider = createProvider(providerConfig);
 
     // Use streaming via SSE
@@ -85,6 +91,31 @@ export async function POST(request: NextRequest) {
         };
 
         try {
+          // Check cache by perceptual hash
+          sendEvent({ type: 'status', message: 'Checking cache...' });
+          const cached = await findByImageHash(imageHash);
+          if (cached) {
+            sendEvent({ type: 'status', message: 'Found cached result, skipping AI call.' });
+            const processed = postProcessComponents(cached, {
+              canvasWidth,
+              canvasHeight,
+              snapToGrid: true,
+              gridSize: 20,
+            });
+            sendEvent({
+              type: 'result',
+              components: processed.components,
+              background: cached.background,
+              layoutDescription: cached.layoutDescription,
+              warnings: processed.warnings,
+              tokenUsage: cached.tokenUsage,
+              latencyMs: 0,
+            });
+            sendEvent({ type: 'complete' });
+            controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+            return;
+          }
+
           sendEvent({ type: 'status', message: `Analyzing image with ${providerConfig.provider}...` });
 
           const result = await recognizeWithRetry(
@@ -112,6 +143,19 @@ export async function POST(request: NextRequest) {
             gridSize: 20,
           });
 
+          // Save recognition log (fire-and-forget)
+          saveRecognitionLog({
+            imageUrl: image.substring(0, 100), // truncate long data-urls
+            imageHash,
+            prompt: PROMPT_VERSION,
+            rawOutput: { components: result.components, background: result.background, layoutDescription: result.layoutDescription },
+            parsed: { components: processed.components, background: result.background, layoutDescription: result.layoutDescription },
+            model: providerConfig.model || providerConfig.provider,
+            tokenUsage: result.tokenUsage ? { input_tokens: result.tokenUsage.inputTokens, output_tokens: result.tokenUsage.outputTokens } : null,
+            latencyMs: result.latencyMs,
+            success: true,
+          });
+
           // Even if some components were rejected, send whatever we got (partial success)
           sendEvent({
             type: 'result',
@@ -127,6 +171,19 @@ export async function POST(request: NextRequest) {
           controller.enqueue(encoder.encode('data: [DONE]\n\n'));
         } catch (err) {
           const message = err instanceof Error ? err.message : 'AI analysis failed';
+
+          // Log failed recognition attempt
+          saveRecognitionLog({
+            imageUrl: image.substring(0, 100),
+            imageHash,
+            prompt: PROMPT_VERSION,
+            rawOutput: {},
+            model: providerConfig.model || providerConfig.provider,
+            latencyMs: 0,
+            success: false,
+            errorMsg: message,
+          });
+
           sendEvent({ type: 'error', message });
         } finally {
           controller.close();
