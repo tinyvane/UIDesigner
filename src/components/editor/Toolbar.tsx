@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Undo2,
   Redo2,
@@ -21,6 +22,7 @@ import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUIStore } from '@/stores/uiStore';
+import { ExportDialog } from './ExportDialog';
 
 function ToolbarButton({
   icon: Icon,
@@ -51,6 +53,7 @@ function ToolbarButton({
 }
 
 export function Toolbar() {
+  const [showExportDialog, setShowExportDialog] = useState(false);
   const { undo, redo, canUndo, canRedo, clearCanvas, components, saveStatus, setSaveStatus } = useEditorStore();
   const { zoom, mode, gridVisible, snapEnabled, setMode, zoomIn, zoomOut, zoomToFit, toggleGrid, toggleSnap } =
     useUIStore();
@@ -122,7 +125,7 @@ export function Toolbar() {
         label="Preview (Ctrl+P)"
         onClick={() => window.open('/preview', '_blank')}
       />
-      <ToolbarButton icon={Download} label="Export" />
+      <ToolbarButton icon={Download} label="Export" onClick={() => setShowExportDialog(true)} />
       <Separator orientation="vertical" className="mx-1 h-6" />
       <ToolbarButton
         icon={Trash2}
@@ -134,6 +137,9 @@ export function Toolbar() {
         }}
         disabled={components.size === 0}
       />
+
+      {/* Export Dialog */}
+      {showExportDialog && <ExportDialog onClose={() => setShowExportDialog(false)} />}
     </div>
   );
 }
