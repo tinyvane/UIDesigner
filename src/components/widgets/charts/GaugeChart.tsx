@@ -3,11 +3,12 @@
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
 import { GaugeChart as GaugeChartComponent } from 'echarts/charts';
+import { TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { registerComponent } from '../registry';
 import type { WidgetProps } from '../registry';
 
-echarts.use([GaugeChartComponent, CanvasRenderer]);
+echarts.use([GaugeChartComponent, TitleComponent, CanvasRenderer]);
 
 function GaugeChartWidget({ width, height, props }: WidgetProps) {
   const {

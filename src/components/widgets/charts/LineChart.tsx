@@ -3,12 +3,12 @@
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
 import { LineChart as LineChartComponent } from 'echarts/charts';
-import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components';
+import { GridComponent, TooltipComponent, LegendComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { registerComponent } from '../registry';
 import type { WidgetProps } from '../registry';
 
-echarts.use([LineChartComponent, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer]);
+echarts.use([LineChartComponent, GridComponent, TooltipComponent, LegendComponent, TitleComponent, CanvasRenderer]);
 
 const DEFAULT_DATA = {
   categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],

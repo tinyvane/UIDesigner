@@ -3,12 +3,12 @@
 import ReactEChartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
 import { PieChart as PieChartComponent } from 'echarts/charts';
-import { TooltipComponent, LegendComponent } from 'echarts/components';
+import { TooltipComponent, LegendComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { registerComponent } from '../registry';
 import type { WidgetProps } from '../registry';
 
-echarts.use([PieChartComponent, TooltipComponent, LegendComponent, CanvasRenderer]);
+echarts.use([PieChartComponent, TooltipComponent, LegendComponent, TitleComponent, CanvasRenderer]);
 
 const DEFAULT_DATA = [
   { name: 'Category A', value: 335 },
