@@ -26,11 +26,14 @@ function ScrollingTableWidget({ width, height, props }: WidgetProps) {
     scrollSpeed = 2000,
   } = props as Record<string, unknown>;
 
-  const { columns, rows } = data as typeof DEFAULT_DATA;
+  const parsed = data as Partial<typeof DEFAULT_DATA> | null;
+  const columns = parsed?.columns ?? DEFAULT_DATA.columns;
+  const rows = parsed?.rows ?? DEFAULT_DATA.rows;
   const [offset, setOffset] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
+    if (rows.length === 0) return;
     timerRef.current = setInterval(() => {
       setOffset((prev) => (prev + 1) % rows.length);
     }, scrollSpeed as number);
@@ -39,8 +42,13 @@ function ScrollingTableWidget({ width, height, props }: WidgetProps) {
     };
   }, [rows.length, scrollSpeed]);
 
+  if (rows.length === 0) {
+    return <div className="flex h-full w-full items-center justify-center text-xs text-gray-500" style={{ width, height }}>No data</div>;
+  }
+
   // Reorder rows based on offset for scrolling effect
-  const visibleRows = [...rows.slice(offset), ...rows.slice(0, offset)];
+  const safeOffset = offset % rows.length;
+  const visibleRows = [...rows.slice(safeOffset), ...rows.slice(0, safeOffset)];
 
   return (
     <div

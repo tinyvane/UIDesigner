@@ -22,7 +22,9 @@ function BasicTableWidget({ width, height, props }: WidgetProps) {
     striped = true,
   } = props as Record<string, unknown>;
 
-  const { columns, rows } = data as typeof DEFAULT_DATA;
+  const parsed = data as Partial<typeof DEFAULT_DATA> | null;
+  const columns = parsed?.columns ?? DEFAULT_DATA.columns;
+  const rows = parsed?.rows ?? DEFAULT_DATA.rows;
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden rounded-lg border border-gray-700/50" style={{ width, height }}>
@@ -50,12 +52,12 @@ function BasicTableWidget({ width, height, props }: WidgetProps) {
               >
                 {row.map((cell, j) => (
                   <td key={j} className="px-3 py-1.5 text-gray-400">
-                    {cell.startsWith('+') ? (
+                    {typeof cell === 'string' && cell.startsWith('+') ? (
                       <span className="text-green-400">{cell}</span>
-                    ) : cell.startsWith('-') ? (
+                    ) : typeof cell === 'string' && cell.startsWith('-') ? (
                       <span className="text-red-400">{cell}</span>
                     ) : (
-                      cell
+                      String(cell ?? '')
                     )}
                   </td>
                 ))}
