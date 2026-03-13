@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useRef, useCallback } from 'react';
+import { memo, useRef, useCallback, useState, useEffect } from 'react';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUIStore } from '@/stores/uiStore';
 
@@ -18,14 +18,16 @@ function MinimapComponent() {
   const isDragging = useRef(false);
   const minimapRef = useRef<HTMLDivElement>(null);
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const aspectRatio = canvas.height / canvas.width;
   const minimapHeight = MINIMAP_WIDTH * aspectRatio;
   const scale = MINIMAP_WIDTH / canvas.width;
 
   // Calculate viewport rectangle in minimap coordinates
-  // The viewport shows what portion of the canvas is visible
-  const containerWidth = typeof window !== 'undefined' ? window.innerWidth - 240 - 288 : 1000;
-  const containerHeight = typeof window !== 'undefined' ? window.innerHeight - 48 : 600;
+  const containerWidth = mounted ? window.innerWidth - 240 - 288 : 1000;
+  const containerHeight = mounted ? window.innerHeight - 48 : 600;
 
   const viewportX = (-panOffset.x / zoom) * scale;
   const viewportY = (-panOffset.y / zoom) * scale;

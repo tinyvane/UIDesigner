@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useState, useEffect } from 'react';
 import { useUIStore } from '@/stores/uiStore';
 import { useEditorStore } from '@/stores/editorStore';
 
@@ -27,13 +27,16 @@ function RulerComponent() {
   const canvasWidth = useEditorStore((s) => s.canvas.width);
   const canvasHeight = useEditorStore((s) => s.canvas.height);
 
-  if (!rulerVisible) return null;
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!rulerVisible || !mounted) return null;
 
   const tickInterval = getTickInterval(zoom);
   const scaledInterval = tickInterval * zoom;
 
-  const winW = typeof window !== 'undefined' ? window.innerWidth : 1920;
-  const winH = typeof window !== 'undefined' ? window.innerHeight : 1080;
+  const winW = window.innerWidth;
+  const winH = window.innerHeight;
 
   // Calculate visible range for horizontal ruler
   const hStart = Math.floor(-panOffset.x / zoom / tickInterval) * tickInterval;
