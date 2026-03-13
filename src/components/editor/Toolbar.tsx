@@ -51,7 +51,7 @@ function ToolbarButton({
 }
 
 export function Toolbar() {
-  const { undo, redo, canUndo, canRedo, clearCanvas, components } = useEditorStore();
+  const { undo, redo, canUndo, canRedo, clearCanvas, components, saveStatus, setSaveStatus } = useEditorStore();
   const { zoom, mode, gridVisible, snapEnabled, setMode, zoomIn, zoomOut, zoomToFit, toggleGrid, toggleSnap } =
     useUIStore();
 
@@ -102,9 +102,21 @@ export function Toolbar() {
       {/* Spacer */}
       <div className="flex-1" />
 
+      {/* Save status indicator */}
+      <span className={`mr-1 text-[10px] ${saveStatus === 'saved' ? 'text-gray-500' : saveStatus === 'saving' ? 'text-yellow-400' : saveStatus === 'unsaved' ? 'text-orange-400' : 'text-red-400'}`}>
+        {saveStatus === 'saved' ? 'Saved' : saveStatus === 'saving' ? 'Saving...' : saveStatus === 'unsaved' ? 'Unsaved' : 'Error'}
+      </span>
+
       {/* Right actions */}
       <ToolbarButton icon={Upload} label="Upload Image (AI)" />
-      <ToolbarButton icon={Save} label="Save (Ctrl+S)" />
+      <ToolbarButton
+        icon={Save}
+        label="Save (Ctrl+S)"
+        onClick={() => {
+          setSaveStatus('saving');
+          setTimeout(() => setSaveStatus('saved'), 300);
+        }}
+      />
       <ToolbarButton icon={Eye} label="Preview" />
       <ToolbarButton icon={Download} label="Export" />
       <Separator orientation="vertical" className="mx-1 h-6" />

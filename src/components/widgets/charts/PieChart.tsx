@@ -18,12 +18,28 @@ const DEFAULT_DATA = [
   { name: 'Category E', value: 108 },
 ];
 
+/** Safely parse pie data from various formats */
+function parsePieData(raw: unknown): { name: string; value: number }[] {
+  let obj = raw;
+  if (typeof obj === 'string') {
+    try { obj = JSON.parse(obj); } catch { return DEFAULT_DATA; }
+  }
+  if (!Array.isArray(obj)) return DEFAULT_DATA;
+  return obj.map((item: unknown) => {
+    if (!item || typeof item !== 'object') return { name: '?', value: 0 };
+    const o = item as Record<string, unknown>;
+    return { name: String(o.name ?? '?'), value: Number(o.value) || 0 };
+  });
+}
+
 function PieChartWidget({ width, height, props }: WidgetProps) {
   const {
     title = 'Pie Chart',
     donut = true,
     data = DEFAULT_DATA,
   } = props as Record<string, unknown>;
+
+  const pieData = parsePieData(data);
 
   const option = {
     backgroundColor: 'transparent',
@@ -34,7 +50,7 @@ function PieChartWidget({ width, height, props }: WidgetProps) {
       type: 'pie',
       radius: (donut as boolean) ? ['35%', '60%'] : ['0%', '60%'],
       center: ['50%', '48%'],
-      data: data as typeof DEFAULT_DATA,
+      data: pieData,
       label: { show: false },
       emphasis: { label: { show: true, fontSize: 12, color: '#fff' } },
       itemStyle: { borderRadius: 4, borderColor: '#0d1117', borderWidth: 2 },

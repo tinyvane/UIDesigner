@@ -45,6 +45,11 @@ interface UIState {
   aiStatus: AIStatus;
   aiProgress: { recognized: number; total: number };
   aiError: string | null;
+
+  // Data source panel
+  dataSourcePanelOpen: boolean;
+  activeDataSourceId: string | null;
+  requestLogPanelOpen: boolean;
 }
 
 interface UIActions {
@@ -89,6 +94,11 @@ interface UIActions {
   setAIStatus: (status: AIStatus) => void;
   setAIProgress: (progress: { recognized: number; total: number }) => void;
   setAIError: (error: string | null) => void;
+
+  // Data source panel
+  toggleDataSourcePanel: () => void;
+  setActiveDataSourceId: (id: string | null) => void;
+  toggleRequestLogPanel: () => void;
 }
 
 const ZOOM_LEVELS = [0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4];
@@ -115,6 +125,9 @@ export const useUIStore = create<UIState & UIActions>()((set, get) => ({
   aiStatus: 'idle',
   aiProgress: { recognized: 0, total: 0 },
   aiError: null,
+  dataSourcePanelOpen: false,
+  activeDataSourceId: null,
+  requestLogPanelOpen: false,
 
   // Selection
   select: (ids) => set({ selectedIds: new Set(ids) }),
@@ -173,4 +186,9 @@ export const useUIStore = create<UIState & UIActions>()((set, get) => ({
   setAIStatus: (status) => set({ aiStatus: status }),
   setAIProgress: (progress) => set({ aiProgress: progress }),
   setAIError: (error) => set({ aiError: error }),
+
+  // Data source panel
+  toggleDataSourcePanel: () => set((s) => ({ dataSourcePanelOpen: !s.dataSourcePanelOpen })),
+  setActiveDataSourceId: (id) => set({ activeDataSourceId: id }),
+  toggleRequestLogPanel: () => set((s) => ({ requestLogPanelOpen: !s.requestLogPanelOpen })),
 }));

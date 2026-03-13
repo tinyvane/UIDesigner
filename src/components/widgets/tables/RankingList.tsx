@@ -14,6 +14,20 @@ const DEFAULT_DATA = [
   { name: '广西', value: 320 },
 ];
 
+/** Safely parse ranking data */
+function parseRankingData(raw: unknown): { name: string; value: number }[] {
+  let obj = raw;
+  if (typeof obj === 'string') {
+    try { obj = JSON.parse(obj); } catch { return DEFAULT_DATA; }
+  }
+  if (!Array.isArray(obj)) return DEFAULT_DATA;
+  return obj.map((item: unknown) => {
+    if (!item || typeof item !== 'object') return { name: '?', value: 0 };
+    const o = item as Record<string, unknown>;
+    return { name: String(o.name ?? '?'), value: Number(o.value) || 0 };
+  });
+}
+
 function RankingListWidget({ width, height, props }: WidgetProps) {
   const {
     title = '区域风险排名',
@@ -25,7 +39,7 @@ function RankingListWidget({ width, height, props }: WidgetProps) {
     columns = 1,
   } = props as {
     title?: string;
-    data?: { name: string; value: number }[];
+    data?: unknown;
     color?: string;
     barColor?: string;
     showIndex?: boolean;
@@ -33,11 +47,12 @@ function RankingListWidget({ width, height, props }: WidgetProps) {
     columns?: number;
   };
 
-  const maxVal = Math.max(...data.map((d) => d.value), 1);
+  const parsedData = parseRankingData(data);
+  const maxVal = Math.max(...parsedData.map((d) => d.value), 1);
   const colCount = Math.max(1, Math.min(columns, 3));
-  const itemsPerCol = Math.ceil(data.length / colCount);
+  const itemsPerCol = Math.ceil(parsedData.length / colCount);
   const cols = Array.from({ length: colCount }, (_, i) =>
-    data.slice(i * itemsPerCol, (i + 1) * itemsPerCol)
+    parsedData.slice(i * itemsPerCol, (i + 1) * itemsPerCol)
   );
 
   const topColors = ['#ff4d4f', '#ff7a45', '#ffa940'];

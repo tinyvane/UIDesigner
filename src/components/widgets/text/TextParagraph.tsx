@@ -3,6 +3,16 @@
 import { registerComponent } from '../registry';
 import type { WidgetProps } from '../registry';
 
+/** Convert hex color + opacity (0–100) to rgba string */
+function hexToRgba(hex: string, opacity: number): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  if (isNaN(r) || isNaN(g) || isNaN(b)) return 'transparent';
+  return `rgba(${r},${g},${b},${opacity / 100})`;
+}
+
 function TextParagraphWidget({ width, height, props }: WidgetProps) {
   const {
     text = '截至2019-09-09 18:00:00之前的48小时内，轮巡重大危险源企业 375家，出现违规操作的视频785个款。',
@@ -10,7 +20,8 @@ function TextParagraphWidget({ width, height, props }: WidgetProps) {
     fontSize = 12,
     lineHeight = 1.6,
     textAlign = 'left',
-    backgroundColor = 'transparent',
+    backgroundColor = '#0d1117',
+    bgOpacity = 0,
     padding = 8,
   } = props as {
     text?: string;
@@ -19,8 +30,13 @@ function TextParagraphWidget({ width, height, props }: WidgetProps) {
     lineHeight?: number;
     textAlign?: string;
     backgroundColor?: string;
+    bgOpacity?: number;
     padding?: number;
   };
+
+  const bg = bgOpacity === 0
+    ? 'transparent'
+    : hexToRgba(backgroundColor, bgOpacity);
 
   return (
     <div
@@ -28,7 +44,7 @@ function TextParagraphWidget({ width, height, props }: WidgetProps) {
       style={{
         width,
         height,
-        backgroundColor,
+        backgroundColor: bg,
         padding,
       }}
     >
@@ -61,7 +77,8 @@ registerComponent({
     fontSize: 12,
     lineHeight: 1.6,
     textAlign: 'left',
-    backgroundColor: 'transparent',
+    backgroundColor: '#0d1117',
+    bgOpacity: 0,
     padding: 8,
   },
   propSchema: [
@@ -74,7 +91,8 @@ registerComponent({
       { label: 'Center', value: 'center' },
       { label: 'Right', value: 'right' },
     ]},
-    { key: 'backgroundColor', type: 'color', label: 'Background', group: 'Style' },
+    { key: 'backgroundColor', type: 'color', label: 'Background Color', group: 'Style' },
+    { key: 'bgOpacity', type: 'number', label: 'Background Opacity', group: 'Style', min: 0, max: 100, step: 5 },
     { key: 'padding', type: 'number', label: 'Padding', group: 'Style', min: 0, max: 32, step: 2 },
   ],
   render: TextParagraphWidget,

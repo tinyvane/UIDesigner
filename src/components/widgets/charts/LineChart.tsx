@@ -15,6 +15,19 @@ const DEFAULT_DATA = {
   values: [150, 230, 224, 218, 135, 147, 260],
 };
 
+/** Safely parse data from various formats AI might send */
+function parseLineData(raw: unknown): { categories: string[]; values: number[] } {
+  let obj = raw;
+  if (typeof obj === 'string') {
+    try { obj = JSON.parse(obj); } catch { return DEFAULT_DATA; }
+  }
+  if (!obj || typeof obj !== 'object') return DEFAULT_DATA;
+  const o = obj as Record<string, unknown>;
+  const categories = Array.isArray(o.categories) ? o.categories.map(String) : DEFAULT_DATA.categories;
+  const values = Array.isArray(o.values) ? o.values.map(Number).map(v => isNaN(v) ? 0 : v) : DEFAULT_DATA.values;
+  return { categories, values };
+}
+
 function LineChartWidget({ width, height, props }: WidgetProps) {
   const {
     title = 'Line Chart',
@@ -24,6 +37,8 @@ function LineChartWidget({ width, height, props }: WidgetProps) {
     data = DEFAULT_DATA,
   } = props as Record<string, unknown>;
 
+  const { categories, values } = parseLineData(data);
+
   const option = {
     backgroundColor: 'transparent',
     title: { text: title as string, textStyle: { color: '#e5e7eb', fontSize: 14 }, left: 'center', top: 8 },
@@ -31,7 +46,7 @@ function LineChartWidget({ width, height, props }: WidgetProps) {
     grid: { left: '10%', right: '5%', bottom: '15%', top: '25%' },
     xAxis: {
       type: 'category' as const,
-      data: (data as typeof DEFAULT_DATA).categories,
+      data: categories,
       axisLabel: { color: '#9ca3af', fontSize: 10 },
       axisLine: { lineStyle: { color: '#374151' } },
     },
@@ -42,7 +57,7 @@ function LineChartWidget({ width, height, props }: WidgetProps) {
     },
     series: [{
       type: 'line',
-      data: (data as typeof DEFAULT_DATA).values,
+      data: values,
       smooth: smooth as boolean,
       lineStyle: { color: color as string, width: 2 },
       itemStyle: { color: color as string },

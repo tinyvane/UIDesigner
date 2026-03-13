@@ -72,6 +72,17 @@ export function useKeyboard() {
           }
           break;
 
+        // Save (Ctrl+S)
+        case isCtrl && e.key === 's':
+          e.preventDefault();
+          // Trigger manual save — for now, localStorage is auto-saved
+          // When project API is ready, this will save to server
+          useEditorStore.getState().setSaveStatus('saving');
+          setTimeout(() => {
+            useEditorStore.getState().setSaveStatus('saved');
+          }, 300);
+          break;
+
         // Select all
         case isCtrl && e.key === 'a':
           e.preventDefault();

@@ -16,6 +16,21 @@ const DEFAULT_DATA = {
   values: [120, 200, 150, 80, 70, 110, 130],
 };
 
+/** Safely parse data from various formats AI might send */
+function parseBarData(raw: unknown): { categories: string[]; values: number[] } {
+  // If it's a JSON string, parse it first
+  let obj = raw;
+  if (typeof obj === 'string') {
+    try { obj = JSON.parse(obj); } catch { return DEFAULT_DATA; }
+  }
+  if (!obj || typeof obj !== 'object') return DEFAULT_DATA;
+
+  const o = obj as Record<string, unknown>;
+  const categories = Array.isArray(o.categories) ? o.categories.map(String) : DEFAULT_DATA.categories;
+  const values = Array.isArray(o.values) ? o.values.map(Number).map(v => isNaN(v) ? 0 : v) : DEFAULT_DATA.values;
+  return { categories, values };
+}
+
 function BarChartWidget({ width, height, props }: WidgetProps) {
   const {
     title = 'Bar Chart',
@@ -30,7 +45,7 @@ function BarChartWidget({ width, height, props }: WidgetProps) {
   } = props as {
     title?: string;
     color?: string;
-    data?: { categories: string[]; values: number[] };
+    data?: unknown;
     showGrid?: boolean;
     horizontal?: boolean;
     gradient?: boolean;
@@ -39,9 +54,7 @@ function BarChartWidget({ width, height, props }: WidgetProps) {
     barRadius?: number;
   };
 
-  const parsed = data as Partial<typeof DEFAULT_DATA> | null;
-  const categories = parsed?.categories ?? DEFAULT_DATA.categories;
-  const values = parsed?.values ?? DEFAULT_DATA.values;
+  const { categories, values } = parseBarData(data);
 
   const barColor = gradient
     ? new echarts.graphic.LinearGradient(

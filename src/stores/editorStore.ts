@@ -3,6 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import { enableMapSet } from 'immer';
 import { nanoid } from 'nanoid';
 import type { ComponentData, ComponentType, Background } from '@/schemas/component';
+import type { DataSource } from '@/schemas/dataSource';
 
 // Enable Immer Map/Set support
 enableMapSet();
@@ -25,6 +26,9 @@ interface HistoryEntry {
   componentOrder: string[];
 }
 
+// ========== Save State ==========
+export type SaveStatus = 'saved' | 'saving' | 'unsaved' | 'error';
+
 interface EditorState {
   // Canvas data (persisted)
   projectId: string | null;
@@ -35,6 +39,15 @@ interface EditorState {
   };
   components: Map<string, ComponentData>;
   componentOrder: string[]; // render order (zIndex)
+
+  // Data sources
+  dataSources: Map<string, DataSource>;
+  dataValues: Map<string, unknown>; // dataSourceId → latest fetched value
+  dataErrors: Map<string, string>; // dataSourceId → error message
+  dataLoading: Set<string>; // dataSourceIds currently fetching
+
+  // Save state
+  saveStatus: SaveStatus;
 
   // History (undo/redo)
   history: HistoryEntry[];
@@ -73,9 +86,24 @@ interface EditorActions {
   canUndo: () => boolean;
   canRedo: () => boolean;
 
+  // Data sources
+  addDataSource: (ds: Omit<DataSource, 'id'>) => string;
+  updateDataSource: (id: string, patch: Partial<DataSource>) => void;
+  removeDataSource: (id: string) => void;
+  setDataValue: (dataSourceId: string, value: unknown) => void;
+  setDataError: (dataSourceId: string, error: string | null) => void;
+  setDataLoading: (dataSourceId: string, loading: boolean) => void;
+
+  // Data binding
+  bindComponentToDataSource: (componentId: string, dataSourceId: string, mapping: Record<string, string>) => void;
+  unbindComponentFromDataSource: (componentId: string) => void;
+
+  // Save state
+  setSaveStatus: (status: SaveStatus) => void;
+
   // Serialization
-  loadFromJSON: (data: { canvas: EditorState['canvas']; components: ComponentData[] }) => void;
-  toJSON: () => { canvas: EditorState['canvas']; components: ComponentData[] };
+  loadFromJSON: (data: { canvas: EditorState['canvas']; components: ComponentData[]; dataSources?: DataSource[] }) => void;
+  toJSON: () => { canvas: EditorState['canvas']; components: ComponentData[]; dataSources: DataSource[] };
 
   // Reset
   reset: () => void;
@@ -117,6 +145,11 @@ const initialState: EditorState = {
   },
   components: new Map(),
   componentOrder: [],
+  dataSources: new Map(),
+  dataValues: new Map(),
+  dataErrors: new Map(),
+  dataLoading: new Set(),
+  saveStatus: 'saved',
   history: [],
   historyIndex: -1,
   maxHistory: 100,
@@ -307,6 +340,80 @@ export const useEditorStore = create<EditorState & EditorActions>()(
       get().pushHistory();
     },
 
+    // ========== Data Sources ==========
+    addDataSource: (ds) => {
+      const id = nanoid(10);
+      set((state) => {
+        state.dataSources.set(id, { ...ds, id } as DataSource);
+      });
+      return id;
+    },
+
+    updateDataSource: (id, patch) =>
+      set((state) => {
+        const ds = state.dataSources.get(id);
+        if (ds) Object.assign(ds, patch);
+      }),
+
+    removeDataSource: (id) =>
+      set((state) => {
+        state.dataSources.delete(id);
+        state.dataValues.delete(id);
+        state.dataErrors.delete(id);
+        state.dataLoading.delete(id);
+        // Unbind any components referencing this data source
+        for (const [, comp] of state.components) {
+          if (comp.dataSourceId === id) {
+            comp.dataSourceId = null;
+            comp.dataMapping = null;
+          }
+        }
+      }),
+
+    setDataValue: (dataSourceId, value) =>
+      set((state) => {
+        state.dataValues.set(dataSourceId, value);
+        state.dataErrors.delete(dataSourceId);
+      }),
+
+    setDataError: (dataSourceId, error) =>
+      set((state) => {
+        if (error) {
+          state.dataErrors.set(dataSourceId, error);
+        } else {
+          state.dataErrors.delete(dataSourceId);
+        }
+      }),
+
+    setDataLoading: (dataSourceId, loading) =>
+      set((state) => {
+        if (loading) {
+          state.dataLoading.add(dataSourceId);
+        } else {
+          state.dataLoading.delete(dataSourceId);
+        }
+      }),
+
+    bindComponentToDataSource: (componentId, dataSourceId, mapping) =>
+      set((state) => {
+        const comp = state.components.get(componentId);
+        if (comp) {
+          comp.dataSourceId = dataSourceId;
+          comp.dataMapping = mapping;
+        }
+      }),
+
+    unbindComponentFromDataSource: (componentId) =>
+      set((state) => {
+        const comp = state.components.get(componentId);
+        if (comp) {
+          comp.dataSourceId = null;
+          comp.dataMapping = null;
+        }
+      }),
+
+    setSaveStatus: (status) => set((state) => { state.saveStatus = status; }),
+
     pushHistory: () =>
       set((state) => {
         const entry: HistoryEntry = {
@@ -362,6 +469,9 @@ export const useEditorStore = create<EditorState & EditorActions>()(
         state.canvas = data.canvas;
         state.components = new Map(data.components.map((c) => [c.id, c]));
         state.componentOrder = data.components.map((c) => c.id);
+        if (data.dataSources) {
+          state.dataSources = new Map(data.dataSources.map((ds) => [ds.id, ds]));
+        }
         state.history = [];
         state.historyIndex = -1;
       }),
@@ -373,6 +483,7 @@ export const useEditorStore = create<EditorState & EditorActions>()(
         components: state.componentOrder
           .map((id) => state.components.get(id))
           .filter(Boolean) as ComponentData[],
+        dataSources: Array.from(state.dataSources.values()),
       };
     },
 

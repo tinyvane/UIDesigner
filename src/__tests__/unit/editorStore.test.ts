@@ -106,4 +106,112 @@ describe('editorStore', () => {
     useEditorStore.getState().loadFromJSON(json);
     expect(useEditorStore.getState().components.size).toBe(2);
   });
+
+  // ========== Data Source Tests ==========
+  describe('data sources', () => {
+    it('should add a data source', () => {
+      const id = useEditorStore.getState().addDataSource({
+        name: 'Test API',
+        type: 'api',
+        config: { type: 'api', url: 'https://example.com/api', method: 'GET' },
+        transform: null,
+      });
+      expect(useEditorStore.getState().dataSources.size).toBe(1);
+      expect(useEditorStore.getState().dataSources.get(id)?.name).toBe('Test API');
+    });
+
+    it('should update a data source', () => {
+      const id = useEditorStore.getState().addDataSource({
+        name: 'Old Name',
+        type: 'static',
+        config: { type: 'static', data: [1, 2, 3] },
+        transform: null,
+      });
+      useEditorStore.getState().updateDataSource(id, { name: 'New Name' });
+      expect(useEditorStore.getState().dataSources.get(id)?.name).toBe('New Name');
+    });
+
+    it('should remove a data source and unbind components', () => {
+      const dsId = useEditorStore.getState().addDataSource({
+        name: 'DS',
+        type: 'static',
+        config: { type: 'static', data: {} },
+        transform: null,
+      });
+      const compId = useEditorStore.getState().addComponent('chart_bar');
+      useEditorStore.getState().bindComponentToDataSource(compId, dsId, { data: '$.values' });
+
+      expect(useEditorStore.getState().components.get(compId)?.dataSourceId).toBe(dsId);
+
+      useEditorStore.getState().removeDataSource(dsId);
+      expect(useEditorStore.getState().dataSources.size).toBe(0);
+      expect(useEditorStore.getState().components.get(compId)?.dataSourceId).toBeNull();
+    });
+
+    it('should bind and unbind components to data sources', () => {
+      const dsId = useEditorStore.getState().addDataSource({
+        name: 'DS',
+        type: 'static',
+        config: { type: 'static', data: {} },
+        transform: null,
+      });
+      const compId = useEditorStore.getState().addComponent('chart_bar');
+
+      useEditorStore.getState().bindComponentToDataSource(compId, dsId, { data: '$.items' });
+      const comp = useEditorStore.getState().components.get(compId)!;
+      expect(comp.dataSourceId).toBe(dsId);
+      expect(comp.dataMapping).toEqual({ data: '$.items' });
+
+      useEditorStore.getState().unbindComponentFromDataSource(compId);
+      const comp2 = useEditorStore.getState().components.get(compId)!;
+      expect(comp2.dataSourceId).toBeNull();
+      expect(comp2.dataMapping).toBeNull();
+    });
+
+    it('should manage data values and errors', () => {
+      const dsId = 'test-ds-id';
+      useEditorStore.getState().setDataValue(dsId, { items: [1, 2, 3] });
+      expect(useEditorStore.getState().dataValues.get(dsId)).toEqual({ items: [1, 2, 3] });
+
+      useEditorStore.getState().setDataError(dsId, 'Network error');
+      expect(useEditorStore.getState().dataErrors.get(dsId)).toBe('Network error');
+
+      useEditorStore.getState().setDataError(dsId, null);
+      expect(useEditorStore.getState().dataErrors.has(dsId)).toBe(false);
+    });
+
+    it('should manage data loading state', () => {
+      const dsId = 'test-ds-id';
+      useEditorStore.getState().setDataLoading(dsId, true);
+      expect(useEditorStore.getState().dataLoading.has(dsId)).toBe(true);
+
+      useEditorStore.getState().setDataLoading(dsId, false);
+      expect(useEditorStore.getState().dataLoading.has(dsId)).toBe(false);
+    });
+
+    it('should serialize dataSources in toJSON', () => {
+      useEditorStore.getState().addDataSource({
+        name: 'DS1',
+        type: 'static',
+        config: { type: 'static', data: [1] },
+        transform: null,
+      });
+      const json = useEditorStore.getState().toJSON();
+      expect(json.dataSources).toHaveLength(1);
+      expect(json.dataSources[0].name).toBe('DS1');
+    });
+
+    it('should restore dataSources from loadFromJSON', () => {
+      const json = {
+        canvas: { width: 1920, height: 1080, background: { type: 'color' as const, value: '#000' } },
+        components: [],
+        dataSources: [
+          { id: 'ds1', name: 'API Source', type: 'api' as const, config: { type: 'api' as const, url: 'https://example.com', method: 'GET' as const }, transform: null },
+        ],
+      };
+      useEditorStore.getState().loadFromJSON(json);
+      expect(useEditorStore.getState().dataSources.size).toBe(1);
+      expect(useEditorStore.getState().dataSources.get('ds1')?.name).toBe('API Source');
+    });
+  });
 });

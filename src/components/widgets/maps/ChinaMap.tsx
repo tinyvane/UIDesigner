@@ -31,15 +31,29 @@ function ChinaMapWidget({ width, height, props }: WidgetProps) {
 
   const {
     title = '',
-    data = DEFAULT_DATA,
+    data: rawData = DEFAULT_DATA,
     colorRange = ['#0a3a6b', '#0d6efd', '#00ff88'],
     showVisualMap = true,
   } = props as {
     title?: string;
-    data?: { name: string; value: number }[];
+    data?: unknown;
     colorRange?: string[];
     showVisualMap?: boolean;
   };
+
+  // Safely parse map data
+  const data = (() => {
+    let obj = rawData;
+    if (typeof obj === 'string') {
+      try { obj = JSON.parse(obj); } catch { return DEFAULT_DATA; }
+    }
+    if (!Array.isArray(obj)) return DEFAULT_DATA;
+    return obj.map((item: unknown) => {
+      if (!item || typeof item !== 'object') return { name: '?', value: 0 };
+      const o = item as Record<string, unknown>;
+      return { name: String(o.name ?? '?'), value: Number(o.value) || 0 };
+    });
+  })();
 
   useEffect(() => {
     // Dynamically load China GeoJSON

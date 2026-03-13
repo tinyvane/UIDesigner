@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { getComponent } from '@/components/widgets/registry';
+import { DataSourcePanel } from '@/components/editor/DataSourcePanel';
 
 export function PropertyPanel() {
   const components = useEditorStore((s) => s.components);
@@ -371,8 +372,41 @@ export function PropertyPanel() {
           </TabsContent>
 
           <TabsContent value="data" className="mt-0 p-3">
-            <div className="py-8 text-center text-xs text-gray-500">
-              Data binding — coming in Phase 3
+            <div className="space-y-4">
+              {/* Inline JSON editor for component data props */}
+              {registration?.propSchema?.filter((f) => f.type === 'json').map((field) => {
+                const raw = selectedComponent.props[field.key];
+                const jsonStr = typeof raw === 'string' ? raw : JSON.stringify(raw, null, 2);
+                return (
+                  <div key={field.key}>
+                    <Label className="text-[10px] text-gray-500">{field.label}</Label>
+                    <textarea
+                      value={jsonStr ?? ''}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        try {
+                          const parsed = JSON.parse(val);
+                          updateComponent(selectedComponent.id, {
+                            props: { ...selectedComponent.props, [field.key]: parsed },
+                          });
+                        } catch {
+                          updateComponent(selectedComponent.id, {
+                            props: { ...selectedComponent.props, [field.key]: val },
+                          });
+                        }
+                      }}
+                      rows={6}
+                      className="w-full rounded border border-gray-700 bg-gray-800 p-2 font-mono text-[11px] text-gray-200 focus:border-blue-600 focus:outline-none"
+                      spellCheck={false}
+                    />
+                  </div>
+                );
+              })}
+
+              <Separator />
+
+              {/* Data Source Management */}
+              <DataSourcePanel />
             </div>
           </TabsContent>
 
