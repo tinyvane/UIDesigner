@@ -23,17 +23,45 @@ function BarChartWidget({ width, height, props }: WidgetProps) {
     data = DEFAULT_DATA,
     showGrid = true,
     horizontal = false,
+    gradient = false,
+    gradientFrom = '#1a3a6b',
+    gradientTo = '#4facfe',
+    barRadius = 4,
   } = props as {
     title?: string;
     color?: string;
     data?: { categories: string[]; values: number[] };
     showGrid?: boolean;
     horizontal?: boolean;
+    gradient?: boolean;
+    gradientFrom?: string;
+    gradientTo?: string;
+    barRadius?: number;
   };
+
+  const parsed = data as Partial<typeof DEFAULT_DATA> | null;
+  const categories = parsed?.categories ?? DEFAULT_DATA.categories;
+  const values = parsed?.values ?? DEFAULT_DATA.values;
+
+  const barColor = gradient
+    ? new echarts.graphic.LinearGradient(
+        horizontal ? 0 : 0,  // x0
+        horizontal ? 0 : 1,  // y0
+        horizontal ? 1 : 0,  // x1
+        horizontal ? 0 : 0,  // y1
+        [
+          { offset: 0, color: gradientFrom },
+          { offset: 1, color: gradientTo },
+        ],
+      )
+    : color;
+
+  const r = barRadius;
+  const borderRadius = horizontal ? [0, r, r, 0] : [r, r, 0, 0];
 
   const categoryAxis = {
     type: 'category' as const,
-    data: data.categories,
+    data: categories,
     axisLabel: { color: '#9ca3af', fontSize: 10 },
     axisLine: { lineStyle: { color: '#374151' } },
   };
@@ -66,10 +94,10 @@ function BarChartWidget({ width, height, props }: WidgetProps) {
     series: [
       {
         type: 'bar',
-        data: data.values,
+        data: values,
         itemStyle: {
-          color,
-          borderRadius: horizontal ? [0, 4, 4, 0] : [4, 4, 0, 0],
+          color: barColor,
+          borderRadius,
         },
       },
     ],
@@ -99,11 +127,19 @@ registerComponent({
     data: DEFAULT_DATA,
     showGrid: true,
     horizontal: false,
+    gradient: false,
+    gradientFrom: '#1a3a6b',
+    gradientTo: '#4facfe',
+    barRadius: 4,
   },
   propSchema: [
     { key: 'title', type: 'string', label: 'Title', group: 'Basic' },
     { key: 'color', type: 'color', label: 'Bar Color', group: 'Style' },
     { key: 'horizontal', type: 'boolean', label: 'Horizontal', group: 'Style' },
+    { key: 'gradient', type: 'boolean', label: 'Gradient', group: 'Style' },
+    { key: 'gradientFrom', type: 'color', label: 'Gradient From', group: 'Style' },
+    { key: 'gradientTo', type: 'color', label: 'Gradient To', group: 'Style' },
+    { key: 'barRadius', type: 'number', label: 'Bar Radius', group: 'Style', min: 0, max: 20, step: 1 },
     { key: 'showGrid', type: 'boolean', label: 'Show Grid', group: 'Style' },
     { key: 'data', type: 'json', label: 'Data', group: 'Data' },
   ],
