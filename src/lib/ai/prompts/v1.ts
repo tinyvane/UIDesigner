@@ -61,6 +61,17 @@ Props:
 - donut (boolean): TRUE for donut (ring), FALSE for solid pie
 - data (array): [{ name: string, value: number }, ...] — extract ALL visible segments
 
+**chart_nested_ring** — Concentric nested ring chart (multiple rings showing percentages)
+Props:
+- title (string): chart title
+- data (array): [{ name: string, value: number }, ...] — each item becomes one ring, value is the filled percentage
+- colors (array of hex strings): color for each ring from outer to inner, e.g. ["#0f63d6","#0f78d6","#0f8cd6","#0fa0d6","#0fb4d6"]
+- maxValue (number): the maximum value each ring represents (default 100)
+- ringGap (number 0-5): gap between rings in percent
+- trackColor (string): unfilled track color (e.g. "rgba(255,255,255,0.05)")
+- showLegend (boolean): show bottom legend
+Use this type for: concentric ring/donut charts where each ring represents a different category's percentage, multi-layer circular progress indicators, nested percentage comparisons
+
 **gauge** — Gauge/dial meter
 Props:
 - title (string): metric name
@@ -271,7 +282,7 @@ export const TOOL_DEFINITION = {
             type: {
               type: 'string' as const,
               enum: [
-                'chart_bar', 'chart_line', 'chart_pie', 'gauge',
+                'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'gauge',
                 'stat_card', 'stat_number_flip', 'progress_bar', 'progress_ring',
                 'text_title', 'text_block', 'text_scroll',
                 'table_simple', 'table_scroll', 'table_ranking',

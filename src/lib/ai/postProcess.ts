@@ -6,7 +6,7 @@
 import type { AIRecognizedComponent, AIRecognitionResult } from './provider';
 
 const SUPPORTED_TYPES = new Set([
-  'chart_bar', 'chart_line', 'chart_pie', 'gauge',
+  'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'gauge',
   'stat_card', 'stat_number_flip', 'progress_bar', 'progress_ring',
   'text_title', 'text_block', 'text_scroll',
   'table_simple', 'table_scroll', 'table_ranking',
@@ -18,6 +18,8 @@ const SUPPORTED_TYPES = new Set([
 ]);
 
 const TYPE_FALLBACK: Record<string, string> = {
+  'chart_ring': 'chart_nested_ring',
+  'chart_donut_nested': 'chart_nested_ring',
   'chart_radar': 'chart_pie',
   'chart_scatter': 'chart_line',
   'chart_funnel': 'chart_bar',
