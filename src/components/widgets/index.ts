@@ -6,12 +6,14 @@ import './charts/BarChart';
 import './charts/LineChart';
 import './charts/PieChart';
 import './charts/GaugeChart';
+import './charts/NestedRingChart';
 
 // Stats
 import './stats/StatCard';
 import './stats/ProgressBar';
 import './stats/NumberFlipper';
 import './stats/ProgressRing';
+import './stats/TechCounter';
 
 // Text
 import './text/TextTitle';
@@ -22,6 +24,10 @@ import './text/TextParagraph';
 import './tables/BasicTable';
 import './tables/ScrollingTable';
 import './tables/RankingList';
+
+// Buttons
+import './buttons/TechButton';
+import './buttons/TechHeader';
 
 // Decorations
 import './decorations/BorderDecoration';

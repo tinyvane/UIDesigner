@@ -58,7 +58,37 @@
     "maps": "Maps",
     "media": "Media",
     "decorations": "Decorations",
-    "utility": "Utility"
+    "utility": "Utility",
+    "buttons": "Buttons",
+    "gauges": "Gauges",
+    "noComponentsFound": "No components found"
+  },
+  "widgets": {
+    "chart_bar": "Bar Chart",
+    "chart_line": "Line Chart",
+    "chart_pie": "Pie / Donut",
+    "chart_nested_ring": "Nested Ring",
+    "gauge": "Gauge",
+    "stat_card": "Stat Card",
+    "stat_number_flip": "Number Flipper",
+    "tech_counter": "Tech Counter",
+    "progress_bar": "Progress Bar",
+    "progress_ring": "Progress Ring",
+    "text_title": "Title Text",
+    "text_block": "Text Block",
+    "text_scroll": "Scrolling Text",
+    "table_simple": "Basic Table",
+    "table_scroll": "Scrolling Table",
+    "table_ranking": "Ranking List",
+    "map_china": "China Map",
+    "image": "Image",
+    "video": "Video",
+    "tech_button": "Tech Button",
+    "tech_header": "Tech Header",
+    "border_decoration": "Border Decoration",
+    "divider": "Divider",
+    "background_particle": "Glow Dot",
+    "clock": "Clock"
   },
   "propertyPanel": {
     "style": "Style",
@@ -69,7 +99,7 @@
     "size": "Size",
     "rotation": "Rotation",
     "opacity": "Opacity",
-    "noSelection": "Select a component to edit properties",
+    "noSelection": "Select a component to edit its properties",
     "multipleSelected": "{count} components selected"
   },
   "canvas": {

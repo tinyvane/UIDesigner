@@ -11,7 +11,9 @@ export const ComponentTypeEnum = z.enum([
   'chart_funnel',
   'chart_treemap',
   'chart_sankey',
+  'chart_nested_ring',
   // Stats
+  'tech_counter',
   'stat_card',
   'stat_card_group',
   'stat_number_flip',
@@ -44,6 +46,9 @@ export const ComponentTypeEnum = z.enum([
   'border_decoration',
   'divider',
   'background_particle',
+  // Buttons
+  'tech_button',
+  'tech_header',
   // Utility
   'clock',
   'countdown',
@@ -61,6 +66,7 @@ export const ComponentCategoryEnum = z.enum([
   'gauge',
   'map',
   'media',
+  'button',
   'decoration',
   'utility',
 ]);

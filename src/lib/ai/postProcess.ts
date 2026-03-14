@@ -6,17 +6,20 @@
 import type { AIRecognizedComponent, AIRecognitionResult } from './provider';
 
 const SUPPORTED_TYPES = new Set([
-  'chart_bar', 'chart_line', 'chart_pie', 'gauge',
-  'stat_card', 'stat_number_flip', 'progress_bar', 'progress_ring',
+  'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'gauge',
+  'stat_card', 'stat_number_flip', 'tech_counter', 'progress_bar', 'progress_ring',
   'text_title', 'text_block', 'text_scroll',
   'table_simple', 'table_scroll', 'table_ranking',
   'map_china',
   'image',
+  'tech_button', 'tech_header',
   'border_decoration', 'divider',
   'clock',
 ]);
 
 const TYPE_FALLBACK: Record<string, string> = {
+  'chart_ring': 'chart_nested_ring',
+  'chart_donut_nested': 'chart_nested_ring',
   'chart_radar': 'chart_pie',
   'chart_scatter': 'chart_line',
   'chart_funnel': 'chart_bar',
@@ -138,6 +141,9 @@ export function postProcessComponents(
     return comp;
   });
 
+  // Step 7: Smart prop inference — fill in visual properties AI may have missed
+  components = components.map((comp) => inferVisualProps(comp));
+
   // Ensure props exists
   components = components.map((comp) => ({
     ...comp,
@@ -187,6 +193,69 @@ function fixCollisions(components: AIRecognizedComponent[]): AIRecognizedCompone
   }
 
   return result;
+}
+
+/**
+ * Infer visual properties that AI may not have returned.
+ * Uses component dimensions and existing props to fill gaps.
+ */
+function inferVisualProps(comp: AIRecognizedComponent): AIRecognizedComponent {
+  if (!comp.props) return comp;
+  const props = { ...comp.props } as Record<string, unknown>;
+
+  if (comp.type === 'chart_bar') {
+    // Step A: Normalize AI field names to widget expected names
+    // AI sometimes uses different field names than our widget schema expects
+    if (props.direction !== undefined && props.horizontal === undefined) {
+      props.horizontal = props.direction === 'horizontal';
+      delete props.direction;
+    }
+    if (props.barColor !== undefined && props.color === undefined) {
+      props.color = props.barColor;
+      delete props.barColor;
+    }
+    if (props.subtitle !== undefined && props.title !== undefined) {
+      // Keep subtitle as-is, widget may use it
+    }
+
+    // Step B: Infer horizontal orientation from aspect ratio if still not set
+    if (props.horizontal === undefined || props.horizontal === false) {
+      const data = props.data as Record<string, unknown> | undefined;
+      let hasLongCategories = false;
+      if (data) {
+        const categories = Array.isArray(data)
+          ? (data as Array<Record<string, unknown>>).map(d => String(d.name ?? d.label ?? ''))
+          : Array.isArray((data as Record<string, unknown>).categories)
+            ? ((data as Record<string, unknown>).categories as string[]).map(String)
+            : [];
+        const avgLabelLen = categories.length > 0
+          ? categories.reduce((sum, c) => sum + c.length, 0) / categories.length
+          : 0;
+        hasLongCategories = avgLabelLen >= 3;
+      }
+      if (comp.width > comp.height * 1.2 && hasLongCategories) {
+        props.horizontal = true;
+      }
+    }
+  }
+
+  if (comp.type === 'chart_line') {
+    // Normalize line chart field names
+    if (props.lineColor !== undefined && props.color === undefined) {
+      props.color = props.lineColor;
+      delete props.lineColor;
+    }
+  }
+
+  if (comp.type === 'chart_pie') {
+    // Normalize pie chart field names
+    if (props.isDonut !== undefined && props.donut === undefined) {
+      props.donut = props.isDonut;
+      delete props.isDonut;
+    }
+  }
+
+  return { ...comp, props };
 }
 
 function rectsOverlap(

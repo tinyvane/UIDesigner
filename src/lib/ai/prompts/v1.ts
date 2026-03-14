@@ -61,6 +61,17 @@ Props:
 - donut (boolean): TRUE for donut (ring), FALSE for solid pie
 - data (array): [{ name: string, value: number }, ...] — extract ALL visible segments
 
+**chart_nested_ring** — Concentric nested ring chart (multiple rings showing percentages)
+Props:
+- title (string): chart title
+- data (array): [{ name: string, value: number }, ...] — each item becomes one ring, value is the filled percentage
+- colors (array of hex strings): color for each ring from outer to inner, e.g. ["#0f63d6","#0f78d6","#0f8cd6","#0fa0d6","#0fb4d6"]
+- maxValue (number): the maximum value each ring represents (default 100)
+- ringGap (number 0-5): gap between rings in percent
+- trackColor (string): unfilled track color (e.g. "rgba(255,255,255,0.05)")
+- showLegend (boolean): show bottom legend
+Use this type for: concentric ring/donut charts where each ring represents a different category's percentage, multi-layer circular progress indicators, nested percentage comparisons
+
 **gauge** — Gauge/dial meter
 Props:
 - title (string): metric name
@@ -89,6 +100,20 @@ Props:
 - color (hex): number color
 - fontSize (number 12-120): font size
 - decimals (number 0-4): decimal places
+
+**tech_counter** — LCD-style digital counter with corner decorations
+Props:
+- value (number): the number to display
+- label (string): description text below the number
+- prefix (string): prefix text (e.g. "¥")
+- suffix (string): suffix text (e.g. "万")
+- color (hex): number color — golden "#ffeb7b" is typical for tech dashboards
+- fontSize (number 16-120): number font size
+- labelColor (string): label text color
+- showCorners (boolean): show tech-style corner decorations
+- cornerColor (hex): corner decoration color (e.g. "#02a6b5")
+- decimals (number 0-4): decimal places
+Use this type for: large KPI numbers with tech/sci-fi styling, digital counter displays, data dashboard hero metrics with decorative borders
 
 **progress_bar** — Horizontal progress bar
 Props:
@@ -206,6 +231,34 @@ Props:
 - glowOpacity (number 0-1)
 - animate (boolean): pulse animation
 
+### Buttons
+
+**tech_button** — Sci-fi style circular button with glow rings
+Props:
+- text (string): button label text — extract from image
+- glowColor (hex): outer glow/accent color (e.g. "#00e5ff" for cyan glow)
+- ringColor (hex): ring line color (e.g. "#1a6b8a")
+- bgColor (hex): inner background color
+- textColor (hex): text color
+- fontSize (number 10-48): text size
+- rings (number 1-3): number of concentric ring layers
+- glowIntensity (number 0-30): glow strength
+- animated (boolean): pulse animation effect
+Use this type for: circular/round buttons with tech/sci-fi glow effects, navigation buttons with ring borders, status indicator buttons
+
+**tech_header** — Sci-fi style title header bar with decorative border
+Props:
+- text (string): the header title text — extract from image
+- fontSize (number 12-72): title font size
+- textColor (hex): text color
+- textGlow (boolean): whether text has glow effect
+- letterSpacing (number 0-30): space between characters
+- bgColor (hex): background color
+- bgOpacity (number 0-100): background transparency percentage
+- accentColor (hex): decorative border/accent color
+- borderStyle ("angular"|"line"|"none"): bottom border decoration style
+Use this type for: dashboard main titles with decorative backgrounds, header bars with tech-style bottom borders, title sections with gradient backgrounds
+
 ### Utility
 
 **clock** — Real-time digital clock
@@ -243,12 +296,13 @@ export const TOOL_DEFINITION = {
             type: {
               type: 'string' as const,
               enum: [
-                'chart_bar', 'chart_line', 'chart_pie', 'gauge',
-                'stat_card', 'stat_number_flip', 'progress_bar', 'progress_ring',
+                'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'gauge',
+                'stat_card', 'stat_number_flip', 'tech_counter', 'progress_bar', 'progress_ring',
                 'text_title', 'text_block', 'text_scroll',
                 'table_simple', 'table_scroll', 'table_ranking',
                 'map_china',
                 'image',
+                'tech_button', 'tech_header',
                 'border_decoration', 'divider', 'background_particle',
                 'clock',
               ],
@@ -286,7 +340,18 @@ export const TOOL_DEFINITION = {
             },
             props: {
               type: 'object' as const,
-              description: 'Component-specific properties — MUST include all relevant props with actual data extracted from the image. See the Props Reference for each component type.',
+              description: `Component-specific properties — MUST include ALL relevant props with ACTUAL data extracted from the image.
+
+IMPORTANT for chart_bar:
+- horizontal: MUST be true if bars extend horizontally (categories on Y-axis). Look at the image carefully.
+- gradient: MUST be true if bars show any color transition/gradient effect.
+- gradientFrom/gradientTo: Extract the actual gradient colors from the image.
+- color: Extract the ACTUAL bar color from the image as hex (e.g. "#4facfe"), do NOT use default "#6366f1".
+- data: Use { categories: [...], values: [...] } format with ACTUAL labels and values from the image.
+
+IMPORTANT for all components:
+- Extract ACTUAL colors visible in the image, never use widget default colors.
+- Read ALL text/numbers directly from the image.`,
             },
           },
           required: ['type', 'x', 'y', 'width', 'height', 'props'],
@@ -310,4 +375,9 @@ export const TOOL_DEFINITION = {
   },
 };
 
-export const USER_PROMPT = 'Analyze this dashboard screenshot carefully. For EVERY component, extract the actual visible text, data values, colors, and layout direction from the image. Do NOT use placeholder data — read the real content. Output the result using the generate_dashboard_components tool.';
+export const USER_PROMPT = `Analyze this dashboard screenshot carefully. For EVERY component:
+1. Extract the ACTUAL visible text, data values, and colors from the image
+2. For bar charts: detect if bars are HORIZONTAL (extending left-to-right) and set horizontal=true. Detect gradient fills and extract gradient colors.
+3. For ALL charts: extract the ACTUAL color hex codes from the image — do NOT use default colors like #6366f1
+4. Do NOT use placeholder data — read the real content from the image
+Output the result using the generate_dashboard_components tool.`;

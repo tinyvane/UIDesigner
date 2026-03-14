@@ -24,6 +24,7 @@ export function AIConfirmDialog({
   const [components, setComponents] = useState(
     initialComponents.map((c, i) => ({ ...c, accepted: true, id: `ai-${i}` })),
   );
+
   const addComponent = useEditorStore((s) => s.addComponent);
   const updateComponent = useEditorStore((s) => s.updateComponent);
   const setCanvas = useEditorStore((s) => s.setCanvas);
@@ -48,6 +49,7 @@ export function AIConfirmDialog({
     // Add accepted components to canvas
     for (const comp of components) {
       if (!comp.accepted) continue;
+
       const newId = addComponent(
         comp.type as ComponentType,
         { x: comp.x, y: comp.y },
@@ -70,6 +72,7 @@ export function AIConfirmDialog({
 
     for (const comp of components) {
       if (!comp.accepted) continue;
+
       const newId = addComponent(
         comp.type as ComponentType,
         { x: comp.x, y: comp.y },
@@ -138,6 +141,12 @@ export function AIConfirmDialog({
                     <div className="text-[10px] text-gray-500">
                       {comp.type} — {Math.round(comp.x)},{Math.round(comp.y)} {Math.round(comp.width)}x{Math.round(comp.height)}
                     </div>
+                    {/* Show AI-returned props keys for debugging */}
+                    {comp.props && Object.keys(comp.props).length > 0 && (
+                      <div className="text-[10px] text-gray-400 truncate">
+                        props: {Object.keys(comp.props).join(', ')}
+                      </div>
+                    )}
                   </div>
                   <button
                     onClick={() => removeComponent(comp.id)}

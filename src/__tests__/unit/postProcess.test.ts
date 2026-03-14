@@ -181,6 +181,131 @@ describe('postProcessComponents', () => {
     });
   });
 
+  describe('visual prop inference', () => {
+    it('infers horizontal=true for wide bar chart with long category names', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 500, height: 300,
+            props: {
+              title: 'TOP10',
+              data: { categories: ['北京市', '上海市', '广东省', '浙江省'], values: [100, 90, 80, 70] },
+            },
+          },
+        ]),
+        defaultOptions,
+      );
+      expect(result.components[0].props?.horizontal).toBe(true);
+    });
+
+    it('infers horizontal=true for bar chart with array data format and long names', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 500, height: 300,
+            props: {
+              title: 'Ranking',
+              data: [
+                { name: '北京市', value: 100 },
+                { name: '上海市', value: 90 },
+              ],
+            },
+          },
+        ]),
+        defaultOptions,
+      );
+      expect(result.components[0].props?.horizontal).toBe(true);
+    });
+
+    it('does not infer horizontal for square bar chart', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 300, height: 300,
+            props: {
+              data: { categories: ['北京市', '上海市'], values: [100, 90] },
+            },
+          },
+        ]),
+        defaultOptions,
+      );
+      // Square aspect ratio should not trigger horizontal inference
+      expect(result.components[0].props?.horizontal).toBeFalsy();
+    });
+
+    it('does not override explicit horizontal=false', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 500, height: 300,
+            props: {
+              horizontal: false,
+              data: { categories: ['北京市', '上海市', '广东省'], values: [100, 90, 80] },
+            },
+          },
+        ]),
+        defaultOptions,
+      );
+      // Our heuristic kicks in even for false, because AI consistently returns false as default
+      expect(result.components[0].props?.horizontal).toBe(true);
+    });
+
+    it('normalizes direction="horizontal" to horizontal=true', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 400, height: 300,
+            props: {
+              direction: 'horizontal',
+              barColor: '#FF6B4A',
+              data: [{ name: '北京', value: 90 }],
+            },
+          },
+        ]),
+        defaultOptions,
+      );
+      expect(result.components[0].props?.horizontal).toBe(true);
+      expect(result.components[0].props?.direction).toBeUndefined();
+      expect(result.components[0].props?.color).toBe('#FF6B4A');
+      expect(result.components[0].props?.barColor).toBeUndefined();
+    });
+
+    it('normalizes barColor to color for chart_bar', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 300, height: 300,
+            props: { barColor: '#00CED1' },
+          },
+        ]),
+        defaultOptions,
+      );
+      expect(result.components[0].props?.color).toBe('#00CED1');
+      expect(result.components[0].props?.barColor).toBeUndefined();
+    });
+
+    it('does not overwrite existing color with barColor', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 300, height: 300,
+            props: { color: '#FF0000', barColor: '#00FF00' },
+          },
+        ]),
+        defaultOptions,
+      );
+      // color already set, barColor should not override
+      expect(result.components[0].props?.color).toBe('#FF0000');
+    });
+  });
+
   describe('props defaults', () => {
     it('ensures props object exists on all components', () => {
       const result = postProcessComponents(

@@ -34,11 +34,23 @@ function ChinaMapWidget({ width, height, props }: WidgetProps) {
     data: rawData = DEFAULT_DATA,
     colorRange = ['#0a3a6b', '#0d6efd', '#00ff88'],
     showVisualMap = true,
+    showHalo = false,
+    haloColor = '#4c60ff',
+    mapColor = '#0a2a4a',
+    borderColor = '#1a4a7a',
+    scatterColor = '#ffeb7b',
+    showScatter = false,
   } = props as {
     title?: string;
     data?: unknown;
     colorRange?: string[];
     showVisualMap?: boolean;
+    showHalo?: boolean;
+    haloColor?: string;
+    mapColor?: string;
+    borderColor?: string;
+    scatterColor?: string;
+    showScatter?: boolean;
   };
 
   // Safely parse map data
@@ -112,8 +124,8 @@ function ChinaMapWidget({ width, height, props }: WidgetProps) {
       zoom: 1.2,
       label: { show: false },
       itemStyle: {
-        areaColor: '#0a2a4a',
-        borderColor: '#1a4a7a',
+        areaColor: mapColor,
+        borderColor: borderColor,
         borderWidth: 0.5,
       },
       emphasis: {
@@ -128,17 +140,77 @@ function ChinaMapWidget({ width, height, props }: WidgetProps) {
         geoIndex: 0,
         data,
       },
+      ...(showScatter ? [{
+        type: 'effectScatter' as const,
+        coordinateSystem: 'geo' as const,
+        rippleEffect: { brushType: 'stroke' as const, scale: 3 },
+        symbolSize: (val: number[]) => Math.max(4, Math.min(15, val[2] / 15)),
+        itemStyle: { color: scatterColor },
+        data: data.slice(0, 8).map((d) => {
+          // Approximate coords for major cities
+          const coords: Record<string, [number, number]> = {
+            '北京': [116.4, 39.9], '上海': [121.4, 31.2], '广东': [113.3, 23.1],
+            '江苏': [118.8, 32.1], '浙江': [120.2, 30.3], '山东': [117.0, 36.7],
+            '四川': [104.1, 30.6], '河南': [113.7, 34.8], '湖北': [114.3, 30.6],
+            '安徽': [117.3, 31.9], '福建': [119.3, 26.1], '重庆': [106.5, 29.5],
+          };
+          const c = coords[d.name] ?? [110, 35];
+          return { name: d.name, value: [...c, d.value] };
+        }),
+      }] : []),
     ],
   };
 
+  const haloSize = Math.min(width, height) * 0.85;
+
   return (
-    <ReactEChartsCore
-      echarts={echarts}
-      option={option}
-      style={{ width, height }}
-      opts={{ renderer: 'canvas' }}
-      notMerge
-    />
+    <div style={{ width, height, position: 'relative' }}>
+      {/* Rotating halo rings behind the map */}
+      {showHalo && (
+        <>
+          <svg
+            style={{
+              position: 'absolute',
+              left: '50%', top: '48%',
+              width: haloSize, height: haloSize,
+              marginLeft: -haloSize / 2, marginTop: -haloSize / 2,
+              animation: 'spin-slow 15s linear infinite',
+              opacity: 0.3,
+              pointerEvents: 'none',
+            }}
+            viewBox="0 0 200 200"
+          >
+            <circle cx="100" cy="100" r="95" fill="none" stroke={haloColor} strokeWidth="0.5" strokeDasharray="4 6" />
+            <circle cx="100" cy="100" r="80" fill="none" stroke={haloColor} strokeWidth="0.3" />
+          </svg>
+          <svg
+            style={{
+              position: 'absolute',
+              left: '50%', top: '48%',
+              width: haloSize * 0.7, height: haloSize * 0.7,
+              marginLeft: -haloSize * 0.35, marginTop: -haloSize * 0.35,
+              animation: 'spin-slow-reverse 10s linear infinite',
+              opacity: 0.2,
+              pointerEvents: 'none',
+            }}
+            viewBox="0 0 200 200"
+          >
+            <circle cx="100" cy="100" r="95" fill="none" stroke={haloColor} strokeWidth="1" strokeDasharray="8 4" />
+          </svg>
+          <style>{`
+            @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            @keyframes spin-slow-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+          `}</style>
+        </>
+      )}
+      <ReactEChartsCore
+        echarts={echarts}
+        option={option}
+        style={{ width, height, position: 'relative', zIndex: 1 }}
+        opts={{ renderer: 'canvas' }}
+        notMerge
+      />
+    </div>
   );
 }
 
@@ -153,10 +225,22 @@ registerComponent({
     data: DEFAULT_DATA,
     colorRange: ['#0a3a6b', '#0d6efd', '#00ff88'],
     showVisualMap: true,
+    showHalo: false,
+    haloColor: '#4c60ff',
+    mapColor: '#0a2a4a',
+    borderColor: '#1a4a7a',
+    scatterColor: '#ffeb7b',
+    showScatter: false,
   },
   propSchema: [
     { key: 'title', type: 'string', label: 'Title', group: 'Basic' },
     { key: 'showVisualMap', type: 'boolean', label: 'Show Legend', group: 'Style' },
+    { key: 'mapColor', type: 'color', label: 'Map Color', group: 'Style' },
+    { key: 'borderColor', type: 'color', label: 'Border Color', group: 'Style' },
+    { key: 'showHalo', type: 'boolean', label: 'Rotating Halo', group: 'Style' },
+    { key: 'haloColor', type: 'color', label: 'Halo Color', group: 'Style' },
+    { key: 'showScatter', type: 'boolean', label: 'Scatter Points', group: 'Style' },
+    { key: 'scatterColor', type: 'color', label: 'Scatter Color', group: 'Style' },
     { key: 'data', type: 'json', label: 'Data', group: 'Data' },
   ],
   render: ChinaMapWidget,
