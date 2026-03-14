@@ -99,7 +99,7 @@
     "size": "Size",
     "rotation": "Rotation",
     "opacity": "Opacity",
-    "noSelection": "Select a component to edit properties",
+    "noSelection": "Select a component to edit its properties",
     "multipleSelected": "{count} components selected"
   },
   "canvas": {
