@@ -209,6 +209,38 @@ Props:
 - data (array): [[dayIndex, hourIndex, value], ...] — 3D data points
 Use this type for: 3D bar charts, heatmap-style 3D visualizations, time×category matrix data
 
+**chart_wordcloud** — Word cloud for keyword frequency visualization
+Props:
+- title (string): chart title
+- fontSizeMin (number 8-30): minimum font size
+- fontSizeMax (number 20-120): maximum font size
+- shape ("circle"|"diamond"|"triangle-forward"|"star"): cloud shape
+- data (array): [{ name: string, value: number }, ...] — words with frequency
+Use this type for: tag clouds, keyword frequency displays, text analysis results
+
+**chart_liquidfill** — Animated liquid fill / water ball percentage display
+Props:
+- title (string): chart title
+- value (number 0-1): fill percentage (e.g. 0.65 = 65%)
+- color (hex): wave color
+- bgColor (hex): background color
+- shape ("circle"|"rect"|"roundRect"|"diamond"|"triangle"|"pin"): container shape
+- waveAnimation (boolean): animate waves
+- showLabel (boolean): show percentage label
+- fontSize (number 12-72): label font size
+Use this type for: percentage indicators, completion rates, water level displays, circular progress with wave effect
+
+**chart_graph** — Force-directed graph for relationship visualization
+Props:
+- title (string): chart title
+- layout ("force"|"circular"): layout algorithm
+- repulsion (number 50-1000): node repulsion force
+- lineColor (hex): edge line color
+- showLabel (boolean): show node labels
+- draggable (boolean): allow dragging nodes
+- data (object): { nodes: [{name, symbolSize, category}], links: [{source, target}], categories: [{name}] }
+Use this type for: network graphs, relationship diagrams, knowledge graphs, organizational charts
+
 **chart_heatmap** — Cartesian heatmap for two-dimensional density visualization
 Props:
 - title (string): chart title
@@ -330,7 +362,8 @@ export const TOOL_DEFINITION = {
             type: {
               type: 'string' as const,
               enum: [
-                'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'chart_flyline_map', 'chart_bar3d', 'chart_heatmap', 'gauge',
+                'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'chart_flyline_map',
+                'chart_bar3d', 'chart_heatmap', 'chart_wordcloud', 'chart_liquidfill', 'chart_graph', 'gauge',
                 'stat_card', 'stat_number_flip', 'tech_counter', 'progress_bar', 'progress_ring',
                 'text_title', 'text_block', 'text_scroll',
                 'table_simple', 'table_scroll', 'table_ranking',

@@ -91,7 +91,10 @@
     "clock": "Clock",
     "chart_flyline_map": "Flyline Map",
     "chart_bar3d": "3D Bar Chart",
-    "chart_heatmap": "Heatmap"
+    "chart_heatmap": "Heatmap",
+    "chart_wordcloud": "Word Cloud",
+    "chart_liquidfill": "Liquid Fill",
+    "chart_graph": "Graph / Network"
   },
   "propertyPanel": {
     "style": "Style",

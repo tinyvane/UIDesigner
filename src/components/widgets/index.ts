@@ -9,6 +9,9 @@ import './charts/GaugeChart';
 import './charts/NestedRingChart';
 import './charts/Bar3DChart';
 import './charts/HeatmapChart';
+import './charts/WordCloudChart';
+import './charts/LiquidFillChart';
+import './charts/GraphChart';
 
 // Stats
 import './stats/StatCard';

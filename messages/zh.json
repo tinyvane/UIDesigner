@@ -91,7 +91,10 @@
     "clock": "时钟",
     "chart_flyline_map": "飞线地图",
     "chart_bar3d": "3D柱状图",
-    "chart_heatmap": "热力图"
+    "chart_heatmap": "热力图",
+    "chart_wordcloud": "词云",
+    "chart_liquidfill": "水球图",
+    "chart_graph": "关系图谱"
   },
   "propertyPanel": {
     "style": "样式",
