@@ -54,6 +54,7 @@ export function getComponentCategories(): { category: ComponentCategory; label: 
     { category: 'gauge', label: 'Gauges' },
     { category: 'map', label: 'Maps' },
     { category: 'media', label: 'Media' },
+    { category: 'button', label: 'Buttons' },
     { category: 'decoration', label: 'Decorations' },
     { category: 'utility', label: 'Utility' },
   ];
