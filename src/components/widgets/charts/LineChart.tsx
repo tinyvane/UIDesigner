@@ -22,6 +22,25 @@ function parseLineData(raw: unknown): { categories: string[]; values: number[] }
     try { obj = JSON.parse(obj); } catch { return DEFAULT_DATA; }
   }
   if (!obj || typeof obj !== 'object') return DEFAULT_DATA;
+
+  // Format 1: Array of {name, value}
+  if (Array.isArray(obj)) {
+    const items = obj.filter((item): item is Record<string, unknown> =>
+      item && typeof item === 'object' && ('name' in item || 'label' in item),
+    );
+    if (items.length > 0) {
+      return {
+        categories: items.map(item => String(item.name ?? item.label ?? '')),
+        values: items.map(item => {
+          const v = Number(item.value ?? 0);
+          return isNaN(v) ? 0 : v;
+        }),
+      };
+    }
+    return DEFAULT_DATA;
+  }
+
+  // Format 2: { categories, values }
   const o = obj as Record<string, unknown>;
   const categories = Array.isArray(o.categories) ? o.categories.map(String) : DEFAULT_DATA.categories;
   const values = Array.isArray(o.values) ? o.values.map(Number).map(v => isNaN(v) ? 0 : v) : DEFAULT_DATA.values;
