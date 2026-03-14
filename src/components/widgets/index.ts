@@ -13,6 +13,7 @@ import './stats/StatCard';
 import './stats/ProgressBar';
 import './stats/NumberFlipper';
 import './stats/ProgressRing';
+import './stats/TechCounter';
 
 // Text
 import './text/TextTitle';

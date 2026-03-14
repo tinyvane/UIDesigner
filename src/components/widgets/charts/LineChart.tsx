@@ -78,9 +78,15 @@ function LineChartWidget({ width, height, props }: WidgetProps) {
       type: 'line',
       data: values,
       smooth: smooth as boolean,
-      lineStyle: { color: color as string, width: 2 },
+      showSymbol: false,
+      lineStyle: { color: color as string, width: 2, shadowColor: `${color}40`, shadowBlur: 8 },
       itemStyle: { color: color as string },
-      areaStyle: (areaFill as boolean) ? { color: `${color}30` } : undefined,
+      areaStyle: (areaFill as boolean) ? {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: `${color}66` },
+          { offset: 1, color: `${color}05` },
+        ]),
+      } : undefined,
     }],
   };
 
@@ -93,7 +99,7 @@ registerComponent({
   icon: 'TrendingUp',
   category: 'chart',
   description: 'Trend line chart for time series data',
-  defaultProps: { title: 'Line Chart', color: '#06b6d4', smooth: true, areaFill: false, data: DEFAULT_DATA },
+  defaultProps: { title: 'Line Chart', color: '#0184d5', smooth: true, areaFill: true, data: DEFAULT_DATA },
   propSchema: [
     { key: 'title', type: 'string', label: 'Title', group: 'Basic' },
     { key: 'color', type: 'color', label: 'Line Color', group: 'Style' },

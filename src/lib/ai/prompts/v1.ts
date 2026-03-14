@@ -101,6 +101,20 @@ Props:
 - fontSize (number 12-120): font size
 - decimals (number 0-4): decimal places
 
+**tech_counter** — LCD-style digital counter with corner decorations
+Props:
+- value (number): the number to display
+- label (string): description text below the number
+- prefix (string): prefix text (e.g. "¥")
+- suffix (string): suffix text (e.g. "万")
+- color (hex): number color — golden "#ffeb7b" is typical for tech dashboards
+- fontSize (number 16-120): number font size
+- labelColor (string): label text color
+- showCorners (boolean): show tech-style corner decorations
+- cornerColor (hex): corner decoration color (e.g. "#02a6b5")
+- decimals (number 0-4): decimal places
+Use this type for: large KPI numbers with tech/sci-fi styling, digital counter displays, data dashboard hero metrics with decorative borders
+
 **progress_bar** — Horizontal progress bar
 Props:
 - label (string): metric name
@@ -283,7 +297,7 @@ export const TOOL_DEFINITION = {
               type: 'string' as const,
               enum: [
                 'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'gauge',
-                'stat_card', 'stat_number_flip', 'progress_bar', 'progress_ring',
+                'stat_card', 'stat_number_flip', 'tech_counter', 'progress_bar', 'progress_ring',
                 'text_title', 'text_block', 'text_scroll',
                 'table_simple', 'table_scroll', 'table_ranking',
                 'map_china',

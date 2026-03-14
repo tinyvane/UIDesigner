@@ -32,17 +32,26 @@ function parsePieData(raw: unknown): { name: string; value: number }[] {
   });
 }
 
+// Cyan-blue gradient palette inspired by big_screen
+const GRADIENT_COLORS = ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab', '#06b4ab', '#06c8ab', '#06dcab', '#06f0ab'];
+
 function PieChartWidget({ width, height, props }: WidgetProps) {
   const {
     title = 'Pie Chart',
     donut = true,
     data = DEFAULT_DATA,
+    colorScheme = 'default',
   } = props as Record<string, unknown>;
 
   const pieData = parsePieData(data);
 
+  const colorOption = (colorScheme as string) === 'tech'
+    ? { color: GRADIENT_COLORS.slice(0, pieData.length) }
+    : {};
+
   const option = {
     backgroundColor: 'transparent',
+    ...colorOption,
     title: { text: title as string, textStyle: { color: '#e5e7eb', fontSize: 14 }, left: 'center', top: 8 },
     tooltip: { trigger: 'item' as const, formatter: '{b}: {c} ({d}%)' },
     legend: { bottom: 5, textStyle: { color: '#9ca3af', fontSize: 10 }, type: 'scroll' as const },
@@ -66,10 +75,14 @@ registerComponent({
   icon: 'PieChart',
   category: 'chart',
   description: 'Pie or donut chart for proportional data',
-  defaultProps: { title: 'Pie Chart', donut: true, data: DEFAULT_DATA },
+  defaultProps: { title: 'Pie Chart', donut: true, data: DEFAULT_DATA, colorScheme: 'default' },
   propSchema: [
     { key: 'title', type: 'string', label: 'Title', group: 'Basic' },
     { key: 'donut', type: 'boolean', label: 'Donut Style', group: 'Style' },
+    { key: 'colorScheme', type: 'select', label: 'Color Scheme', group: 'Style', options: [
+      { label: 'Default', value: 'default' },
+      { label: 'Tech Blue-Cyan', value: 'tech' },
+    ]},
     { key: 'data', type: 'json', label: 'Data', group: 'Data' },
   ],
   render: PieChartWidget,
