@@ -48,6 +48,7 @@ export function AIConfirmDialog({
     // Add accepted components to canvas
     for (const comp of components) {
       if (!comp.accepted) continue;
+
       const newId = addComponent(
         comp.type as ComponentType,
         { x: comp.x, y: comp.y },
@@ -70,6 +71,7 @@ export function AIConfirmDialog({
 
     for (const comp of components) {
       if (!comp.accepted) continue;
+
       const newId = addComponent(
         comp.type as ComponentType,
         { x: comp.x, y: comp.y },
@@ -138,6 +140,12 @@ export function AIConfirmDialog({
                     <div className="text-[10px] text-gray-500">
                       {comp.type} — {Math.round(comp.x)},{Math.round(comp.y)} {Math.round(comp.width)}x{Math.round(comp.height)}
                     </div>
+                    {/* Show AI-returned props keys for debugging */}
+                    {comp.props && (
+                      <div className="text-[9px] text-gray-600 truncate">
+                        props: {Object.keys(comp.props).join(', ')}
+                      </div>
+                    )}
                   </div>
                   <button
                     onClick={() => removeComponent(comp.id)}

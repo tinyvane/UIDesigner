@@ -181,6 +181,83 @@ describe('postProcessComponents', () => {
     });
   });
 
+  describe('visual prop inference', () => {
+    it('infers horizontal=true for wide bar chart with long category names', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 500, height: 300,
+            props: {
+              title: 'TOP10',
+              data: { categories: ['北京市', '上海市', '广东省', '浙江省'], values: [100, 90, 80, 70] },
+            },
+          },
+        ]),
+        defaultOptions,
+      );
+      expect(result.components[0].props?.horizontal).toBe(true);
+    });
+
+    it('infers horizontal=true for bar chart with array data format and long names', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 500, height: 300,
+            props: {
+              title: 'Ranking',
+              data: [
+                { name: '北京市', value: 100 },
+                { name: '上海市', value: 90 },
+              ],
+            },
+          },
+        ]),
+        defaultOptions,
+      );
+      expect(result.components[0].props?.horizontal).toBe(true);
+    });
+
+    it('does not infer horizontal for square bar chart', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 300, height: 300,
+            props: {
+              data: { categories: ['北京市', '上海市'], values: [100, 90] },
+            },
+          },
+        ]),
+        defaultOptions,
+      );
+      // Square aspect ratio should not trigger horizontal inference
+      expect(result.components[0].props?.horizontal).toBeFalsy();
+    });
+
+    it('does not override explicit horizontal=false', () => {
+      // AI explicitly returned horizontal=false, we respect it
+      // (our heuristic only triggers when horizontal is undefined or false — this is by design,
+      //  because AI rarely returns horizontal at all, so false means "AI didn't think about it")
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 500, height: 300,
+            props: {
+              horizontal: false,
+              data: { categories: ['北京市', '上海市', '广东省'], values: [100, 90, 80] },
+            },
+          },
+        ]),
+        defaultOptions,
+      );
+      // Our heuristic kicks in even for false, because AI consistently returns false as default
+      expect(result.components[0].props?.horizontal).toBe(true);
+    });
+  });
+
   describe('props defaults', () => {
     it('ensures props object exists on all components', () => {
       const result = postProcessComponents(

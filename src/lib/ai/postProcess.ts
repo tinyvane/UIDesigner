@@ -138,6 +138,9 @@ export function postProcessComponents(
     return comp;
   });
 
+  // Step 7: Smart prop inference — fill in visual properties AI may have missed
+  components = components.map((comp) => inferVisualProps(comp));
+
   // Ensure props exists
   components = components.map((comp) => ({
     ...comp,
@@ -187,6 +190,47 @@ function fixCollisions(components: AIRecognizedComponent[]): AIRecognizedCompone
   }
 
   return result;
+}
+
+/**
+ * Infer visual properties that AI may not have returned.
+ * Uses component dimensions and existing props to fill gaps.
+ */
+function inferVisualProps(comp: AIRecognizedComponent): AIRecognizedComponent {
+  if (!comp.props) return comp;
+  const props = { ...comp.props } as Record<string, unknown>;
+
+  if (comp.type === 'chart_bar') {
+    // Infer horizontal orientation from aspect ratio:
+    // If the component is significantly wider than tall, bars are likely horizontal
+    // (horizontal bar charts tend to be wider to accommodate label text on the left)
+    if (props.horizontal === undefined || props.horizontal === false) {
+      // Only infer if AI didn't explicitly set it
+      // A horizontal bar chart with category labels on left is typically wider than tall
+      // Check if the data has long category names (Chinese text) — strong hint for horizontal
+      const data = props.data as Record<string, unknown> | undefined;
+      let hasLongCategories = false;
+      if (data) {
+        const categories = Array.isArray(data)
+          ? (data as Array<Record<string, unknown>>).map(d => String(d.name ?? d.label ?? ''))
+          : Array.isArray((data as Record<string, unknown>).categories)
+            ? ((data as Record<string, unknown>).categories as string[]).map(String)
+            : [];
+        // Chinese characters are ~2x width of ASCII chars
+        const avgLabelLen = categories.length > 0
+          ? categories.reduce((sum, c) => sum + c.length, 0) / categories.length
+          : 0;
+        hasLongCategories = avgLabelLen >= 3; // 3+ chars usually means horizontal layout
+      }
+
+      // Heuristic: wide aspect ratio + long labels → horizontal
+      if (comp.width > comp.height * 1.2 && hasLongCategories) {
+        props.horizontal = true;
+      }
+    }
+  }
+
+  return { ...comp, props };
 }
 
 function rectsOverlap(

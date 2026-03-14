@@ -286,7 +286,18 @@ export const TOOL_DEFINITION = {
             },
             props: {
               type: 'object' as const,
-              description: 'Component-specific properties — MUST include all relevant props with actual data extracted from the image. See the Props Reference for each component type.',
+              description: `Component-specific properties — MUST include ALL relevant props with ACTUAL data extracted from the image.
+
+IMPORTANT for chart_bar:
+- horizontal: MUST be true if bars extend horizontally (categories on Y-axis). Look at the image carefully.
+- gradient: MUST be true if bars show any color transition/gradient effect.
+- gradientFrom/gradientTo: Extract the actual gradient colors from the image.
+- color: Extract the ACTUAL bar color from the image as hex (e.g. "#4facfe"), do NOT use default "#6366f1".
+- data: Use { categories: [...], values: [...] } format with ACTUAL labels and values from the image.
+
+IMPORTANT for all components:
+- Extract ACTUAL colors visible in the image, never use widget default colors.
+- Read ALL text/numbers directly from the image.`,
             },
           },
           required: ['type', 'x', 'y', 'width', 'height', 'props'],
@@ -310,4 +321,9 @@ export const TOOL_DEFINITION = {
   },
 };
 
-export const USER_PROMPT = 'Analyze this dashboard screenshot carefully. For EVERY component, extract the actual visible text, data values, colors, and layout direction from the image. Do NOT use placeholder data — read the real content. Output the result using the generate_dashboard_components tool.';
+export const USER_PROMPT = `Analyze this dashboard screenshot carefully. For EVERY component:
+1. Extract the ACTUAL visible text, data values, and colors from the image
+2. For bar charts: detect if bars are HORIZONTAL (extending left-to-right) and set horizontal=true. Detect gradient fills and extract gradient colors.
+3. For ALL charts: extract the ACTUAL color hex codes from the image — do NOT use default colors like #6366f1
+4. Do NOT use placeholder data — read the real content from the image
+Output the result using the generate_dashboard_components tool.`;
