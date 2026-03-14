@@ -237,9 +237,6 @@ describe('postProcessComponents', () => {
     });
 
     it('does not override explicit horizontal=false', () => {
-      // AI explicitly returned horizontal=false, we respect it
-      // (our heuristic only triggers when horizontal is undefined or false — this is by design,
-      //  because AI rarely returns horizontal at all, so false means "AI didn't think about it")
       const result = postProcessComponents(
         makeResult([
           {
@@ -255,6 +252,57 @@ describe('postProcessComponents', () => {
       );
       // Our heuristic kicks in even for false, because AI consistently returns false as default
       expect(result.components[0].props?.horizontal).toBe(true);
+    });
+
+    it('normalizes direction="horizontal" to horizontal=true', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 400, height: 300,
+            props: {
+              direction: 'horizontal',
+              barColor: '#FF6B4A',
+              data: [{ name: '北京', value: 90 }],
+            },
+          },
+        ]),
+        defaultOptions,
+      );
+      expect(result.components[0].props?.horizontal).toBe(true);
+      expect(result.components[0].props?.direction).toBeUndefined();
+      expect(result.components[0].props?.color).toBe('#FF6B4A');
+      expect(result.components[0].props?.barColor).toBeUndefined();
+    });
+
+    it('normalizes barColor to color for chart_bar', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 300, height: 300,
+            props: { barColor: '#00CED1' },
+          },
+        ]),
+        defaultOptions,
+      );
+      expect(result.components[0].props?.color).toBe('#00CED1');
+      expect(result.components[0].props?.barColor).toBeUndefined();
+    });
+
+    it('does not overwrite existing color with barColor', () => {
+      const result = postProcessComponents(
+        makeResult([
+          {
+            type: 'chart_bar',
+            x: 100, y: 100, width: 300, height: 300,
+            props: { color: '#FF0000', barColor: '#00FF00' },
+          },
+        ]),
+        defaultOptions,
+      );
+      // color already set, barColor should not override
+      expect(result.components[0].props?.color).toBe('#FF0000');
     });
   });
 

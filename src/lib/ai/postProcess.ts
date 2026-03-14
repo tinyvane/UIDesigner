@@ -201,13 +201,22 @@ function inferVisualProps(comp: AIRecognizedComponent): AIRecognizedComponent {
   const props = { ...comp.props } as Record<string, unknown>;
 
   if (comp.type === 'chart_bar') {
-    // Infer horizontal orientation from aspect ratio:
-    // If the component is significantly wider than tall, bars are likely horizontal
-    // (horizontal bar charts tend to be wider to accommodate label text on the left)
+    // Step A: Normalize AI field names to widget expected names
+    // AI sometimes uses different field names than our widget schema expects
+    if (props.direction !== undefined && props.horizontal === undefined) {
+      props.horizontal = props.direction === 'horizontal';
+      delete props.direction;
+    }
+    if (props.barColor !== undefined && props.color === undefined) {
+      props.color = props.barColor;
+      delete props.barColor;
+    }
+    if (props.subtitle !== undefined && props.title !== undefined) {
+      // Keep subtitle as-is, widget may use it
+    }
+
+    // Step B: Infer horizontal orientation from aspect ratio if still not set
     if (props.horizontal === undefined || props.horizontal === false) {
-      // Only infer if AI didn't explicitly set it
-      // A horizontal bar chart with category labels on left is typically wider than tall
-      // Check if the data has long category names (Chinese text) — strong hint for horizontal
       const data = props.data as Record<string, unknown> | undefined;
       let hasLongCategories = false;
       if (data) {
@@ -216,17 +225,30 @@ function inferVisualProps(comp: AIRecognizedComponent): AIRecognizedComponent {
           : Array.isArray((data as Record<string, unknown>).categories)
             ? ((data as Record<string, unknown>).categories as string[]).map(String)
             : [];
-        // Chinese characters are ~2x width of ASCII chars
         const avgLabelLen = categories.length > 0
           ? categories.reduce((sum, c) => sum + c.length, 0) / categories.length
           : 0;
-        hasLongCategories = avgLabelLen >= 3; // 3+ chars usually means horizontal layout
+        hasLongCategories = avgLabelLen >= 3;
       }
-
-      // Heuristic: wide aspect ratio + long labels → horizontal
       if (comp.width > comp.height * 1.2 && hasLongCategories) {
         props.horizontal = true;
       }
+    }
+  }
+
+  if (comp.type === 'chart_line') {
+    // Normalize line chart field names
+    if (props.lineColor !== undefined && props.color === undefined) {
+      props.color = props.lineColor;
+      delete props.lineColor;
+    }
+  }
+
+  if (comp.type === 'chart_pie') {
+    // Normalize pie chart field names
+    if (props.isDonut !== undefined && props.donut === undefined) {
+      props.donut = props.isDonut;
+      delete props.isDonut;
     }
   }
 
