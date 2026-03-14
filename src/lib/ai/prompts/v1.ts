@@ -209,6 +209,17 @@ Props:
 - data (array): [[dayIndex, hourIndex, value], ...] — 3D data points
 Use this type for: 3D bar charts, heatmap-style 3D visualizations, time×category matrix data
 
+**chart_heatmap** — Cartesian heatmap for two-dimensional density visualization
+Props:
+- title (string): chart title
+- colorLow (hex): low value color (e.g. "#313695")
+- colorMid (hex): mid value color (e.g. "#ffffbf")
+- colorHigh (hex): high value color (e.g. "#a50026")
+- maxValue (number): max value for color mapping
+- showLabel (boolean): show value labels in cells
+- data (array): [[xIndex, yIndex, value], ...] — heatmap data points
+Use this type for: heatmaps, time-based density charts, activity matrices, correlation displays
+
 **chart_flyline_map** — China map with animated flying lines between cities
 Props:
 - title (string): map title
@@ -319,7 +330,7 @@ export const TOOL_DEFINITION = {
             type: {
               type: 'string' as const,
               enum: [
-                'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'chart_flyline_map', 'chart_bar3d', 'gauge',
+                'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'chart_flyline_map', 'chart_bar3d', 'chart_heatmap', 'gauge',
                 'stat_card', 'stat_number_flip', 'tech_counter', 'progress_bar', 'progress_ring',
                 'text_title', 'text_block', 'text_scroll',
                 'table_simple', 'table_scroll', 'table_ranking',

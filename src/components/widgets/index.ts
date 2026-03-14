@@ -8,6 +8,7 @@ import './charts/PieChart';
 import './charts/GaugeChart';
 import './charts/NestedRingChart';
 import './charts/Bar3DChart';
+import './charts/HeatmapChart';
 
 // Stats
 import './stats/StatCard';
