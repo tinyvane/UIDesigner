@@ -14,6 +14,7 @@ import './charts/LiquidFillChart';
 import './charts/GraphChart';
 import './charts/SunburstChart';
 import './charts/TreeChart';
+import './charts/PictorialBarChart';
 
 // Stats
 import './stats/StatCard';

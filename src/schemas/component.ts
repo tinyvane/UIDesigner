@@ -20,6 +20,7 @@ export const ComponentTypeEnum = z.enum([
   'chart_graph',
   'chart_sunburst',
   'chart_tree',
+  'chart_pictorial_bar',
   // Stats
   'tech_counter',
   'stat_card',

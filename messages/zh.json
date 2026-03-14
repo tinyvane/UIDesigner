@@ -96,7 +96,8 @@
     "chart_liquidfill": "水球图",
     "chart_graph": "关系图谱",
     "chart_sunburst": "旭日图",
-    "chart_tree": "树图"
+    "chart_tree": "树图",
+    "chart_pictorial_bar": "象形柱状图"
   },
   "propertyPanel": {
     "style": "样式",

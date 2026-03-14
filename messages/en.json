@@ -96,7 +96,8 @@
     "chart_liquidfill": "Liquid Fill",
     "chart_graph": "Graph / Network",
     "chart_sunburst": "Sunburst",
-    "chart_tree": "Tree Chart"
+    "chart_tree": "Tree Chart",
+    "chart_pictorial_bar": "Pictorial Bar"
   },
   "propertyPanel": {
     "style": "Style",

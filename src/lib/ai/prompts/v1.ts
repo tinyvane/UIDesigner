@@ -259,6 +259,17 @@ Props:
 - data (object): hierarchical {name, children: [{name, children: [...]}]} structure
 Use this type for: organizational charts, tree diagrams, file system structures, classification hierarchies
 
+**chart_pictorial_bar** — Bar chart with custom symbols
+Props:
+- title (string): chart title
+- color (hex): symbol color
+- symbol ("triangle"|"arrow"|"diamond"|"circle"|"rect"|"roundRect"|"pin"): bar symbol shape
+- horizontal (boolean): horizontal layout
+- barWidth (number 8-50): symbol size
+- symbolRepeat (boolean): repeat symbols to fill bar
+- data (array): [{ name: string, value: number }, ...]
+Use this type for: pictorial bar charts, icon-based comparisons, decorative bar charts with custom shapes
+
 **chart_heatmap** — Cartesian heatmap for two-dimensional density visualization
 Props:
 - title (string): chart title
@@ -382,7 +393,7 @@ export const TOOL_DEFINITION = {
               enum: [
                 'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'chart_flyline_map',
                 'chart_bar3d', 'chart_heatmap', 'chart_wordcloud', 'chart_liquidfill', 'chart_graph',
-                'chart_sunburst', 'chart_tree', 'gauge',
+                'chart_sunburst', 'chart_tree', 'chart_pictorial_bar', 'gauge',
                 'stat_card', 'stat_number_flip', 'tech_counter', 'progress_bar', 'progress_ring',
                 'text_title', 'text_block', 'text_scroll',
                 'table_simple', 'table_scroll', 'table_ranking',
