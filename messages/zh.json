@@ -89,7 +89,8 @@
     "divider": "分割线",
     "background_particle": "光点装饰",
     "clock": "时钟",
-    "chart_flyline_map": "飞线地图"
+    "chart_flyline_map": "飞线地图",
+    "chart_bar3d": "3D柱状图"
   },
   "propertyPanel": {
     "style": "样式",

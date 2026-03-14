@@ -89,7 +89,8 @@
     "divider": "Divider",
     "background_particle": "Glow Dot",
     "clock": "Clock",
-    "chart_flyline_map": "Flyline Map"
+    "chart_flyline_map": "Flyline Map",
+    "chart_bar3d": "3D Bar Chart"
   },
   "propertyPanel": {
     "style": "Style",

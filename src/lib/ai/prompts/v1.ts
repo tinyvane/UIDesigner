@@ -198,6 +198,17 @@ Props:
 - data (array): [{ name: string, value: number }, ...] — province names in Chinese
 - colorRange (array of 3 hex strings): [low, mid, high] color range
 
+**chart_bar3d** — 3D bar chart for two-dimensional categorical data
+Props:
+- title (string): chart title
+- colorLow (hex): low value color (e.g. "#50a3ba")
+- colorMid (hex): mid value color (e.g. "#eac736")
+- colorHigh (hex): high value color (e.g. "#d94e5d")
+- maxValue (number): max value for color mapping
+- autoRotate (boolean): auto-rotate the 3D view
+- data (array): [[dayIndex, hourIndex, value], ...] — 3D data points
+Use this type for: 3D bar charts, heatmap-style 3D visualizations, time×category matrix data
+
 **chart_flyline_map** — China map with animated flying lines between cities
 Props:
 - title (string): map title
@@ -308,7 +319,7 @@ export const TOOL_DEFINITION = {
             type: {
               type: 'string' as const,
               enum: [
-                'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'chart_flyline_map', 'gauge',
+                'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'chart_flyline_map', 'chart_bar3d', 'gauge',
                 'stat_card', 'stat_number_flip', 'tech_counter', 'progress_bar', 'progress_ring',
                 'text_title', 'text_block', 'text_scroll',
                 'table_simple', 'table_scroll', 'table_ranking',

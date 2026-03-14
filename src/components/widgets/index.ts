@@ -7,6 +7,7 @@ import './charts/LineChart';
 import './charts/PieChart';
 import './charts/GaugeChart';
 import './charts/NestedRingChart';
+import './charts/Bar3DChart';
 
 // Stats
 import './stats/StatCard';
