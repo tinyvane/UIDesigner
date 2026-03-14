@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUIStore } from '@/stores/uiStore';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -21,6 +22,7 @@ export function PropertyPanel() {
   const propertyPanelTab = useUIStore((s) => s.propertyPanelTab);
   const setPropertyPanelTab = useUIStore((s) => s.setPropertyPanelTab);
 
+  const t = useTranslations('propertyPanel');
   const selectedId = selectedIds.size === 1 ? Array.from(selectedIds)[0] : null;
   const selectedComponent = selectedId ? components.get(selectedId) : null;
 
@@ -127,7 +129,7 @@ export function PropertyPanel() {
     return (
       <div className="flex h-full flex-col items-center justify-center p-4 text-center">
         <div className="mb-2 text-4xl text-gray-600">🎯</div>
-        <p className="text-sm text-gray-500">Select a component to edit its properties</p>
+        <p className="text-sm text-gray-500">{t('noSelection')}</p>
       </div>
     );
   }
@@ -159,16 +161,16 @@ export function PropertyPanel() {
       >
         <TabsList className="grid w-full grid-cols-4 rounded-none border-b border-gray-800 bg-transparent">
           <TabsTrigger value="style" className="text-xs data-[state=active]:bg-gray-800">
-            Style
+            {t('style')}
           </TabsTrigger>
           <TabsTrigger value="data" className="text-xs data-[state=active]:bg-gray-800">
-            Data
+            {t('data')}
           </TabsTrigger>
           <TabsTrigger value="animation" className="text-xs data-[state=active]:bg-gray-800">
-            Anim
+            {t('animation')}
           </TabsTrigger>
           <TabsTrigger value="event" className="text-xs data-[state=active]:bg-gray-800">
-            Event
+            {t('event')}
           </TabsTrigger>
         </TabsList>
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { Toolbar } from '@/components/editor/Toolbar';
 import { ComponentLibrary } from '@/components/editor/ComponentLibrary';
 import { LayerPanel } from '@/components/editor/LayerPanel';
@@ -15,6 +16,7 @@ import '@/components/widgets';
 
 export default function EditorPage() {
   useKeyboard();
+  const t = useTranslations('sidebar');
   const sidebarCollapsed = useUIStore((s) => s.sidebarCollapsed);
   const activePanel = useUIStore((s) => s.activePanel);
   const setActivePanel = useUIStore((s) => s.setActivePanel);
@@ -43,7 +45,7 @@ export default function EditorPage() {
                   : 'text-gray-500 hover:text-gray-300'
               }`}
             >
-              Components
+              {t('components')}
             </button>
             <button
               onClick={() => setActivePanel('layers')}
@@ -53,7 +55,7 @@ export default function EditorPage() {
                   : 'text-gray-500 hover:text-gray-300'
               }`}
             >
-              Layers
+              {t('layers')}
             </button>
             <button
               onClick={() => setActivePanel('ai')}
@@ -63,7 +65,7 @@ export default function EditorPage() {
                   : 'text-gray-500 hover:text-gray-300'
               }`}
             >
-              AI
+              {t('ai')}
             </button>
           </div>
           <div className="flex-1 overflow-hidden">
