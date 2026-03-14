@@ -198,6 +198,18 @@ Props:
 - data (array): [{ name: string, value: number }, ...] — province names in Chinese
 - colorRange (array of 3 hex strings): [low, mid, high] color range
 
+**chart_flyline_map** — China map with animated flying lines between cities
+Props:
+- title (string): map title
+- origin (string): origin city name in Chinese (e.g. "北京")
+- lineColor (hex): flying line and scatter color (e.g. "#f19000")
+- mapColor (hex): map fill color (e.g. "#101f32")
+- borderColor (hex): map border color (e.g. "#43d0d6")
+- trailLength (number 0-1): line trail effect length
+- curveness (number 0-0.5): line curvature
+- data (array): [{ to: string, value: number }, ...] — destination cities with values
+Use this type for: maps with animated connecting lines, route/flow visualization, city connection maps, logistics/transport route displays
+
 ### Media
 
 **image** — Static image placeholder
@@ -296,7 +308,7 @@ export const TOOL_DEFINITION = {
             type: {
               type: 'string' as const,
               enum: [
-                'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'gauge',
+                'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'chart_flyline_map', 'gauge',
                 'stat_card', 'stat_number_flip', 'tech_counter', 'progress_bar', 'progress_ring',
                 'text_title', 'text_block', 'text_scroll',
                 'table_simple', 'table_scroll', 'table_ranking',

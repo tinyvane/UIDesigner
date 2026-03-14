@@ -36,6 +36,7 @@ import './decorations/GlowDot';
 
 // Maps
 import './maps/ChinaMap';
+import './maps/FlylineMap';
 
 // Media
 import './media/ImageWidget';

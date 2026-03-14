@@ -6,7 +6,7 @@
 import type { AIRecognizedComponent, AIRecognitionResult } from './provider';
 
 const SUPPORTED_TYPES = new Set([
-  'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'gauge',
+  'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'chart_flyline_map', 'gauge',
   'stat_card', 'stat_number_flip', 'tech_counter', 'progress_bar', 'progress_ring',
   'text_title', 'text_block', 'text_scroll',
   'table_simple', 'table_scroll', 'table_ranking',

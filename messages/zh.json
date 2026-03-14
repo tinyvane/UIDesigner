@@ -88,7 +88,8 @@
     "border_decoration": "边框装饰",
     "divider": "分割线",
     "background_particle": "光点装饰",
-    "clock": "时钟"
+    "clock": "时钟",
+    "chart_flyline_map": "飞线地图"
   },
   "propertyPanel": {
     "style": "样式",
