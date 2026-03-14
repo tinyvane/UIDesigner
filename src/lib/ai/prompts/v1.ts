@@ -241,6 +241,24 @@ Props:
 - data (object): { nodes: [{name, symbolSize, category}], links: [{source, target}], categories: [{name}] }
 Use this type for: network graphs, relationship diagrams, knowledge graphs, organizational charts
 
+**chart_sunburst** — Multi-level ring chart for hierarchical data
+Props:
+- title (string): chart title
+- labelShow (boolean): show text labels
+- colorScheme ("default"|"tech"): color palette
+- data (array): hierarchical [{name, value, children: [...]}] structure
+Use this type for: sunburst charts, multi-level ring diagrams, hierarchical category breakdowns
+
+**chart_tree** — Hierarchical tree diagram
+Props:
+- title (string): chart title
+- orient ("LR"|"RL"|"TB"|"BT"): tree direction
+- lineColor (hex): connecting line color
+- labelColor (hex): node label color
+- symbolSize (number 4-30): node circle size
+- data (object): hierarchical {name, children: [{name, children: [...]}]} structure
+Use this type for: organizational charts, tree diagrams, file system structures, classification hierarchies
+
 **chart_heatmap** — Cartesian heatmap for two-dimensional density visualization
 Props:
 - title (string): chart title
@@ -363,7 +381,8 @@ export const TOOL_DEFINITION = {
               type: 'string' as const,
               enum: [
                 'chart_bar', 'chart_line', 'chart_pie', 'chart_nested_ring', 'chart_flyline_map',
-                'chart_bar3d', 'chart_heatmap', 'chart_wordcloud', 'chart_liquidfill', 'chart_graph', 'gauge',
+                'chart_bar3d', 'chart_heatmap', 'chart_wordcloud', 'chart_liquidfill', 'chart_graph',
+                'chart_sunburst', 'chart_tree', 'gauge',
                 'stat_card', 'stat_number_flip', 'tech_counter', 'progress_bar', 'progress_ring',
                 'text_title', 'text_block', 'text_scroll',
                 'table_simple', 'table_scroll', 'table_ranking',

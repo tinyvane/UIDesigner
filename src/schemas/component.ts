@@ -18,6 +18,8 @@ export const ComponentTypeEnum = z.enum([
   'chart_wordcloud',
   'chart_liquidfill',
   'chart_graph',
+  'chart_sunburst',
+  'chart_tree',
   // Stats
   'tech_counter',
   'stat_card',

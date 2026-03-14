@@ -12,6 +12,8 @@ import './charts/HeatmapChart';
 import './charts/WordCloudChart';
 import './charts/LiquidFillChart';
 import './charts/GraphChart';
+import './charts/SunburstChart';
+import './charts/TreeChart';
 
 // Stats
 import './stats/StatCard';

@@ -94,7 +94,9 @@
     "chart_heatmap": "Heatmap",
     "chart_wordcloud": "Word Cloud",
     "chart_liquidfill": "Liquid Fill",
-    "chart_graph": "Graph / Network"
+    "chart_graph": "Graph / Network",
+    "chart_sunburst": "Sunburst",
+    "chart_tree": "Tree Chart"
   },
   "propertyPanel": {
     "style": "Style",
