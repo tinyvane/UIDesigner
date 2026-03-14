@@ -23,6 +23,9 @@ import './tables/BasicTable';
 import './tables/ScrollingTable';
 import './tables/RankingList';
 
+// Buttons
+import './buttons/TechButton';
+
 // Decorations
 import './decorations/BorderDecoration';
 import './decorations/Divider';

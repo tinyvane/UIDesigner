@@ -11,6 +11,7 @@ import {
   Image,
   Frame,
   Clock,
+  CircleDot,
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
@@ -27,6 +28,7 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
   gauge: Gauge,
   map: Map,
   media: Image,
+  button: CircleDot,
   decoration: Frame,
   utility: Clock,
 };

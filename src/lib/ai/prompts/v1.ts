@@ -206,6 +206,21 @@ Props:
 - glowOpacity (number 0-1)
 - animate (boolean): pulse animation
 
+### Buttons
+
+**tech_button** — Sci-fi style circular button with glow rings
+Props:
+- text (string): button label text — extract from image
+- glowColor (hex): outer glow/accent color (e.g. "#00e5ff" for cyan glow)
+- ringColor (hex): ring line color (e.g. "#1a6b8a")
+- bgColor (hex): inner background color
+- textColor (hex): text color
+- fontSize (number 10-48): text size
+- rings (number 1-3): number of concentric ring layers
+- glowIntensity (number 0-30): glow strength
+- animated (boolean): pulse animation effect
+Use this type for: circular/round buttons with tech/sci-fi glow effects, navigation buttons with ring borders, status indicator buttons
+
 ### Utility
 
 **clock** — Real-time digital clock
@@ -249,6 +264,7 @@ export const TOOL_DEFINITION = {
                 'table_simple', 'table_scroll', 'table_ranking',
                 'map_china',
                 'image',
+                'tech_button',
                 'border_decoration', 'divider', 'background_particle',
                 'clock',
               ],

@@ -44,6 +44,8 @@ export const ComponentTypeEnum = z.enum([
   'border_decoration',
   'divider',
   'background_particle',
+  // Buttons
+  'tech_button',
   // Utility
   'clock',
   'countdown',
@@ -61,6 +63,7 @@ export const ComponentCategoryEnum = z.enum([
   'gauge',
   'map',
   'media',
+  'button',
   'decoration',
   'utility',
 ]);
