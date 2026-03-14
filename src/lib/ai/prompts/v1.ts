@@ -221,6 +221,19 @@ Props:
 - animated (boolean): pulse animation effect
 Use this type for: circular/round buttons with tech/sci-fi glow effects, navigation buttons with ring borders, status indicator buttons
 
+**tech_header** — Sci-fi style title header bar with decorative border
+Props:
+- text (string): the header title text — extract from image
+- fontSize (number 12-72): title font size
+- textColor (hex): text color
+- textGlow (boolean): whether text has glow effect
+- letterSpacing (number 0-30): space between characters
+- bgColor (hex): background color
+- bgOpacity (number 0-100): background transparency percentage
+- accentColor (hex): decorative border/accent color
+- borderStyle ("angular"|"line"|"none"): bottom border decoration style
+Use this type for: dashboard main titles with decorative backgrounds, header bars with tech-style bottom borders, title sections with gradient backgrounds
+
 ### Utility
 
 **clock** — Real-time digital clock
@@ -264,7 +277,7 @@ export const TOOL_DEFINITION = {
                 'table_simple', 'table_scroll', 'table_ranking',
                 'map_china',
                 'image',
-                'tech_button',
+                'tech_button', 'tech_header',
                 'border_decoration', 'divider', 'background_particle',
                 'clock',
               ],

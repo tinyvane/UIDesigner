@@ -25,6 +25,7 @@ import './tables/RankingList';
 
 // Buttons
 import './buttons/TechButton';
+import './buttons/TechHeader';
 
 // Decorations
 import './decorations/BorderDecoration';

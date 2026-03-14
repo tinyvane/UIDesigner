@@ -12,7 +12,7 @@ const SUPPORTED_TYPES = new Set([
   'table_simple', 'table_scroll', 'table_ranking',
   'map_china',
   'image',
-  'tech_button',
+  'tech_button', 'tech_header',
   'border_decoration', 'divider',
   'clock',
 ]);

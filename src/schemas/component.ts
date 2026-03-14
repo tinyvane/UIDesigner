@@ -46,6 +46,7 @@ export const ComponentTypeEnum = z.enum([
   'background_particle',
   // Buttons
   'tech_button',
+  'tech_header',
   // Utility
   'clock',
   'countdown',
