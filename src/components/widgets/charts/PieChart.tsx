@@ -41,6 +41,8 @@ function PieChartWidget({ width, height, props }: WidgetProps) {
     donut = true,
     data = DEFAULT_DATA,
     colorScheme = 'default',
+    showLabel = false,
+    labelFormat = 'name_percent',
   } = props as Record<string, unknown>;
 
   const pieData = parsePieData(data);
@@ -48,6 +50,19 @@ function PieChartWidget({ width, height, props }: WidgetProps) {
   const colorOption = (colorScheme as string) === 'tech'
     ? { color: GRADIENT_COLORS.slice(0, pieData.length) }
     : {};
+
+  // Label formatter based on selected format
+  const labelFormatter = (() => {
+    switch (labelFormat as string) {
+      case 'name_only': return '{b}';
+      case 'value_only': return '{c}';
+      case 'percent_only': return '{d}%';
+      case 'name_value': return '{b}: {c}';
+      case 'name_percent': return '{b} {d}%';
+      case 'all': return '{b}: {c} ({d}%)';
+      default: return '{b} {d}%';
+    }
+  })();
 
   const option = {
     backgroundColor: 'transparent',
@@ -60,7 +75,16 @@ function PieChartWidget({ width, height, props }: WidgetProps) {
       radius: (donut as boolean) ? ['35%', '60%'] : ['0%', '60%'],
       center: ['50%', '48%'],
       data: pieData,
-      label: { show: false },
+      label: {
+        show: showLabel as boolean,
+        color: '#e5e7eb',
+        fontSize: 11,
+        formatter: labelFormatter,
+      },
+      labelLine: {
+        show: showLabel as boolean,
+        lineStyle: { color: '#4b5563' },
+      },
       emphasis: { label: { show: true, fontSize: 12, color: '#fff' } },
       itemStyle: { borderRadius: 4, borderColor: '#0d1117', borderWidth: 2 },
     }],
@@ -75,10 +99,19 @@ registerComponent({
   icon: 'PieChart',
   category: 'chart',
   description: 'Pie or donut chart for proportional data',
-  defaultProps: { title: 'Pie Chart', donut: true, data: DEFAULT_DATA, colorScheme: 'default' },
+  defaultProps: { title: 'Pie Chart', donut: true, data: DEFAULT_DATA, colorScheme: 'default', showLabel: false, labelFormat: 'name_percent' },
   propSchema: [
     { key: 'title', type: 'string', label: 'Title', group: 'Basic' },
     { key: 'donut', type: 'boolean', label: 'Donut Style', group: 'Style' },
+    { key: 'showLabel', type: 'boolean', label: 'Show Labels', group: 'Style' },
+    { key: 'labelFormat', type: 'select', label: 'Label Format', group: 'Style', options: [
+      { label: '名称 + 百分比', value: 'name_percent' },
+      { label: '名称 + 数值', value: 'name_value' },
+      { label: '全部 (名称:数值 百分比)', value: 'all' },
+      { label: '仅名称', value: 'name_only' },
+      { label: '仅数值', value: 'value_only' },
+      { label: '仅百分比', value: 'percent_only' },
+    ]},
     { key: 'colorScheme', type: 'select', label: 'Color Scheme', group: 'Style', options: [
       { label: 'Default', value: 'default' },
       { label: 'Tech Blue-Cyan', value: 'tech' },
