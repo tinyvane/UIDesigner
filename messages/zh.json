@@ -61,7 +61,9 @@
     "utility": "工具",
     "buttons": "按钮",
     "gauges": "仪表盘",
-    "noComponentsFound": "未找到组件"
+    "noComponentsFound": "未找到组件",
+    "templates": "模板",
+    "templatesDesc": "选择预制模板快速填充画布"
   },
   "widgets": {
     "chart_bar": "柱状图",

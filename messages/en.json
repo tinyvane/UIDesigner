@@ -61,7 +61,9 @@
     "utility": "Utility",
     "buttons": "Buttons",
     "gauges": "Gauges",
-    "noComponentsFound": "No components found"
+    "noComponentsFound": "No components found",
+    "templates": "Templates",
+    "templatesDesc": "Select a template to fill the canvas"
   },
   "widgets": {
     "chart_bar": "Bar Chart",

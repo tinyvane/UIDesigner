@@ -32,7 +32,7 @@ interface UIState {
 
   // Panels
   sidebarCollapsed: boolean;
-  activePanel: 'components' | 'layers' | 'ai' | null;
+  activePanel: 'components' | 'layers' | 'ai' | 'templates' | null;
   propertyPanelTab: PropertyPanelTab;
 
   // Context menu

@@ -5,6 +5,7 @@ import { Toolbar } from '@/components/editor/Toolbar';
 import { ComponentLibrary } from '@/components/editor/ComponentLibrary';
 import { LayerPanel } from '@/components/editor/LayerPanel';
 import { AIUploader } from '@/components/editor/AIUploader';
+import { TemplatePanel } from '@/components/editor/TemplatePanel';
 import { Canvas } from '@/components/editor/Canvas/Canvas';
 import { PropertyPanel } from '@/components/editor/PropertyPanel/PropertyPanel';
 import ChatPanel from '@/components/editor/ChatPanel';
@@ -58,6 +59,16 @@ export default function EditorPage() {
               {t('layers')}
             </button>
             <button
+              onClick={() => setActivePanel('templates')}
+              className={`flex-1 px-3 py-2 text-xs font-medium ${
+                activePanel === 'templates'
+                  ? 'border-b-2 border-blue-500 text-blue-400'
+                  : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              {t('templates')}
+            </button>
+            <button
               onClick={() => setActivePanel('ai')}
               className={`flex-1 px-3 py-2 text-xs font-medium ${
                 activePanel === 'ai'
@@ -69,7 +80,7 @@ export default function EditorPage() {
             </button>
           </div>
           <div className="flex-1 overflow-hidden">
-            {activePanel === 'layers' ? <LayerPanel /> : activePanel === 'ai' ? <AIUploader /> : <ComponentLibrary />}
+            {activePanel === 'layers' ? <LayerPanel /> : activePanel === 'ai' ? <AIUploader /> : activePanel === 'templates' ? <TemplatePanel /> : <ComponentLibrary />}
           </div>
         </div>
 
