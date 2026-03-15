@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts/core';
 import { TooltipComponent, VisualMapComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
+import 'echarts-gl';
 import { registerComponent } from '../registry';
 import type { WidgetProps } from '../registry';
 
@@ -40,12 +41,6 @@ function parseBar3DData(raw: unknown): number[][] {
 function Bar3DChartWidget({ width, height, props }: WidgetProps) {
   const chartRef = useRef<HTMLDivElement>(null);
   const instanceRef = useRef<echarts.ECharts | null>(null);
-  const [glReady, setGlReady] = useState(false);
-
-  // Load echarts-gl dynamically on mount
-  useEffect(() => {
-    import('echarts-gl').then(() => setGlReady(true)).catch(() => setGlReady(false));
-  }, []);
 
   const {
     title = '3D Bar Chart',
@@ -76,7 +71,7 @@ function Bar3DChartWidget({ width, height, props }: WidgetProps) {
   const barData = parseBar3DData(data);
 
   useEffect(() => {
-    if (!chartRef.current || !glReady) return;
+    if (!chartRef.current) return;
 
     if (!instanceRef.current) {
       instanceRef.current = echarts.init(chartRef.current);
@@ -132,7 +127,7 @@ function Bar3DChartWidget({ width, height, props }: WidgetProps) {
     return () => {
       // Don't dispose — just clear on unmount
     };
-  }, [barData, xLabels, yLabels, colorLow, colorMid, colorHigh, maxValue, autoRotate, boxWidth, boxDepth, title, glReady]);
+  }, [barData, xLabels, yLabels, colorLow, colorMid, colorHigh, maxValue, autoRotate, boxWidth, boxDepth, title]);
 
   // Handle resize
   useEffect(() => {
