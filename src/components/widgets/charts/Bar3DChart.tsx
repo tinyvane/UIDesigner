@@ -8,7 +8,9 @@ import { registerComponent } from '../registry';
 import type { WidgetProps } from '../registry';
 
 // ECharts GL provides bar3D series + grid3D component (must import after echarts/core)
-import 'echarts-gl';
+if (typeof window !== 'undefined') {
+  import('echarts-gl').catch(() => {});
+}
 
 echarts.use([TooltipComponent, VisualMapComponent, CanvasRenderer]);
 

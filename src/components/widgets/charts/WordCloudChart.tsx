@@ -4,7 +4,11 @@ import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts/core';
 import { TooltipComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-import 'echarts-wordcloud';
+// Dynamic import: echarts-wordcloud requires browser canvas API
+let wordcloudLoaded = false;
+if (typeof window !== 'undefined') {
+  import('echarts-wordcloud').then(() => { wordcloudLoaded = true; }).catch(() => {});
+}
 import { registerComponent } from '../registry';
 import type { WidgetProps } from '../registry';
 

@@ -4,7 +4,9 @@ import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts/core';
 import { TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-import 'echarts-liquidfill';
+if (typeof window !== 'undefined') {
+  import('echarts-liquidfill').catch(() => {});
+}
 import { registerComponent } from '../registry';
 import type { WidgetProps } from '../registry';
 
