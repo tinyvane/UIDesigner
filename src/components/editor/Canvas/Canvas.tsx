@@ -16,7 +16,7 @@ import { Minimap } from './Minimap';
 export function Canvas() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { canvas, components, componentOrder } = useEditorStore();
-  const { zoom, panOffset, gridVisible, clearSelection, setZoom, setPanOffset } = useUIStore();
+  const { zoom, panOffset, gridVisible, clearSelection, setZoom, setPanOffset, mode } = useUIStore();
   const { handleWheel, handlePointerDown: handleCanvasPan, handlePointerMove: handleCanvasPanMove, handlePointerUp: handleCanvasPanUp } = useCanvas();
 
   const { selectionHandlers, SelectionBoxOverlay } = useSelectionBox({ zoom, panOffset });
@@ -111,6 +111,7 @@ export function Canvas() {
     <div
       ref={containerRef}
       className="relative h-full w-full overflow-hidden bg-gray-950"
+      style={{ cursor: mode === 'pan' ? 'grab' : 'default' }}
       onWheel={handleWheel}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}

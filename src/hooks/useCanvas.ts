@@ -37,6 +37,8 @@ export function useCanvas() {
         isPanning.current = true;
         lastPointer.current = { x: e.clientX, y: e.clientY };
         (e.target as HTMLElement).setPointerCapture(e.pointerId);
+        // Show grabbing cursor while dragging
+        document.body.style.cursor = 'grabbing';
       }
     },
     [mode],
@@ -58,6 +60,7 @@ export function useCanvas() {
 
   const handlePointerUp = useCallback(() => {
     isPanning.current = false;
+    document.body.style.cursor = '';
   }, []);
 
   // Convert screen coordinates to canvas coordinates

@@ -28,6 +28,10 @@ export function useSelectionBox({ zoom, panOffset }: SelectionBoxProps) {
       const target = e.target as HTMLElement;
       if (!target.dataset.canvasBackground) return;
 
+      // Don't start selection box in pan mode
+      const currentMode = useUIStore.getState().mode;
+      if (currentMode === 'pan') return;
+
       isActive.current = true;
       const rect = { startX: e.clientX, startY: e.clientY, currentX: e.clientX, currentY: e.clientY };
       setBox(rect);
