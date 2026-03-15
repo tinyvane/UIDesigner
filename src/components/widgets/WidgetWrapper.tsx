@@ -1,11 +1,39 @@
 'use client';
 
-import { memo, Suspense, useMemo, useRef, useCallback } from 'react';
+import { memo, Suspense, useMemo, useRef, useCallback, Component, type ReactNode } from 'react';
 import { useEditorStore } from '@/stores/editorStore';
 import { useUIStore } from '@/stores/uiStore';
 import { getComponent } from './registry';
 import type { ComponentData } from '@/schemas/component';
 import { calculateSnap } from '@/lib/utils/alignment';
+
+/** Error boundary to prevent single widget crash from breaking the entire editor */
+class WidgetErrorBoundary extends Component<
+  { children: ReactNode; componentType: string },
+  { hasError: boolean; error: string }
+> {
+  constructor(props: { children: ReactNode; componentType: string }) {
+    super(props);
+    this.state = { hasError: false, error: '' };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error: error.message };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex h-full w-full flex-col items-center justify-center bg-red-900/20 p-2 text-center">
+          <div className="text-xs text-red-400">Widget Error</div>
+          <div className="mt-1 text-[10px] text-red-500/70">{this.props.componentType}</div>
+          <div className="mt-1 max-w-full truncate text-[9px] text-gray-500">{this.state.error}</div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 interface WidgetWrapperProps {
   component: ComponentData;
@@ -300,21 +328,23 @@ function WidgetWrapperInner({ component }: WidgetWrapperProps) {
     >
       {/* Widget content — pointer-events none to prevent chart/text from stealing events */}
       <div className="pointer-events-none h-full w-full">
-        <Suspense
-          fallback={
-            <div className="flex h-full w-full items-center justify-center bg-gray-800/50 text-xs text-gray-400">
-              Loading...
-            </div>
-          }
-        >
-          <RenderComponent
-            id={component.id}
-            width={component.width}
-            height={component.height}
-            props={effectiveProps}
-            isEditing={isSelected}
-          />
-        </Suspense>
+        <WidgetErrorBoundary componentType={component.type}>
+          <Suspense
+            fallback={
+              <div className="flex h-full w-full items-center justify-center bg-gray-800/50 text-xs text-gray-400">
+                Loading...
+              </div>
+            }
+          >
+            <RenderComponent
+              id={component.id}
+              width={component.width}
+              height={component.height}
+              props={effectiveProps}
+              isEditing={isSelected}
+            />
+          </Suspense>
+        </WidgetErrorBoundary>
       </div>
 
       {/* Resize handles + Rotation handle (shown when selected) */}
