@@ -1,14 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts/core';
 import { TooltipComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-// Dynamic import: echarts-wordcloud requires browser canvas API
-let wordcloudLoaded = false;
-if (typeof window !== 'undefined') {
-  import('echarts-wordcloud').then(() => { wordcloudLoaded = true; }).catch(() => {});
-}
+// echarts-wordcloud loaded dynamically in component useEffect
 import { registerComponent } from '../registry';
 import type { WidgetProps } from '../registry';
 
@@ -35,6 +31,11 @@ function parseWordData(raw: unknown): { name: string; value: number }[] {
 function WordCloudChartWidget({ width, height, props }: WidgetProps) {
   const chartRef = useRef<HTMLDivElement>(null);
   const instanceRef = useRef<echarts.ECharts | null>(null);
+  const [pluginReady, setPluginReady] = useState(false);
+
+  useEffect(() => {
+    import('echarts-wordcloud').then(() => setPluginReady(true)).catch(() => {});
+  }, []);
 
   const {
     title = '',
@@ -55,7 +56,7 @@ function WordCloudChartWidget({ width, height, props }: WidgetProps) {
   const wordData = parseWordData(data);
 
   useEffect(() => {
-    if (!chartRef.current) return;
+    if (!chartRef.current || !pluginReady) return;
     if (!instanceRef.current) { instanceRef.current = echarts.init(chartRef.current); }
 
     const option = {
@@ -87,7 +88,7 @@ function WordCloudChartWidget({ width, height, props }: WidgetProps) {
     };
 
     instanceRef.current.setOption(option, true);
-  }, [wordData, colorRange, fontSizeMin, fontSizeMax, shape, title]);
+  }, [wordData, colorRange, fontSizeMin, fontSizeMax, shape, title, pluginReady]);
 
   useEffect(() => { instanceRef.current?.resize(); }, [width, height]);
   useEffect(() => { return () => { instanceRef.current?.dispose(); instanceRef.current = null; }; }, []);

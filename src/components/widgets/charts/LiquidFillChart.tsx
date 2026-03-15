@@ -1,12 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts/core';
 import { TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-if (typeof window !== 'undefined') {
-  import('echarts-liquidfill').catch(() => {});
-}
 import { registerComponent } from '../registry';
 import type { WidgetProps } from '../registry';
 
@@ -15,6 +12,11 @@ echarts.use([TitleComponent, CanvasRenderer]);
 function LiquidFillChartWidget({ width, height, props }: WidgetProps) {
   const chartRef = useRef<HTMLDivElement>(null);
   const instanceRef = useRef<echarts.ECharts | null>(null);
+  const [pluginReady, setPluginReady] = useState(false);
+
+  useEffect(() => {
+    import('echarts-liquidfill').then(() => setPluginReady(true)).catch(() => {});
+  }, []);
 
   const {
     title = '',
@@ -39,7 +41,7 @@ function LiquidFillChartWidget({ width, height, props }: WidgetProps) {
   };
 
   useEffect(() => {
-    if (!chartRef.current) return;
+    if (!chartRef.current || !pluginReady) return;
     if (!instanceRef.current) { instanceRef.current = echarts.init(chartRef.current); }
 
     const option = {
@@ -72,7 +74,7 @@ function LiquidFillChartWidget({ width, height, props }: WidgetProps) {
     };
 
     instanceRef.current.setOption(option, true);
-  }, [value, color, bgColor, shape, waveAnimation, showLabel, fontSize, outlineShow, title]);
+  }, [value, color, bgColor, shape, waveAnimation, showLabel, fontSize, outlineShow, title, pluginReady]);
 
   useEffect(() => { instanceRef.current?.resize(); }, [width, height]);
   useEffect(() => { return () => { instanceRef.current?.dispose(); instanceRef.current = null; }; }, []);
