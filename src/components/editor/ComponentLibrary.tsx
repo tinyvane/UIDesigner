@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   BarChart3,
@@ -56,8 +56,12 @@ export function ComponentLibrary() {
   const ts = useTranslations('sidebar');
   const tw = useTranslations('widgets');
 
+  // Delay rendering until after hydration so dynamic widgets are registered
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   const categories = getComponentCategories();
-  const allComponents = getAllComponents();
+  const allComponents = mounted ? getAllComponents() : [];
 
   const filteredComponents = search
     ? allComponents.filter(
@@ -87,7 +91,7 @@ export function ComponentLibrary() {
       </div>
 
       <ScrollArea className="flex-1">
-        <div className="p-2" suppressHydrationWarning>
+        <div className="p-2">
           {search ? (
             // Flat search results
             <div className="grid grid-cols-2 gap-1.5">
