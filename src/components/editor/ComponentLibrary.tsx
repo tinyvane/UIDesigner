@@ -118,7 +118,7 @@ export function ComponentLibrary() {
                   >
                     <Icon className="h-3.5 w-3.5" />
                     <span>{ts(i18nKey)}</span>
-                    <span className="ml-auto text-gray-600">{categoryComponents.length}</span>
+                    <span className="ml-auto text-gray-600" suppressHydrationWarning>{categoryComponents.length}</span>
                   </button>
 
                   {isExpanded && (
