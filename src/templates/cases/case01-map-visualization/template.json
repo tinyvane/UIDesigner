@@ -1,0 +1,86 @@
+{
+  "id": "case01-map-visualization",
+  "name": "地图数据可视化",
+  "nameEn": "Map Data Visualization",
+  "description": "以飞线地图为核心的数据可视化大屏，展示城市间数据流向",
+  "descriptionEn": "Flyline map-centered dashboard showing data flow between cities",
+  "source": "iDataV case01",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": { "type": "color", "value": "#040b1a" }
+  },
+  "components": [
+    {
+      "type": "tech_header",
+      "name": "标题",
+      "x": 0, "y": 0, "width": 1920, "height": 70,
+      "props": { "text": "全国数据流向监控平台", "fontSize": 28, "accentColor": "#43d0d6", "bgOpacity": 80 }
+    },
+    {
+      "type": "chart_flyline_map",
+      "name": "飞线地图",
+      "x": 360, "y": 80, "width": 1200, "height": 700,
+      "props": {
+        "origin": "北京",
+        "lineColor": "#f19000",
+        "mapColor": "#101f32",
+        "borderColor": "#43d0d6",
+        "data": [
+          {"to": "上海", "value": 95}, {"to": "广州", "value": 90}, {"to": "深圳", "value": 85},
+          {"to": "成都", "value": 80}, {"to": "武汉", "value": 75}, {"to": "杭州", "value": 70},
+          {"to": "西安", "value": 65}, {"to": "重庆", "value": 60}, {"to": "南京", "value": 55}
+        ]
+      }
+    },
+    {
+      "type": "chart_bar",
+      "name": "城市排行",
+      "x": 20, "y": 90, "width": 320, "height": 450,
+      "props": {
+        "title": "数据量排行",
+        "horizontal": true,
+        "color": "#43d0d6",
+        "data": {
+          "categories": ["上海", "广州", "深圳", "成都", "武汉", "杭州", "西安"],
+          "values": [95, 90, 85, 80, 75, 70, 65]
+        }
+      }
+    },
+    {
+      "type": "chart_pie",
+      "name": "区域分布",
+      "x": 1580, "y": 90, "width": 320, "height": 300,
+      "props": {
+        "title": "区域分布",
+        "donut": true,
+        "colorScheme": "tech",
+        "data": [
+          {"name": "华东", "value": 35}, {"name": "华南", "value": 25},
+          {"name": "华北", "value": 20}, {"name": "西南", "value": 12}, {"name": "其他", "value": 8}
+        ]
+      }
+    },
+    {
+      "type": "tech_counter",
+      "name": "总流量",
+      "x": 20, "y": 560, "width": 320, "height": 100,
+      "props": { "value": 1285600, "label": "总数据流量", "color": "#f19000", "cornerColor": "#43d0d6" }
+    },
+    {
+      "type": "chart_line",
+      "name": "趋势",
+      "x": 20, "y": 680, "width": 320, "height": 380,
+      "props": {
+        "title": "24小时流量趋势",
+        "color": "#43d0d6",
+        "smooth": true,
+        "areaFill": true,
+        "data": {
+          "categories": ["0时","4时","8时","12时","16时","20时","24时"],
+          "values": [120, 80, 250, 380, 420, 350, 180]
+        }
+      }
+    }
+  ]
+}

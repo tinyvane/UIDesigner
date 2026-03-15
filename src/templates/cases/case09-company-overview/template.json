@@ -1,0 +1,217 @@
+{
+  "id": "case09-company-overview",
+  "name": "上市公司全景概览",
+  "nameEn": "Listed Company Overview",
+  "description": "综合数据大屏：横向条形图、中国地图、象形柱状图、折线图、环形饼图、数字计数器、统计表格",
+  "descriptionEn": "Comprehensive dashboard: horizontal bar, China map, pictorial bar, line chart, donut pie, number counter, stats table",
+  "source": "iDataV case09",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": {
+      "type": "color",
+      "value": "#0a0e27"
+    }
+  },
+  "components": [
+    {
+      "type": "tech_header",
+      "name": "大屏标题",
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 70,
+      "props": {
+        "text": "上市公司全景概览",
+        "fontSize": 28,
+        "textColor": "#e0e8ff",
+        "textGlow": true,
+        "bgColor": "#0a1628",
+        "bgOpacity": 90,
+        "accentColor": "#1e90ff",
+        "borderStyle": "angular",
+        "letterSpacing": 12
+      }
+    },
+    {
+      "type": "chart_bar",
+      "name": "市值排名 Top10",
+      "x": 20,
+      "y": 90,
+      "width": 440,
+      "height": 300,
+      "props": {
+        "title": "市值排名 Top10",
+        "horizontal": true,
+        "color": "#2f89cf",
+        "gradient": false,
+        "barRadius": 4,
+        "data": {
+          "categories": ["工商银行", "建设银行", "中国平安", "招商银行", "农业银行", "中国银行", "贵州茅台", "中国人寿", "中国石油", "交通银行"],
+          "values": [21000, 18000, 15000, 12000, 11000, 10000, 9500, 8800, 8200, 7500]
+        }
+      }
+    },
+    {
+      "type": "map_china",
+      "name": "地域分布",
+      "x": 480,
+      "y": 80,
+      "width": 960,
+      "height": 580,
+      "props": {
+        "title": "",
+        "showVisualMap": true,
+        "showHalo": true,
+        "haloColor": "#4c60ff",
+        "mapColor": "#0a2a4a",
+        "borderColor": "#1a4a7a",
+        "showScatter": true,
+        "scatterColor": "#ffeb7b",
+        "data": [
+          {"name": "广东", "value": 680}, {"name": "北京", "value": 420},
+          {"name": "上海", "value": 380}, {"name": "浙江", "value": 520},
+          {"name": "江苏", "value": 480}, {"name": "山东", "value": 260},
+          {"name": "福建", "value": 180}, {"name": "四川", "value": 160},
+          {"name": "湖北", "value": 120}, {"name": "安徽", "value": 140}
+        ]
+      }
+    },
+    {
+      "type": "chart_pictorial_bar",
+      "name": "行业分布",
+      "x": 1460,
+      "y": 90,
+      "width": 440,
+      "height": 300,
+      "props": {
+        "title": "行业分布",
+        "color": "#27d08a",
+        "symbol": "triangle",
+        "horizontal": false,
+        "barWidth": 18,
+        "data": [
+          {"name": "金融", "value": 320},
+          {"name": "制造", "value": 280},
+          {"name": "科技", "value": 210},
+          {"name": "地产", "value": 180},
+          {"name": "医药", "value": 150},
+          {"name": "消费", "value": 120}
+        ]
+      }
+    },
+    {
+      "type": "tech_counter",
+      "name": "上市公司总数",
+      "x": 20,
+      "y": 410,
+      "width": 220,
+      "height": 100,
+      "props": {
+        "value": 4682,
+        "label": "上市公司总数",
+        "suffix": " 家",
+        "color": "#ffeb7b",
+        "fontSize": 36,
+        "showCorners": true,
+        "cornerColor": "#02a6b5"
+      }
+    },
+    {
+      "type": "tech_counter",
+      "name": "总市值",
+      "x": 240,
+      "y": 410,
+      "width": 220,
+      "height": 100,
+      "props": {
+        "value": 82.5,
+        "label": "总市值（万亿元）",
+        "decimals": 1,
+        "color": "#ffeb7b",
+        "fontSize": 36,
+        "showCorners": true,
+        "cornerColor": "#02a6b5"
+      }
+    },
+    {
+      "type": "chart_line",
+      "name": "平均市盈率趋势",
+      "x": 20,
+      "y": 530,
+      "width": 440,
+      "height": 260,
+      "props": {
+        "title": "平均市盈率趋势",
+        "color": "#0184d5",
+        "smooth": true,
+        "areaFill": true,
+        "data": {
+          "categories": ["2019", "2020", "2021", "2022", "2023", "2024", "2025"],
+          "values": [14.2, 16.8, 21.5, 15.3, 13.8, 16.2, 18.5]
+        }
+      }
+    },
+    {
+      "type": "chart_pie",
+      "name": "交易所分布",
+      "x": 20,
+      "y": 800,
+      "width": 440,
+      "height": 260,
+      "props": {
+        "title": "交易所分布",
+        "donut": true,
+        "colorScheme": "tech",
+        "data": [
+          {"name": "上交所主板", "value": 1680},
+          {"name": "深交所主板", "value": 1520},
+          {"name": "科创板", "value": 560},
+          {"name": "创业板", "value": 680},
+          {"name": "北交所", "value": 242}
+        ]
+      }
+    },
+    {
+      "type": "chart_nested_ring",
+      "name": "行业占比",
+      "x": 1460,
+      "y": 410,
+      "width": 440,
+      "height": 300,
+      "props": {
+        "title": "行业占比",
+        "maxValue": 100,
+        "data": [
+          {"name": "金融", "value": 85},
+          {"name": "制造", "value": 72},
+          {"name": "科技", "value": 65},
+          {"name": "地产", "value": 48},
+          {"name": "医药", "value": 38}
+        ]
+      }
+    },
+    {
+      "type": "table_simple",
+      "name": "最新公告",
+      "x": 1460,
+      "y": 730,
+      "width": 440,
+      "height": 330,
+      "props": {
+        "title": "最新公告",
+        "striped": true,
+        "data": {
+          "columns": ["代码", "名称", "类型", "日期"],
+          "rows": [
+            ["600519", "贵州茅台", "年报", "2025-03-28"],
+            ["000858", "五粮液", "季报", "2025-03-25"],
+            ["601318", "中国平安", "分红", "2025-03-22"],
+            ["000001", "平安银行", "公告", "2025-03-20"],
+            ["600036", "招商银行", "年报", "2025-03-18"]
+          ]
+        }
+      }
+    }
+  ]
+}

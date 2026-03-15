@@ -1,0 +1,63 @@
+{
+  "id": "case04-echarts-extensions",
+  "name": "ECharts 扩展图表展示",
+  "nameEn": "ECharts Extension Charts",
+  "description": "词云、水球图、关系图谱等 ECharts 扩展图表展示",
+  "descriptionEn": "Showcase of word cloud, liquid fill, and graph chart extensions",
+  "source": "iDataV case04",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": { "type": "color", "value": "#0a0e27" }
+  },
+  "components": [
+    {
+      "type": "tech_header",
+      "name": "标题",
+      "x": 0, "y": 0, "width": 1920, "height": 70,
+      "props": { "text": "数据分析驾驶舱", "fontSize": 28, "accentColor": "#1e90ff" }
+    },
+    {
+      "type": "chart_wordcloud",
+      "name": "热点词云",
+      "x": 20, "y": 90, "width": 620, "height": 460,
+      "props": { "title": "行业热点词云", "fontSizeMin": 14, "fontSizeMax": 55, "shape": "circle" }
+    },
+    {
+      "type": "chart_liquidfill",
+      "name": "完成率",
+      "x": 660, "y": 90, "width": 300, "height": 300,
+      "props": { "title": "季度目标完成率", "value": 0.78, "color": "#1a90ff", "bgColor": "#15559a" }
+    },
+    {
+      "type": "chart_liquidfill",
+      "name": "达标率",
+      "x": 980, "y": 90, "width": 300, "height": 300,
+      "props": { "title": "质量达标率", "value": 0.92, "color": "#27d08a", "bgColor": "#0a3a2a", "shape": "roundRect" }
+    },
+    {
+      "type": "chart_graph",
+      "name": "关系网络",
+      "x": 1300, "y": 90, "width": 600, "height": 460,
+      "props": { "title": "企业关系图谱", "repulsion": 350, "lineColor": "#555" }
+    },
+    {
+      "type": "chart_sunburst",
+      "name": "行业分类",
+      "x": 20, "y": 570, "width": 460, "height": 490,
+      "props": { "title": "行业分类旭日图", "colorScheme": "tech" }
+    },
+    {
+      "type": "chart_heatmap",
+      "name": "活跃热力图",
+      "x": 500, "y": 570, "width": 700, "height": 490,
+      "props": { "title": "用户活跃热力图" }
+    },
+    {
+      "type": "chart_tree",
+      "name": "组织架构",
+      "x": 1220, "y": 570, "width": 680, "height": 490,
+      "props": { "title": "组织架构树图", "orient": "TB", "lineColor": "#1a90ff", "symbolSize": 12 }
+    }
+  ]
+}
