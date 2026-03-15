@@ -1,0 +1,45 @@
+{
+  "id": "tpl01-purple-dark",
+  "name": "紫灰暗色大屏（两行五面板）",
+  "nameEn": "Purple Dark Dashboard (2-Row 5-Panel)",
+  "description": "经典两行布局：上3列+下2列，紫灰色调科技风格",
+  "descriptionEn": "Classic 2-row layout: top 3 columns + bottom 2 columns, purple-gray tech style",
+  "source": "iDataV tpl01",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": { "type": "color", "value": "#281e2f" }
+  },
+  "components": [
+    {
+      "type": "tech_header", "name": "大屏标题",
+      "x": 0, "y": 0, "width": 1920, "height": 65,
+      "props": { "text": "智慧城市运营监控中心", "fontSize": 26, "textColor": "#fff", "accentColor": "#9aa8d4", "bgColor": "#281e2f", "bgOpacity": 90 }
+    },
+    {
+      "type": "chart_bar", "name": "区域销售额",
+      "x": 20, "y": 80, "width": 620, "height": 420,
+      "props": { "title": "各区域销售额", "color": "#73aae5", "data": { "categories": ["华东","华南","华北","华中","西南","西北","东北"], "values": [1520,1380,1200,980,860,720,580] } }
+    },
+    {
+      "type": "chart_line", "name": "月度趋势",
+      "x": 650, "y": 80, "width": 620, "height": 420,
+      "props": { "title": "月度营收趋势", "color": "#f9c922", "smooth": true, "areaFill": true, "data": { "categories": ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"], "values": [820,932,901,934,1290,1330,1520,1480,1350,1200,1100,1380] } }
+    },
+    {
+      "type": "chart_pie", "name": "产品分布",
+      "x": 1280, "y": 80, "width": 620, "height": 420,
+      "props": { "title": "产品线分布", "donut": true, "data": [{"name":"智慧交通","value":335},{"name":"智慧安防","value":310},{"name":"智慧能源","value":274},{"name":"智慧医疗","value":235},{"name":"智慧教育","value":180}] }
+    },
+    {
+      "type": "chart_heatmap", "name": "周活跃度",
+      "x": 20, "y": 520, "width": 940, "height": 540,
+      "props": { "title": "一周活跃度热力图", "colorLow": "#281e2f", "colorMid": "#73aae5", "colorHigh": "#e74c3c" }
+    },
+    {
+      "type": "chart_nested_ring", "name": "KPI完成率",
+      "x": 980, "y": 520, "width": 920, "height": 540,
+      "props": { "title": "各部门KPI完成率", "data": [{"name":"销售部","value":92},{"name":"研发部","value":85},{"name":"运营部","value":78},{"name":"市场部","value":70},{"name":"客服部","value":65}] }
+    }
+  ]
+}

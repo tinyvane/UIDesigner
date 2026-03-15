@@ -1,0 +1,45 @@
+{
+  "id": "tpl03-indigo-cyan",
+  "name": "靛蓝青色大屏（两行五面板）",
+  "nameEn": "Indigo Cyan Dashboard (2-Row 5-Panel)",
+  "description": "靛蓝底色+青色强调，适合智慧城市/IoT场景",
+  "descriptionEn": "Indigo base + cyan accent, ideal for smart city / IoT scenarios",
+  "source": "iDataV tpl03",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": { "type": "color", "value": "#050d3c" }
+  },
+  "components": [
+    {
+      "type": "tech_header", "name": "标题",
+      "x": 0, "y": 0, "width": 1920, "height": 65,
+      "props": { "text": "智慧园区综合管理平台", "fontSize": 26, "textColor": "#bef2ff", "accentColor": "#5ac8fa", "bgColor": "#050d3c" }
+    },
+    {
+      "type": "chart_sunburst", "name": "设备分类",
+      "x": 20, "y": 80, "width": 620, "height": 420,
+      "props": { "title": "IoT设备分类", "colorScheme": "tech", "data": [{"name":"传感器","value":100,"children":[{"name":"温度","value":40},{"name":"湿度","value":30},{"name":"压力","value":30}]},{"name":"执行器","value":60,"children":[{"name":"电机","value":25},{"name":"阀门","value":20},{"name":"开关","value":15}]},{"name":"网关","value":40,"children":[{"name":"LoRa","value":20},{"name":"NB-IoT","value":15},{"name":"WiFi","value":5}]}] }
+    },
+    {
+      "type": "chart_graph", "name": "设备拓扑",
+      "x": 650, "y": 80, "width": 620, "height": 420,
+      "props": { "title": "设备网络拓扑", "repulsion": 400, "lineColor": "#5ac8fa" }
+    },
+    {
+      "type": "chart_bar", "name": "告警统计",
+      "x": 1280, "y": 80, "width": 620, "height": 420,
+      "props": { "title": "本月告警统计", "color": "#5ac8fa", "data": { "categories": ["紧急","严重","一般","提示"], "values": [12,28,65,120] } }
+    },
+    {
+      "type": "chart_line", "name": "能耗趋势",
+      "x": 20, "y": 520, "width": 940, "height": 540,
+      "props": { "title": "园区能耗趋势（近30天）", "color": "#5ac8fa", "smooth": true, "areaFill": true, "data": { "categories": ["1日","5日","10日","15日","20日","25日","30日"], "values": [2800,3200,2900,3500,3100,2700,3000] } }
+    },
+    {
+      "type": "chart_tree", "name": "组织架构",
+      "x": 980, "y": 520, "width": 920, "height": 540,
+      "props": { "title": "园区管理架构", "orient": "TB", "lineColor": "#5ac8fa", "labelColor": "#bef2ff" }
+    }
+  ]
+}

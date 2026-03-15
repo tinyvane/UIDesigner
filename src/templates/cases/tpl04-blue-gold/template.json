@@ -1,0 +1,65 @@
+{
+  "id": "tpl04-blue-gold",
+  "name": "蓝黑金色大屏（三列七面板）",
+  "nameEn": "Blue-Gold Dashboard (3-Column 7-Panel)",
+  "description": "三列经典布局：左2+中2+右3面板，蓝黑底+金色标题，适合管理驾驶舱",
+  "descriptionEn": "Classic 3-column: left 2 + center 2 + right 3 panels, blue-black with gold accents",
+  "source": "iDataV tpl04",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": { "type": "color", "value": "#0b0f34" }
+  },
+  "components": [
+    {
+      "type": "tech_header", "name": "标题",
+      "x": 0, "y": 0, "width": 1920, "height": 65,
+      "props": { "text": "企业经营管理驾驶舱", "fontSize": 28, "textColor": "#e9c29d", "accentColor": "#e9c29d", "bgColor": "#0b0f34" }
+    },
+    {
+      "type": "chart_bar", "name": "营收排名",
+      "x": 20, "y": 80, "width": 440, "height": 380,
+      "props": { "title": "子公司营收排名", "horizontal": true, "color": "#e9c29d", "data": { "categories": ["北京总部","上海分公司","广州分公司","深圳分公司","成都分公司"], "values": [8500,6200,5800,4900,3800] } }
+    },
+    {
+      "type": "chart_nested_ring", "name": "业务占比",
+      "x": 20, "y": 480, "width": 440, "height": 580,
+      "props": { "title": "业务板块占比", "colors": ["#e9c29d","#d4a574","#bf804a","#aa5b20","#955000"], "data": [{"name":"金融科技","value":85},{"name":"智慧城市","value":72},{"name":"数据服务","value":65},{"name":"云计算","value":55},{"name":"AI平台","value":42}] }
+    },
+    {
+      "type": "map_china", "name": "业务分布",
+      "x": 480, "y": 80, "width": 960, "height": 620,
+      "props": { "showVisualMap": true, "showHalo": true, "haloColor": "#e9c29d", "mapColor": "#0b1a3a", "borderColor": "#1a3a6b", "showScatter": true, "scatterColor": "#e9c29d", "data": [{"name":"北京","value":850},{"name":"上海","value":620},{"name":"广东","value":580},{"name":"浙江","value":490},{"name":"江苏","value":450},{"name":"四川","value":380}] }
+    },
+    {
+      "type": "chart_line", "name": "季度趋势",
+      "x": 480, "y": 720, "width": 960, "height": 340,
+      "props": { "title": "季度营收趋势", "color": "#e9c29d", "smooth": true, "areaFill": true, "data": { "categories": ["Q1'24","Q2'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25"], "values": [3200,3800,4100,4500,3900,4200,4800,5200] } }
+    },
+    {
+      "type": "tech_counter", "name": "总营收",
+      "x": 1460, "y": 80, "width": 220, "height": 100,
+      "props": { "value": 35.8, "label": "总营收（亿元）", "decimals": 1, "color": "#e9c29d", "cornerColor": "#e9c29d" }
+    },
+    {
+      "type": "tech_counter", "name": "净利润",
+      "x": 1690, "y": 80, "width": 210, "height": 100,
+      "props": { "value": 8.2, "label": "净利润（亿元）", "decimals": 1, "color": "#e9c29d", "cornerColor": "#e9c29d" }
+    },
+    {
+      "type": "chart_pie", "name": "客户分布",
+      "x": 1460, "y": 200, "width": 440, "height": 300,
+      "props": { "title": "客户行业分布", "donut": true, "data": [{"name":"金融","value":35},{"name":"政府","value":28},{"name":"制造","value":20},{"name":"零售","value":12},{"name":"其他","value":5}] }
+    },
+    {
+      "type": "chart_pictorial_bar", "name": "产品销量",
+      "x": 1460, "y": 520, "width": 440, "height": 280,
+      "props": { "title": "产品销量对比", "color": "#e9c29d", "symbol": "diamond", "data": [{"name":"产品A","value":1200},{"name":"产品B","value":980},{"name":"产品C","value":850},{"name":"产品D","value":620},{"name":"产品E","value":480}] }
+    },
+    {
+      "type": "table_simple", "name": "项目列表",
+      "x": 1460, "y": 820, "width": 440, "height": 240,
+      "props": { "title": "重点项目进度", "striped": true, "data": { "columns": ["项目","负责人","进度","状态"], "rows": [["智慧园区","张三","85%","进行中"],["数据中台","李四","60%","进行中"],["AI平台","王五","95%","验收中"],["安全审计","赵六","30%","启动"]] } }
+    }
+  ]
+}

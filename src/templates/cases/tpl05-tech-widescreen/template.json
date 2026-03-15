@@ -1,0 +1,90 @@
+{
+  "id": "tpl05-tech-widescreen",
+  "name": "科技蓝超宽屏大屏（三栏复杂布局）",
+  "nameEn": "Tech Blue Widescreen Dashboard (Complex 3-Column)",
+  "description": "最复杂的布局模板：左右各3面板+中间地图+5指标卡，适合大型监控中心",
+  "descriptionEn": "Most complex layout: left/right 3 panels each + center map + 5 KPI cards, for large monitoring centers",
+  "source": "iDataV tpl05",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": { "type": "color", "value": "#041742" }
+  },
+  "components": [
+    {
+      "type": "tech_header", "name": "标题",
+      "x": 0, "y": 0, "width": 1920, "height": 70,
+      "props": { "text": "智慧城市综合运营指挥中心", "fontSize": 30, "textColor": "#07CCFC", "accentColor": "#07CCFC", "bgColor": "#041742", "letterSpacing": 10 }
+    },
+    {
+      "type": "tech_counter", "name": "总人口",
+      "x": 580, "y": 80, "width": 150, "height": 80,
+      "props": { "value": 1285, "label": "总人口(万)", "fontSize": 28, "color": "#07CCFC", "cornerColor": "#07CCFC", "showCorners": false }
+    },
+    {
+      "type": "tech_counter", "name": "社区数",
+      "x": 740, "y": 80, "width": 150, "height": 80,
+      "props": { "value": 386, "label": "社区数", "fontSize": 28, "color": "#07CCFC", "cornerColor": "#07CCFC", "showCorners": false }
+    },
+    {
+      "type": "tech_counter", "name": "设备数",
+      "x": 900, "y": 80, "width": 150, "height": 80,
+      "props": { "value": 52800, "label": "IoT设备", "fontSize": 28, "color": "#07CCFC", "cornerColor": "#07CCFC", "showCorners": false }
+    },
+    {
+      "type": "tech_counter", "name": "日均事件",
+      "x": 1060, "y": 80, "width": 150, "height": 80,
+      "props": { "value": 3256, "label": "日均事件", "fontSize": 28, "color": "#07CCFC", "cornerColor": "#07CCFC", "showCorners": false }
+    },
+    {
+      "type": "tech_counter", "name": "处置率",
+      "x": 1220, "y": 80, "width": 150, "height": 80,
+      "props": { "value": 99.2, "label": "处置率(%)", "fontSize": 28, "decimals": 1, "color": "#07CCFC", "cornerColor": "#07CCFC", "showCorners": false }
+    },
+    {
+      "type": "chart_bar", "name": "左-交通流量",
+      "x": 20, "y": 80, "width": 540, "height": 300,
+      "props": { "title": "主干道实时车流量", "color": "#fd6343", "data": { "categories": ["长安街","中关村大街","三环路","四环路","五环路","京藏高速"], "values": [8500,6200,12000,15000,18000,9500] } }
+    },
+    {
+      "type": "chart_line", "name": "左-环境指数",
+      "x": 20, "y": 400, "width": 540, "height": 300,
+      "props": { "title": "空气质量指数(AQI)趋势", "color": "#03cd66", "smooth": true, "areaFill": true, "data": { "categories": ["6时","8时","10时","12时","14时","16时","18时","20时"], "values": [45,68,82,75,90,85,72,55] } }
+    },
+    {
+      "type": "chart_pie", "name": "左-事件分类",
+      "x": 20, "y": 720, "width": 540, "height": 340,
+      "props": { "title": "城市事件分类", "donut": true, "colorScheme": "tech", "data": [{"name":"交通事故","value":120},{"name":"消防报警","value":85},{"name":"治安事件","value":65},{"name":"市政投诉","value":180},{"name":"环境污染","value":45}] }
+    },
+    {
+      "type": "chart_flyline_map", "name": "中-城市地图",
+      "x": 560, "y": 170, "width": 800, "height": 560,
+      "props": { "origin": "北京", "lineColor": "#07CCFC", "mapColor": "#041742", "borderColor": "#0a3a6b", "data": [{"to":"上海","value":95},{"to":"广州","value":85},{"to":"成都","value":70},{"to":"武汉","value":65},{"to":"杭州","value":60},{"to":"西安","value":55}] }
+    },
+    {
+      "type": "chart_heatmap", "name": "中-活跃度",
+      "x": 560, "y": 750, "width": 800, "height": 310,
+      "props": { "title": "区域活跃度热力图", "colorLow": "#041742", "colorMid": "#07CCFC", "colorHigh": "#fd6343" }
+    },
+    {
+      "type": "chart_liquidfill", "name": "右-安全指数",
+      "x": 1420, "y": 80, "width": 240, "height": 240,
+      "props": { "title": "城市安全指数", "value": 0.92, "color": "#03cd66", "bgColor": "#041742" }
+    },
+    {
+      "type": "chart_liquidfill", "name": "右-满意度",
+      "x": 1670, "y": 80, "width": 240, "height": 240,
+      "props": { "title": "市民满意度", "value": 0.87, "color": "#05aaff", "bgColor": "#041742", "shape": "roundRect" }
+    },
+    {
+      "type": "chart_nested_ring", "name": "右-资源分配",
+      "x": 1380, "y": 340, "width": 540, "height": 340,
+      "props": { "title": "公共资源分配", "colors": ["#fd6343","#f9a300","#05aaff","#03cd66","#853cff"], "data": [{"name":"教育","value":82},{"name":"医疗","value":75},{"name":"交通","value":68},{"name":"环保","value":55},{"name":"文化","value":42}] }
+    },
+    {
+      "type": "table_simple", "name": "右-实时事件",
+      "x": 1380, "y": 700, "width": 540, "height": 360,
+      "props": { "title": "实时事件列表", "striped": true, "data": { "columns": ["时间","类型","地点","状态"], "rows": [["10:23","交通拥堵","中关村","处理中"],["10:18","消防报警","朝阳区","已出动"],["10:12","市政投诉","海淀区","已受理"],["10:05","治安事件","西城区","已处置"],["09:58","环境预警","丰台区","监控中"]] } }
+    }
+  ]
+}

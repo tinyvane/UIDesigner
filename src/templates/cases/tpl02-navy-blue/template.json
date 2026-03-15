@@ -1,0 +1,55 @@
+{
+  "id": "tpl02-navy-blue",
+  "name": "深蓝科技大屏（两行五面板）",
+  "nameEn": "Navy Blue Dashboard (2-Row 5-Panel)",
+  "description": "深蓝色调两行布局，适合数据监控场景",
+  "descriptionEn": "Navy blue 2-row layout, ideal for data monitoring",
+  "source": "iDataV tpl02",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": { "type": "color", "value": "#0a1631" }
+  },
+  "components": [
+    {
+      "type": "tech_header", "name": "标题",
+      "x": 0, "y": 0, "width": 1920, "height": 65,
+      "props": { "text": "生产运营数据监控平台", "fontSize": 26, "accentColor": "#73aae5", "bgColor": "#0a1631" }
+    },
+    {
+      "type": "chart_bar", "name": "产量统计",
+      "x": 20, "y": 80, "width": 620, "height": 420,
+      "props": { "title": "各产线日产量", "color": "#3498db", "gradient": true, "gradientFrom": "#1a3a6b", "gradientTo": "#4facfe", "data": { "categories": ["A线","B线","C线","D线","E线","F线"], "values": [4500,3800,4200,3500,5100,2900] } }
+    },
+    {
+      "type": "chart_liquidfill", "name": "良品率",
+      "x": 700, "y": 80, "width": 250, "height": 250,
+      "props": { "title": "良品率", "value": 0.96, "color": "#27d08a", "bgColor": "#0a2a2a" }
+    },
+    {
+      "type": "chart_liquidfill", "name": "设备稼动率",
+      "x": 970, "y": 80, "width": 250, "height": 250,
+      "props": { "title": "设备稼动率", "value": 0.88, "color": "#3498db", "bgColor": "#0a1a3a" }
+    },
+    {
+      "type": "chart_pie", "name": "能耗分布",
+      "x": 1280, "y": 80, "width": 620, "height": 420,
+      "props": { "title": "能耗分布", "donut": true, "colorScheme": "tech", "data": [{"name":"电力","value":45},{"name":"天然气","value":25},{"name":"蒸汽","value":18},{"name":"水","value":12}] }
+    },
+    {
+      "type": "chart_line", "name": "产量趋势",
+      "x": 650, "y": 350, "width": 620, "height": 150,
+      "props": { "title": "24小时产量", "color": "#f9c922", "smooth": true, "areaFill": true, "data": { "categories": ["0时","2时","4时","6时","8时","10时","12时","14时","16时","18时","20时","22时"], "values": [50,30,20,80,200,380,420,450,380,350,280,120] } }
+    },
+    {
+      "type": "chart_bar", "name": "质量排名",
+      "x": 20, "y": 520, "width": 940, "height": 540,
+      "props": { "title": "车间质量评分排名", "horizontal": true, "color": "#73aae5", "data": { "categories": ["一车间","二车间","三车间","四车间","五车间","六车间","七车间","八车间"], "values": [98,95,93,91,88,85,82,78] } }
+    },
+    {
+      "type": "chart_wordcloud", "name": "异常关键词",
+      "x": 980, "y": 520, "width": 920, "height": 540,
+      "props": { "title": "设备异常关键词", "shape": "diamond", "data": [{"name":"温度过高","value":120},{"name":"振动异常","value":95},{"name":"压力偏低","value":80},{"name":"电流超标","value":75},{"name":"轴承磨损","value":70},{"name":"润滑不足","value":65},{"name":"噪音异常","value":58},{"name":"泄漏","value":52},{"name":"过载","value":48},{"name":"短路","value":42},{"name":"老化","value":38},{"name":"腐蚀","value":35}] }
+    }
+  ]
+}
