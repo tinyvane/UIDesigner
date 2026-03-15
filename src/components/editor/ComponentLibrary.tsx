@@ -87,7 +87,7 @@ export function ComponentLibrary() {
       </div>
 
       <ScrollArea className="flex-1">
-        <div className="p-2">
+        <div className="p-2" suppressHydrationWarning>
           {search ? (
             // Flat search results
             <div className="grid grid-cols-2 gap-1.5">
