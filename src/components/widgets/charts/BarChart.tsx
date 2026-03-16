@@ -60,6 +60,7 @@ function BarChartWidget({ width, height, props }: WidgetProps) {
     gradientFrom = '#1a3a6b',
     gradientTo = '#4facfe',
     barRadius = 4,
+    showLabel = false,
   } = props as {
     title?: string;
     color?: string;
@@ -70,6 +71,7 @@ function BarChartWidget({ width, height, props }: WidgetProps) {
     gradientFrom?: string;
     gradientTo?: string;
     barRadius?: number;
+    showLabel?: boolean;
   };
 
   const { categories, values } = parseBarData(data);
@@ -130,6 +132,12 @@ function BarChartWidget({ width, height, props }: WidgetProps) {
           color: barColor,
           borderRadius,
         },
+        label: {
+          show: showLabel,
+          position: horizontal ? 'right' as const : 'top' as const,
+          color: '#9ca3af',
+          fontSize: 10,
+        },
       },
     ],
   };
@@ -162,11 +170,13 @@ registerComponent({
     gradientFrom: '#1a3a6b',
     gradientTo: '#4facfe',
     barRadius: 4,
+    showLabel: false,
   },
   propSchema: [
     { key: 'title', type: 'string', label: 'Title', group: 'Basic' },
     { key: 'color', type: 'color', label: 'Bar Color', group: 'Style' },
     { key: 'horizontal', type: 'boolean', label: 'Horizontal', group: 'Style' },
+    { key: 'showLabel', type: 'boolean', label: 'Show Labels', group: 'Style' },
     { key: 'gradient', type: 'boolean', label: 'Gradient', group: 'Style' },
     { key: 'gradientFrom', type: 'color', label: 'Gradient From', group: 'Style' },
     { key: 'gradientTo', type: 'color', label: 'Gradient To', group: 'Style' },
