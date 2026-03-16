@@ -64,11 +64,15 @@ export function Toolbar() {
 
   return (
     <div className="flex h-12 items-center gap-1 border-b border-gray-800 bg-gray-900 px-3">
-      {/* Logo / Project Name */}
-      <div className="mr-4 flex items-center gap-2">
+      {/* Logo / Project Name — click to go back to dashboard */}
+      <a
+        href="/dashboard"
+        className="mr-4 flex items-center gap-2 rounded px-1 py-0.5 transition-colors hover:bg-gray-800"
+        title={t('backToDashboard')}
+      >
         <div className="h-6 w-6 rounded bg-blue-600" />
         <span className="text-sm font-semibold text-gray-200">Dashboard Designer</span>
-      </div>
+      </a>
 
       <Separator orientation="vertical" className="mx-1 h-6" />
 

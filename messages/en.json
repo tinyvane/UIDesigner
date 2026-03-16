@@ -44,7 +44,8 @@
     "clearCanvas": "Clear Canvas",
     "saved": "Saved",
     "saving": "Saving...",
-    "unsaved": "Unsaved"
+    "unsaved": "Unsaved",
+    "backToDashboard": "Back to Projects"
   },
   "sidebar": {
     "components": "Components",

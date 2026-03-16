@@ -44,7 +44,8 @@
     "clearCanvas": "清空画布",
     "saved": "已保存",
     "saving": "保存中...",
-    "unsaved": "未保存"
+    "unsaved": "未保存",
+    "backToDashboard": "返回项目列表"
   },
   "sidebar": {
     "components": "组件",
