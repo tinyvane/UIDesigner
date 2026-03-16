@@ -5,7 +5,6 @@ import * as echarts from 'echarts/core';
 import { TooltipComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import 'echarts-wordcloud';
-import { registerComponent } from '../registry';
 import type { WidgetProps } from '../registry';
 
 echarts.use([TooltipComponent, TitleComponent, CanvasRenderer]);
@@ -91,31 +90,5 @@ function WordCloudChartWidget({ width, height, props }: WidgetProps) {
   return <div ref={chartRef} style={{ width, height }} />;
 }
 
-registerComponent({
-  type: 'chart_wordcloud',
-  label: 'Word Cloud',
-  icon: 'Cloud',
-  category: 'chart',
-  description: 'Word cloud for visualizing keyword frequency',
-  defaultProps: {
-    title: '',
-    data: DEFAULT_DATA,
-    colorRange: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#17becf'],
-    fontSizeMin: 12,
-    fontSizeMax: 60,
-    shape: 'circle',
-  },
-  propSchema: [
-    { key: 'title', type: 'string', label: 'Title', group: 'Basic' },
-    { key: 'fontSizeMin', type: 'number', label: 'Min Font Size', group: 'Style', min: 8, max: 30 },
-    { key: 'fontSizeMax', type: 'number', label: 'Max Font Size', group: 'Style', min: 20, max: 120 },
-    { key: 'shape', type: 'select', label: 'Shape', group: 'Style', options: [
-      { label: 'Circle', value: 'circle' }, { label: 'Diamond', value: 'diamond' },
-      { label: 'Triangle', value: 'triangle-forward' }, { label: 'Star', value: 'star' },
-    ]},
-    { key: 'data', type: 'json', label: 'Data', group: 'Data' },
-  ],
-  render: WordCloudChartWidget,
-});
-
+// Registration handled by WordCloudLazy.tsx
 export default WordCloudChartWidget;

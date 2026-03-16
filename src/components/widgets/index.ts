@@ -7,14 +7,11 @@ import './charts/LineChart';
 import './charts/PieChart';
 import './charts/GaugeChart';
 import './charts/NestedRingChart';
-// Bar3DChart, WordCloudChart, LiquidFillChart require browser-only plugins
-// (echarts-gl, echarts-wordcloud, echarts-liquidfill)
-// They must be loaded dynamically to avoid Turbopack HMR module factory issues
-if (typeof window !== 'undefined') {
-  import('./charts/Bar3DChart');
-  import('./charts/WordCloudChart');
-  import('./charts/LiquidFillChart');
-}
+// Bar3DChart, WordCloudChart, LiquidFillChart use browser-only echarts plugins.
+// They register with lazy render functions to avoid Turbopack HMR issues.
+import './charts/Bar3DLazy';
+import './charts/WordCloudLazy';
+import './charts/LiquidFillLazy';
 import './charts/HeatmapChart';
 import './charts/GraphChart';
 import './charts/SunburstChart';
