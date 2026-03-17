@@ -8,6 +8,7 @@ export default auth;
 
 export const config = {
   // Protect these routes — redirect to sign-in if unauthenticated
+  // IMPORTANT: /api/auth/* must NOT be included (NextAuth needs unauthenticated access)
   matcher: [
     '/dashboard/:path*',
     '/editor/:path*',
