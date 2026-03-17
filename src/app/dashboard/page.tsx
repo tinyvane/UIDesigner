@@ -115,12 +115,6 @@ export default function DashboardPage() {
           </div>
           <div className="flex gap-3">
             <button
-              onClick={() => router.push('/templates')}
-              className="px-4 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-white rounded-lg border border-gray-700 transition-colors"
-            >
-              Browse Templates
-            </button>
-            <button
               onClick={() => { setShowNewDialog(true); setNewName(''); setNewDesc(''); }}
               className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
             >
