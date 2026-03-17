@@ -66,22 +66,18 @@ export function Toolbar() {
   return (
     <div className="flex h-12 items-center gap-1 border-b border-gray-800 bg-gray-900 px-3">
       {/* Back button */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <a
-            href="/dashboard"
-            className="flex h-8 w-8 items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </a>
-        </TooltipTrigger>
-        <TooltipContent side="bottom">{t('backToDashboard')}</TooltipContent>
-      </Tooltip>
+      <a
+        href="/dashboard"
+        className="flex h-8 w-8 items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+        title={t('backToDashboard')}
+      >
+        <ArrowLeft className="h-4 w-4" />
+      </a>
 
       {/* Logo / Project Name */}
       <a
         href="/dashboard"
-        className="mr-4 flex items-center gap-2 rounded px-1 py-0.5 transition-colors hover:bg-gray-800"
+        className="mr-2 flex items-center gap-2 rounded px-1 py-0.5 transition-colors hover:bg-gray-800"
       >
         <div className="h-6 w-6 rounded bg-blue-600" />
         <span className="text-sm font-semibold text-gray-200">Dashboard Designer</span>
