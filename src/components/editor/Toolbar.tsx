@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
+  ArrowLeft,
   Undo2,
   Redo2,
   ZoomIn,
@@ -64,11 +65,23 @@ export function Toolbar() {
 
   return (
     <div className="flex h-12 items-center gap-1 border-b border-gray-800 bg-gray-900 px-3">
-      {/* Logo / Project Name — click to go back to dashboard */}
+      {/* Back button */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <a
+            href="/dashboard"
+            className="flex h-8 w-8 items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </a>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">{t('backToDashboard')}</TooltipContent>
+      </Tooltip>
+
+      {/* Logo / Project Name */}
       <a
         href="/dashboard"
         className="mr-4 flex items-center gap-2 rounded px-1 py-0.5 transition-colors hover:bg-gray-800"
-        title={t('backToDashboard')}
       >
         <div className="h-6 w-6 rounded bg-blue-600" />
         <span className="text-sm font-semibold text-gray-200">Dashboard Designer</span>
