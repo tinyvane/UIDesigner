@@ -36,11 +36,25 @@ import tpl02 from './cases/tpl02-navy-blue/template.json';
 import tpl03 from './cases/tpl03-indigo-cyan/template.json';
 import tpl04 from './cases/tpl04-blue-gold/template.json';
 import tpl05 from './cases/tpl05-tech-widescreen/template.json';
+// Built-in templates (migrated from database seed)
+import builtin01 from './cases/builtin01-data-monitoring/template.json';
+import builtin02 from './cases/builtin02-sales-dashboard/template.json';
+import builtin03 from './cases/builtin03-iot-monitoring/template.json';
+import builtin04 from './cases/builtin04-operations/template.json';
+import builtin05 from './cases/builtin05-smart-city/template.json';
 
 const templates: CaseTemplate[] = [
+  // Built-in templates
+  builtin01 as CaseTemplate,
+  builtin02 as CaseTemplate,
+  builtin03 as CaseTemplate,
+  builtin04 as CaseTemplate,
+  builtin05 as CaseTemplate,
+  // iDataV case templates
   case01 as CaseTemplate,
   case04 as CaseTemplate,
   case09 as CaseTemplate,
+  // iDataV layout templates
   tpl01 as CaseTemplate,
   tpl02 as CaseTemplate,
   tpl03 as CaseTemplate,

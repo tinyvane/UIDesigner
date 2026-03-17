@@ -1,0 +1,105 @@
+{
+  "id": "builtin04-operations",
+  "name": "运维态势感知大屏",
+  "nameEn": "Operations Situational Awareness Dashboard",
+  "description": "深蓝色运维态势感知大屏，包含微服务统计卡片、中国地图、QPS仪表盘、响应时间仪表盘、QPS趋势折线图、错误统计柱状图、部署日志表格、资源进度条、告警饼图",
+  "descriptionEn": "Deep blue operations situational awareness dashboard with microservice stat cards, China map, QPS/response gauges, QPS trend line chart, error bar chart, deployment log table, resource progress bars, and alert pie chart",
+  "source": "内置模板",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": { "type": "color", "value": "#0c1222" }
+  },
+  "components": [
+    {
+      "type": "text_title", "name": "标题",
+      "x": 510, "y": 15, "width": 900, "height": 55,
+      "props": { "text": "运维态势感知平台", "fontSize": 34, "color": "#60a5fa", "textAlign": "center", "fontWeight": "bold", "letterSpacing": 6 }
+    },
+    {
+      "type": "clock", "name": "时钟",
+      "x": 1680, "y": 20, "width": 220, "height": 45,
+      "props": { "format": "YYYY-MM-DD HH:mm:ss", "showDate": true, "color": "#60a5fa" }
+    },
+    {
+      "type": "stat_card", "name": "服务总数",
+      "x": 40, "y": 100, "width": 280, "height": 130,
+      "props": { "title": "微服务总数", "value": "128", "color": "#60a5fa" }
+    },
+    {
+      "type": "stat_card", "name": "健康服务",
+      "x": 340, "y": 100, "width": 280, "height": 130,
+      "props": { "title": "健康服务", "value": "125", "color": "#10b981" }
+    },
+    {
+      "type": "stat_card", "name": "异常服务",
+      "x": 40, "y": 250, "width": 280, "height": 130,
+      "props": { "title": "异常服务", "value": "3", "color": "#ef4444" }
+    },
+    {
+      "type": "stat_card", "name": "今日部署",
+      "x": 340, "y": 250, "width": 280, "height": 130,
+      "props": { "title": "今日部署", "value": "17", "trend": 3, "trendLabel": "次", "color": "#a78bfa" }
+    },
+    {
+      "type": "map_china", "name": "地图",
+      "x": 640, "y": 80, "width": 700, "height": 520,
+      "props": { "title": "", "data": [{ "name": "北京", "value": 320 }, { "name": "上海", "value": 280 }, { "name": "广东", "value": 250 }, { "name": "浙江", "value": 180 }, { "name": "四川", "value": 150 }, { "name": "湖北", "value": 120 }], "colorRange": ["#0a3a6b", "#0d6efd", "#00ff88"], "showVisualMap": true }
+    },
+    {
+      "type": "gauge", "name": "QPS",
+      "x": 1380, "y": 100, "width": 260, "height": 220,
+      "props": { "title": "QPS", "value": 8520, "color": "#60a5fa", "max": 15000, "unit": "" }
+    },
+    {
+      "type": "gauge", "name": "响应时间",
+      "x": 1640, "y": 100, "width": 260, "height": 220,
+      "props": { "title": "平均响应", "value": 45, "color": "#10b981", "max": 200, "unit": "ms" }
+    },
+    {
+      "type": "chart_line", "name": "QPS趋势",
+      "x": 1360, "y": 340, "width": 540, "height": 260,
+      "props": { "title": "QPS趋势 (近1小时)", "color": "#60a5fa", "smooth": true, "areaFill": true, "data": { "categories": ["-60m","-50m","-40m","-30m","-20m","-10m","now"], "values": [6200,7100,8500,7800,9200,8800,8520] } }
+    },
+    {
+      "type": "chart_bar", "name": "错误统计",
+      "x": 40, "y": 420, "width": 580, "height": 300,
+      "props": { "title": "各服务错误数 (Top 10)", "color": "#ef4444", "horizontal": true, "data": { "categories": ["auth-svc","payment-svc","user-svc","order-svc","notify-svc"], "values": [45,32,28,21,15] }, "showGrid": true }
+    },
+    {
+      "type": "table_scroll", "name": "部署日志",
+      "x": 40, "y": 740, "width": 900, "height": 300,
+      "props": { "title": "最近部署记录", "headerColor": "#1e293b", "data": { "columns": ["时间", "服务", "版本", "操作人", "状态"], "rows": [["18:15","auth-svc","v2.3.1","张工","成功"],["17:42","payment-svc","v1.8.0","李工","成功"],["17:10","user-svc","v3.1.2","王工","成功"],["16:35","order-svc","v2.0.5","赵工","回滚"],["16:00","gateway","v1.5.0","张工","成功"]] }, "scrollSpeed": 3000 }
+    },
+    {
+      "type": "progress_bar", "name": "CPU集群",
+      "x": 960, "y": 740, "width": 440, "height": 45,
+      "props": { "label": "CPU 集群平均", "value": 58, "max": 100, "color": "#60a5fa", "showValue": true }
+    },
+    {
+      "type": "progress_bar", "name": "内存集群",
+      "x": 960, "y": 800, "width": 440, "height": 45,
+      "props": { "label": "内存集群平均", "value": 71, "max": 100, "color": "#f59e0b", "showValue": true }
+    },
+    {
+      "type": "progress_bar", "name": "磁盘",
+      "x": 960, "y": 860, "width": 440, "height": 45,
+      "props": { "label": "磁盘使用率", "value": 43, "max": 100, "color": "#10b981", "showValue": true }
+    },
+    {
+      "type": "progress_bar", "name": "网络",
+      "x": 960, "y": 920, "width": 440, "height": 45,
+      "props": { "label": "网络带宽", "value": 35, "max": 100, "color": "#a78bfa", "showValue": true }
+    },
+    {
+      "type": "chart_pie", "name": "告警分布",
+      "x": 1420, "y": 640, "width": 480, "height": 400,
+      "props": { "title": "告警级别分布", "donut": true, "data": [{ "name": "严重", "value": 3 }, { "name": "警告", "value": 12 }, { "name": "提示", "value": 28 }, { "name": "已恢复", "value": 85 }] }
+    },
+    {
+      "type": "border_decoration", "name": "边框",
+      "x": 20, "y": 8, "width": 1880, "height": 1064,
+      "props": { "borderColor": "#1e40af", "borderWidth": 1, "cornerSize": 20, "style": "tech" }
+    }
+  ]
+}

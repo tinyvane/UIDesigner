@@ -1,0 +1,85 @@
+{
+  "id": "builtin05-smart-city",
+  "name": "智慧城市综合管理",
+  "nameEn": "Smart City Integrated Management",
+  "description": "渐变深色智慧城市综合管理平台，包含人口统计卡片、空气质量折线图、交通流量柱状图、中国地图、城市预警表格、在线摄像头/停车位卡片、路网拥堵仪表盘、事件分类饼图",
+  "descriptionEn": "Gradient dark smart city management platform with population stat cards, AQI line chart, traffic bar chart, China map, city alert table, camera/parking stat cards, traffic congestion gauge, and event category pie chart",
+  "source": "内置模板",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": { "type": "gradient", "value": "linear-gradient(180deg, #020617 0%, #0c1222 100%)" }
+  },
+  "components": [
+    {
+      "type": "text_title", "name": "标题",
+      "x": 460, "y": 15, "width": 1000, "height": 60,
+      "props": { "text": "智慧城市综合管理平台", "fontSize": 36, "color": "#38bdf8", "textAlign": "center", "fontWeight": "bold", "letterSpacing": 8 }
+    },
+    {
+      "type": "divider", "name": "分割线",
+      "x": 0, "y": 75, "width": 1920, "height": 4,
+      "props": { "color": "#1e40af", "thickness": 1, "style": "solid", "orientation": "horizontal" }
+    },
+    {
+      "type": "stat_card", "name": "常住人口",
+      "x": 40, "y": 100, "width": 280, "height": 130,
+      "props": { "title": "常住人口 (万)", "value": "1,245", "color": "#38bdf8" }
+    },
+    {
+      "type": "stat_card", "name": "流动人口",
+      "x": 40, "y": 250, "width": 280, "height": 130,
+      "props": { "title": "流动人口 (万)", "value": "387", "color": "#a78bfa" }
+    },
+    {
+      "type": "stat_card", "name": "今日报警",
+      "x": 40, "y": 400, "width": 280, "height": 130,
+      "props": { "title": "今日报警", "value": "156", "trend": -8.2, "trendLabel": "较昨日", "color": "#f59e0b" }
+    },
+    {
+      "type": "chart_line", "name": "空气质量",
+      "x": 40, "y": 560, "width": 400, "height": 240,
+      "props": { "title": "AQI 趋势 (近7日)", "color": "#10b981", "smooth": true, "areaFill": true, "data": { "categories": ["周一","周二","周三","周四","周五","周六","周日"], "values": [65,72,58,82,95,78,62] } }
+    },
+    {
+      "type": "chart_bar", "name": "交通流量",
+      "x": 40, "y": 820, "width": 400, "height": 240,
+      "props": { "title": "各区域交通流量", "color": "#38bdf8", "data": { "categories": ["朝阳","海淀","丰台","西城","东城","通州"], "values": [12500,11800,9600,8200,7500,6800] }, "showGrid": true }
+    },
+    {
+      "type": "map_china", "name": "地图",
+      "x": 460, "y": 90, "width": 1000, "height": 600,
+      "props": { "title": "", "data": [{ "name": "北京", "value": 1245 }, { "name": "上海", "value": 1580 }, { "name": "广东", "value": 2100 }, { "name": "浙江", "value": 980 }, { "name": "江苏", "value": 1250 }, { "name": "四川", "value": 850 }, { "name": "湖北", "value": 720 }], "colorRange": ["#0a2463", "#1e40af", "#38bdf8"], "showVisualMap": true }
+    },
+    {
+      "type": "table_scroll", "name": "预警列表",
+      "x": 460, "y": 720, "width": 700, "height": 340,
+      "props": { "title": "城市预警信息", "headerColor": "#1e293b", "data": { "columns": ["时间", "区域", "类型", "级别", "状态"], "rows": [["18:20","朝阳区","交通拥堵","黄色","处理中"],["18:15","海淀区","空气质量","橙色","已发布"],["18:10","丰台区","积水预警","黄色","处理中"],["18:05","西城区","人流密集","蓝色","已通知"],["17:55","东城区","消防隐患","红色","已派出"]] }, "scrollSpeed": 3000 }
+    },
+    {
+      "type": "stat_card", "name": "摄像头",
+      "x": 1500, "y": 100, "width": 380, "height": 130,
+      "props": { "title": "在线摄像头", "value": "28,456", "trend": 0.3, "trendLabel": "在线率99.7%", "color": "#10b981" }
+    },
+    {
+      "type": "stat_card", "name": "停车位",
+      "x": 1500, "y": 250, "width": 380, "height": 130,
+      "props": { "title": "剩余停车位", "value": "12,890", "trend": -15, "trendLabel": "较1小时前", "color": "#f59e0b" }
+    },
+    {
+      "type": "gauge", "name": "路网拥堵",
+      "x": 1500, "y": 400, "width": 380, "height": 280,
+      "props": { "title": "路网拥堵指数", "value": 6.8, "color": "#f59e0b", "max": 10, "unit": "" }
+    },
+    {
+      "type": "chart_pie", "name": "事件分类",
+      "x": 1200, "y": 720, "width": 680, "height": 340,
+      "props": { "title": "城市事件分类", "donut": true, "data": [{ "name": "交通", "value": 450 }, { "name": "治安", "value": 280 }, { "name": "市政", "value": 220 }, { "name": "环保", "value": 180 }, { "name": "消防", "value": 120 }, { "name": "其他", "value": 95 }] }
+    },
+    {
+      "type": "border_decoration", "name": "边框",
+      "x": 20, "y": 8, "width": 1880, "height": 1064,
+      "props": { "borderColor": "#1e3a5f", "borderWidth": 1, "cornerSize": 24, "style": "tech" }
+    }
+  ]
+}

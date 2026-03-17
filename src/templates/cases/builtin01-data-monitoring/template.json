@@ -1,0 +1,105 @@
+{
+  "id": "builtin01-data-monitoring",
+  "name": "实时数据监控大屏",
+  "nameEn": "Real-time Data Monitoring Dashboard",
+  "description": "暗色科技风实时数据监控大屏，包含统计卡片、仪表盘、柱状图、折线图、饼图、滚动表格、排名表等组件",
+  "descriptionEn": "Dark tech-style real-time data monitoring dashboard with stat cards, gauges, bar/line/pie charts, scrolling table, ranking table and more",
+  "source": "内置模板",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": { "type": "color", "value": "#0a0e27" }
+  },
+  "components": [
+    {
+      "type": "text_title", "name": "标题",
+      "x": 560, "y": 20, "width": 800, "height": 60,
+      "props": { "text": "实时数据监控中心", "fontSize": 36, "color": "#00e5ff", "textAlign": "center", "fontWeight": "bold", "letterSpacing": 6 }
+    },
+    {
+      "type": "clock", "name": "时钟",
+      "x": 1700, "y": 20, "width": 200, "height": 50,
+      "props": { "format": "YYYY-MM-DD HH:mm:ss", "showDate": true, "color": "#00e5ff" }
+    },
+    {
+      "type": "text_scroll", "name": "滚动公告",
+      "x": 0, "y": 80, "width": 1920, "height": 30,
+      "props": { "text": "系统运行正常 — 所有服务健康 — 数据延迟 < 50ms — 当前在线用户 2,847", "color": "#94a3b8", "fontSize": 13, "speed": 40, "backgroundColor": "rgba(0,0,0,0.3)" }
+    },
+    {
+      "type": "stat_card", "name": "在线用户",
+      "x": 40, "y": 140, "width": 280, "height": 140,
+      "props": { "title": "在线用户", "value": "2,847", "trend": 12.5, "trendLabel": "较昨日", "color": "#06b6d4" }
+    },
+    {
+      "type": "stat_card", "name": "今日订单",
+      "x": 340, "y": 140, "width": 280, "height": 140,
+      "props": { "title": "今日订单", "value": "8,392", "trend": 8.3, "trendLabel": "较昨日", "color": "#8b5cf6" }
+    },
+    {
+      "type": "stat_card", "name": "营业额",
+      "x": 640, "y": 140, "width": 280, "height": 140,
+      "props": { "title": "营业额(万)", "value": "156.8", "trend": -2.1, "trendLabel": "较昨日", "color": "#f59e0b" }
+    },
+    {
+      "type": "stat_card", "name": "转化率",
+      "x": 940, "y": 140, "width": 280, "height": 140,
+      "props": { "title": "转化率", "value": "23.7%", "trend": 1.2, "trendLabel": "较昨日", "color": "#10b981" }
+    },
+    {
+      "type": "gauge", "name": "CPU",
+      "x": 1280, "y": 140, "width": 300, "height": 240,
+      "props": { "title": "CPU使用率", "value": 67, "color": "#06b6d4", "max": 100, "unit": "%" }
+    },
+    {
+      "type": "gauge", "name": "内存",
+      "x": 1600, "y": 140, "width": 300, "height": 240,
+      "props": { "title": "内存使用率", "value": 82, "color": "#f59e0b", "max": 100, "unit": "%" }
+    },
+    {
+      "type": "chart_bar", "name": "每小时订单",
+      "x": 40, "y": 320, "width": 580, "height": 340,
+      "props": { "title": "每小时订单量", "color": "#6366f1", "data": { "categories": ["00:00","02:00","04:00","06:00","08:00","10:00","12:00","14:00","16:00","18:00","20:00","22:00"], "values": [120,85,60,95,380,520,680,590,720,650,480,320] }, "showGrid": true, "gradient": true, "gradientFrom": "#1a3a6b", "gradientTo": "#4facfe" }
+    },
+    {
+      "type": "chart_line", "name": "流量趋势",
+      "x": 640, "y": 320, "width": 580, "height": 340,
+      "props": { "title": "24h流量趋势", "color": "#10b981", "smooth": true, "areaFill": true, "data": { "categories": ["00:00","02:00","04:00","06:00","08:00","10:00","12:00","14:00","16:00","18:00","20:00","22:00"], "values": [2100,1800,1500,1900,4200,5800,7200,6500,8100,7300,5500,3800] } }
+    },
+    {
+      "type": "chart_pie", "name": "流量来源",
+      "x": 1280, "y": 400, "width": 600, "height": 260,
+      "props": { "title": "流量来源分布", "donut": true, "data": [{ "name": "直接访问", "value": 335 }, { "name": "搜索引擎", "value": 580 }, { "name": "社交媒体", "value": 234 }, { "name": "外链", "value": 135 }, { "name": "广告", "value": 248 }] }
+    },
+    {
+      "type": "table_scroll", "name": "事件日志",
+      "x": 40, "y": 700, "width": 580, "height": 340,
+      "props": { "title": "实时事件日志", "headerColor": "#1e293b", "data": { "columns": ["时间", "事件", "来源", "状态"], "rows": [["18:23:01","用户登录","Web","成功"],["18:22:58","API调用","Mobile","成功"],["18:22:45","数据同步","Server","处理中"],["18:22:30","告警恢复","Monitor","已恢复"],["18:22:15","支付回调","Gateway","成功"],["18:22:01","缓存更新","Redis","成功"]] }, "scrollSpeed": 2500 }
+    },
+    {
+      "type": "table_ranking", "name": "区域排名",
+      "x": 640, "y": 700, "width": 580, "height": 340,
+      "props": { "title": "区域销售排名", "data": [{ "name": "华东区", "value": 28500 }, { "name": "华南区", "value": 24300 }, { "name": "华北区", "value": 21800 }, { "name": "西南区", "value": 18600 }, { "name": "华中区", "value": 16200 }, { "name": "西北区", "value": 12800 }, { "name": "东北区", "value": 10500 }], "color": "#0d6efd", "showIndex": true, "unit": "万" }
+    },
+    {
+      "type": "progress_bar", "name": "服务器A",
+      "x": 1280, "y": 700, "width": 600, "height": 50,
+      "props": { "label": "服务器 A 负载", "value": 72, "max": 100, "color": "#06b6d4", "showValue": true }
+    },
+    {
+      "type": "progress_bar", "name": "服务器B",
+      "x": 1280, "y": 770, "width": 600, "height": 50,
+      "props": { "label": "服务器 B 负载", "value": 45, "max": 100, "color": "#10b981", "showValue": true }
+    },
+    {
+      "type": "progress_bar", "name": "服务器C",
+      "x": 1280, "y": 840, "width": 600, "height": 50,
+      "props": { "label": "服务器 C 负载", "value": 91, "max": 100, "color": "#ef4444", "showValue": true }
+    },
+    {
+      "type": "border_decoration", "name": "边框",
+      "x": 20, "y": 10, "width": 1880, "height": 1060,
+      "props": { "borderColor": "#1e40af", "borderWidth": 1, "cornerSize": 20, "style": "tech" }
+    }
+  ]
+}

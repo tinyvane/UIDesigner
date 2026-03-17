@@ -1,0 +1,65 @@
+{
+  "id": "builtin02-sales-dashboard",
+  "name": "销售业绩看板",
+  "nameEn": "Sales Performance Dashboard",
+  "description": "深色主题销售业绩看板，包含营收统计卡片、月度营收柱状图、产品分布饼图、日销售趋势折线图、销售排名表",
+  "descriptionEn": "Dark-themed sales performance dashboard with revenue stat cards, monthly revenue bar chart, product distribution pie chart, daily sales trend line chart, and sales ranking table",
+  "source": "内置模板",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": { "type": "color", "value": "#111827" }
+  },
+  "components": [
+    {
+      "type": "text_title", "name": "标题",
+      "x": 560, "y": 20, "width": 800, "height": 60,
+      "props": { "text": "销售业绩数据看板", "fontSize": 32, "color": "#f59e0b", "textAlign": "center", "fontWeight": "bold", "letterSpacing": 4 }
+    },
+    {
+      "type": "stat_card", "name": "总营收",
+      "x": 40, "y": 120, "width": 440, "height": 160,
+      "props": { "title": "本月总营收", "value": "¥ 2,385万", "trend": 15.2, "trendLabel": "同比增长", "color": "#f59e0b" }
+    },
+    {
+      "type": "stat_card", "name": "订单数",
+      "x": 500, "y": 120, "width": 440, "height": 160,
+      "props": { "title": "本月订单数", "value": "18,492", "trend": 8.7, "trendLabel": "同比增长", "color": "#06b6d4" }
+    },
+    {
+      "type": "stat_card", "name": "客单价",
+      "x": 960, "y": 120, "width": 440, "height": 160,
+      "props": { "title": "平均客单价", "value": "¥ 1,289", "trend": 5.9, "trendLabel": "同比增长", "color": "#8b5cf6" }
+    },
+    {
+      "type": "stat_card", "name": "回款率",
+      "x": 1420, "y": 120, "width": 460, "height": 160,
+      "props": { "title": "回款率", "value": "94.3%", "trend": 2.1, "trendLabel": "较上月", "color": "#10b981" }
+    },
+    {
+      "type": "chart_bar", "name": "月度营收",
+      "x": 40, "y": 320, "width": 900, "height": 340,
+      "props": { "title": "月度营收趋势 (万元)", "color": "#f59e0b", "data": { "categories": ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"], "values": [1850,1620,2100,1980,2250,2480,2150,2380,2560,2420,2180,2385] }, "showGrid": true, "gradient": true, "gradientFrom": "#92400e", "gradientTo": "#f59e0b", "barRadius": 4 }
+    },
+    {
+      "type": "chart_pie", "name": "产品分布",
+      "x": 960, "y": 320, "width": 920, "height": 340,
+      "props": { "title": "产品销售分布", "donut": true, "data": [{ "name": "企业版", "value": 4200 }, { "name": "专业版", "value": 3800 }, { "name": "标准版", "value": 2600 }, { "name": "基础版", "value": 1500 }, { "name": "试用版", "value": 800 }] }
+    },
+    {
+      "type": "chart_line", "name": "日销售额",
+      "x": 40, "y": 700, "width": 900, "height": 340,
+      "props": { "title": "近30日销售额趋势", "color": "#06b6d4", "smooth": true, "areaFill": true, "data": { "categories": ["1日","5日","10日","15日","20日","25日","30日"], "values": [82,95,78,110,125,108,130] } }
+    },
+    {
+      "type": "table_ranking", "name": "销售排名",
+      "x": 960, "y": 700, "width": 920, "height": 340,
+      "props": { "title": "销售人员排名 (本月)", "data": [{ "name": "张三", "value": 385 }, { "name": "李四", "value": 342 }, { "name": "王五", "value": 298 }, { "name": "赵六", "value": 276 }, { "name": "钱七", "value": 245 }, { "name": "孙八", "value": 218 }, { "name": "周九", "value": 195 }], "color": "#f59e0b", "showIndex": true, "unit": "万" }
+    },
+    {
+      "type": "border_decoration", "name": "边框",
+      "x": 20, "y": 10, "width": 1880, "height": 1060,
+      "props": { "borderColor": "#92400e", "borderWidth": 1, "cornerSize": 20, "style": "tech" }
+    }
+  ]
+}
